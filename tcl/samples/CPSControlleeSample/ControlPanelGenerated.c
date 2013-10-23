@@ -63,9 +63,6 @@ static const uint16_t heatPropertyConstraintValue1 = 200;
 static const char* const heatPropertyDisplay1[] = {"Hot", "Heiss"};
 static const uint16_t heatPropertyConstraintValue2 = 225;
 static const char* const heatPropertyDisplay2[] = {"Very Hot", "Sehr Heiss"};
-static const uint16_t heatPropertyConstraintRangeMin = 175;
-static const uint16_t heatPropertyConstraintRangeMax = 225;
-static const uint16_t heatPropertyConstraintRangeInc = 25;
 static ActionWidget ovenAction;
 static const char* const ovenActionLabel[] = {"Start Oven", "Ofen started"};
 static const uint16_t ovenActionHints[] = {ACTION_WIDGET_HINT_ACTIONBUTTON};
@@ -128,11 +125,6 @@ void WidgetsInit()
 	heatProperty.optParams.constraintList[1].display = heatPropertyDisplay1;
 	heatProperty.optParams.constraintList[2].value = &heatPropertyConstraintValue2;
 	heatProperty.optParams.constraintList[2].display = heatPropertyDisplay2;
-
-	heatProperty.optParams.constraintRangeDefined = TRUE;
-	heatProperty.optParams.constraintRange.minValue = &heatPropertyConstraintRangeMin;
-	heatProperty.optParams.constraintRange.maxValue = &heatPropertyConstraintRangeMax;
-	heatProperty.optParams.constraintRange.increment = &heatPropertyConstraintRangeInc;
 
 	initializeActionWidget(&ovenAction);
 	ovenAction.base.numLanguages = 2;
@@ -557,12 +549,12 @@ AJ_Status SetValueProperty(AJ_Message* replyMsg, uint32_t propId, void* context)
     return status;
 }
 
-AJ_Status ExecuteAction(AJ_Message* msg, uint32_t propId)
+AJ_Status ExecuteAction(AJ_Message* msg, uint32_t msgId, ExecuteActionContext* context)
 {
     AJ_Message reply;
     AJ_MarshalReplyMsg(msg, &reply);
 
-    switch (propId) {
+    switch (msgId) {
 		case EN_OVENACTION_EXEC:
 		case DE_AT_OVENACTION_EXEC:
 		{
@@ -590,7 +582,7 @@ AJ_Status ExecuteAction(AJ_Message* msg, uint32_t propId)
 		case EN_AREYOUSURE_EXEC_ACTION1:
 		case DE_AT_AREYOUSURE_EXEC_ACTION1:
 		{
-			AJ_Printf("Execute Action1 was called\n");
+			AJ_Printf("Execute Action1 was called\n");addDismissSignal(context, NOTIFICATION_ACTION_AREYOUSURE_SIGNAL_DISMISS);
 		}
 		break;
 		case EN_AREYOUSURE_EXEC_ACTION2:

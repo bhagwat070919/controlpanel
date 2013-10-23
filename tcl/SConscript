@@ -55,17 +55,23 @@ iskoot_env['INDIV_BUILD'] = 1
 iskoot_env['ABOUT_ROOT_FROM_COMPONENT']       = str(iskoot_env.Dir('$ABOUT_ROOT'))
 iskoot_env['SERVERSAMPLE_ROOT_FROM_COMPONENT'] = str(iskoot_env.Dir('$SERVERSAMPLE_ROOT'))
 
+returnValue = []
+
 # a sub environment for the controlpanel app, so they won't taint the main environment 
 # with defines and include dirs 
 controlpanel_env = iskoot_env.Clone()
 
 Export('controlpanel_env')
 
-controlpanel_env.SConscript('samples/CPSControlleeSample/SConscript')
+controlpanel_app = controlpanel_env.SConscript('samples/CPSControlleeSample/SConscript')
+controlpanel_env.Install("build", controlpanel_app)
+returnValue += controlpanel_app
 
 # Build docs
 if controlpanel_env['DOCS'] != 'none' :
     controlpanel_env.Tool('doxygen', toolpath=[doxygen_path])
     installDocs = controlpanel_env.SConscript('docs/SConscript', {'env': controlpanel_env})
     controlpanel_env.Depends(installDocs, controlpanel_env.Glob('*.h'));
-    
+    returnValue += installDocs
+
+Return('returnValue')

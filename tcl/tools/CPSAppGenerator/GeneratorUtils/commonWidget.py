@@ -14,6 +14,11 @@
 #
 import sys
 
+def as_list(s):
+	if isinstance(s, list): return s
+	return [s]
+
+
 class Widget:
 
     def __init__(self, generated, element, parentObjectPath, languageSetName) :
@@ -125,7 +130,7 @@ class Widget:
   
     def setEnabled (self) :
         enabled = self.element.enabled
-        if hasattr(enabled, "attr") and "code" in enabled.attr and enabled.attr["code"] == "true" : 
+        if hasattr(enabled, "attr") and hasattr(enabled.attr, "code") and enabled.attr["code"] == "true" : 
             self.generated.initFunction += "\t{0}.base.getEnabled = {1};\n".format(self.name, enabled)
         else :
             enabledText = enabled.upper()
@@ -136,7 +141,7 @@ class Widget:
 
     def setWritable (self) :
         writable = self.element.writable
-        if hasattr(writable, "attr") and "code" in writable.attr and writable.attr["code"] == "true" : 
+        if hasattr(writable, "attr") and hasattr(writable.attr, "code") and writable.attr["code"] == "true" : 
             self.generated.initFunction += "\t{0}.base.getWritable = {1};\n".format(self.name, writable)
         else :
             writableText = writable.upper()
@@ -148,7 +153,7 @@ class Widget:
     def setBgColor (self) :
         if hasattr(self.element, "bgcolor") :
             bgColor = self.element.bgcolor
-            if hasattr(bgColor, "attr") and "code" in bgColor.attr and bgColor.attr["code"] == "true" : 
+            if hasattr(bgColor, "attr") and hasattr(bgColor.attr, "code") and bgColor.attr["code"] == "true" : 
                 self.generated.initFunction += "\t{0}.base.optParams.getBgColor = {1};\n".format(self.name, bgColor)
             else :
                 self.generated.initFunction += "\t{0}.base.optParams.bgColor = {1};\n".format(self.name, bgColor)
@@ -183,8 +188,8 @@ class Widget:
     def setUnitMeasure (self) :
         self.setCodeOrValueString ("unitMeasure", "optParams.unitOfMeasure", "optParams.getUnitMeasure", "UnitMeasure")
 
-    def setLabelAction (self, labelActionType) :
-        self.setCodeOrValueString (labelActionType, "optParams.{0}".format(labelActionType), "optParams.get{0}".format(labelActionType[0].upper() + labelActionType[1:]) , labelActionType.capitalize())
+    def setLabelAction (self, i) :
+        self.setCodeOrValueString ('label', "optParams.labelAction%i" % (i+1), "optParams.getLabelAction%i" % (i+1), 'Labelaction%i' % (i+1), self.element.button[i])
 
     def setCodeOrValueString (self, fieldName, variableName, codeVariableName, defineName, elementToUse = 0) :
  
@@ -196,37 +201,37 @@ class Widget:
         if not hasattr(element, fieldName) :
             return;
 
-        if isinstance(getattr(element, fieldName) , list) :
-            fields = getattr(element, fieldName) 
-        else :
-            fields = [getattr(element, fieldName) ];
+        root = getattr(element, fieldName) 
 
-        if len(fields) == 1 and hasattr(fields[0], "attr") and "code" in fields[0].attr and fields[0].attr["code"] == "true" : 
-            self.generated.initFunction += "\t{0}.{1} = {2};\n".format(self.name, codeVariableName, fields[0])
-        elif len(fields) != len(self.languageSet) :
-            print "ERROR - Missing a {1} or too many {1}s defined for {0}. Exiting".format(self.name, fieldName)
-            sys.exit(0)
-        else :
+        if root._has("code") : 
+            self.generated.initFunction += "\t{0}.{1} = {2};\n".format(self.name, codeVariableName, root.code)
+            return
+        if root._has("value"):
+            values = as_list(root.value)
+            if len(values) != len(self.languageSet) :
+                print "ERROR - Missing a {1} or too many {1}s defined for {0}. Exiting".format(self.name, fieldName)
+                sys.exit(1)
+
             self.generated.initFunction += "\t{0}.{1} = {0}{2};\n".format(self.name, variableName, defineName)
 
             fieldDefineStr = "static const char* const {0}{1}[] = {2}".format(self.name, defineName, "{")     
             for lang in self.languageSet :
-                field = filter(lambda x: x.attr["language"] == lang, fields)
-                if len(field) !=  1:
+                value = filter(lambda x: x.attr["language"] == lang, values)
+                if len(value) !=  1:
                     print "ERROR - No {0} is defined or multiple {0}s are defined for language: {1} in {2}. Exiting".format(fieldName, lang, self.name)
                     sys.exit(0)
-                if hasattr(field[0], "attr") and "constant" in field[0].attr and field[0].attr["constant"] == "true" :
-                    fieldDefineStr += "{0}, ".format(field[0])                        
+                if value[0].attr['type'] == 'constant':
+                    fieldDefineStr += "{0}, ".format(value[0])                        
                 else:
-                    fieldDefineStr += "\"{0}\", ".format(field[0])                        
+                    fieldDefineStr += "\"{0}\", ".format(value[0])                        
             fieldDefineStr = fieldDefineStr[:-2] + "};\n"
             self.generated.staticVars += fieldDefineStr
 
     def setConstraintRange (self) :
-        if not hasattr(self.element, "constraintRange") :
-            return;
+        if not self.element._has('constraintDefs'): return
+        if not self.element.constraintDefs._has('constraintRange'): return
 
-        constraintRange = self.element.constraintRange
+        constraintRange = self.element.constraintDefs.constraintRange
         self.generated.initFunction += "\n"
         self.generated.staticVars += "static const {2} {0}ConstraintRangeMin = {1};\n".format(self.name, constraintRange.min, self.varType)
         self.generated.staticVars += "static const {2} {0}ConstraintRangeMax = {1};\n".format(self.name, constraintRange.max, self.varType)    
@@ -238,10 +243,11 @@ class Widget:
         self.generated.initFunction += "\t{0}.optParams.constraintRange.increment = &{0}ConstraintRangeInc;\n".format(self.name)
 
     def setConstraintList (self) :
-        if not hasattr(self.element, "constraintVals") :
-            return;
+        if not self.element._has('constraintDefs'): return
+        if not self.element.constraintDefs._has('constraintVals'): return
 
-        constraintList = self.element.constraintVals
+        constraintList = self.element.constraintDefs.constraintVals
+
         self.generated.initFunction += "\n"
 
         if isinstance(constraintList.constraint, list) :

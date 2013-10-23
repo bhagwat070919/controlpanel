@@ -24,11 +24,13 @@
                         <secured>false</secured>
                         <enabled>true</enabled>
                         <writable>true</writable>
-                        <label language="heb" constant="true">UNICODE_HI_IN_HEBREW</label>
-                        <label language="chi" constant="true">UNICODE_HI_IN_CHINESE</label>
+                        <label>
+                            <value type="constant" language="heb">UNICODE_HI_IN_HEBREW</value>
+                            <value type="constant" language="chi">UNICODE_HI_IN_CHINESE</value>
+                        </label>
                         <bgcolor>0x500</bgcolor>
                         <hints>
-                            <hint>textview</hint>
+                            <hint>edittext</hint>
                         </hints>
                     </stringProperty>
                 </elements>

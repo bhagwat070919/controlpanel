@@ -94,12 +94,12 @@ AJ_Status SetValueProperty(AJ_Message* replyMsg, uint32_t propId, void* context)
     return status;
 }
 
-AJ_Status ExecuteAction(AJ_Message* msg, uint32_t propId)
+AJ_Status ExecuteAction(AJ_Message* msg, uint32_t msgId, ExecuteActionContext* context)
 {
     AJ_Message reply;
     AJ_MarshalReplyMsg(msg, &reply);
 
-    switch (propId) {
+    switch (msgId) {
 
     }
 

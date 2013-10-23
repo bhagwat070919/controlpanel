@@ -36,6 +36,9 @@
 #define SLEEP_TIME          (1000 * 2)
 #endif
 
+#define SIGNAL_TYPE_DISMISS 0
+#define SIGNAL_TYPE_DATA_CHANGED 1
+
 #define WIDGET_TYPE_BASE 0
 #define WIDGET_TYPE_CONTAINER 1
 #define WIDGET_TYPE_PROPERTY 2

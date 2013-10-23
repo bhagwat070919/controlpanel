@@ -12,4 +12,4 @@ obj*
 ajlite.nvram
 .cproject
 .project
-.settings/language.settings.xml
+.settings/*

@@ -179,7 +179,20 @@ Service_Status CPS_MessageProcessor(AJ_BusAttachment* bus, AJ_Message* msg, AJ_S
         break;
 
         ACTION_CASES
-        *msgStatus = ExecuteAction(msg, msg->msgId);
+        {
+            ExecuteActionContext context;
+            context.numSignals = 0;
+            *msgStatus = ExecuteAction(msg, msg->msgId, &context);
+            if (*msgStatus == AJ_OK && context.numSignals != 0) {
+                uint16_t indx;
+                for (indx = 0; indx < context.numSignals; indx++) {
+                	if (context.signals[indx].signalType == SIGNAL_TYPE_DATA_CHANGED)
+                        *msgStatus = SendPropertyChangedSignal(bus, context.signals[indx].signalId, CPSsessionId);
+            	    else if (context.signals[indx].signalType == SIGNAL_TYPE_DISMISS)
+                		*msgStatus = SendDismissSignal(bus, context.signals[indx].signalId, CPSsessionId);
+                }
+            }
+        }
         break;
 
         LISTPROPERTY_CASES

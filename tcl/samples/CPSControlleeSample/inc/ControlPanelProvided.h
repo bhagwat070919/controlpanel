@@ -19,9 +19,12 @@
 
 #include "alljoyn.h"
 #include "alljoyn/controlpanel/Common/DateTimeUtil.h"
+#include "ControlPanelGenerated.h"
 
 #define UNICODE_HI_IN_HEBREW "\xd7\xa9\xd7\x9c\xd7\x95\xd7\x9d\x00"
 #define UNICODE_HI_IN_CHINESE "\xe5\x97\xa8"
+
+void addDismissSignal(ExecuteActionContext* context, int32_t dismissSignal);
 
 uint8_t getEnabledFunc();
 uint8_t getWriteableFunc();
@@ -56,7 +59,7 @@ void* getdoubleVar();
 void setdoubleVar(double newdoubleVar);
 
 void* getStringVar();
-void setStringVar(char* newStringVar);
+void setStringVar(const char* newStringVar);
 
 void* getLPDateProperty();
 void setLPDateProperty(DatePropertyValue* datePropertyValue);

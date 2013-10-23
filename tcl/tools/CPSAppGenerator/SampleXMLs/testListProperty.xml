@@ -20,7 +20,9 @@
                         <name>alarmListProperty</name>
                         <secured>false</secured>
                         <enabled>true</enabled>
-                        <label language="en">List of Alarms:</label>
+                        <label>
+                            <value type="literal" language="en">List of Alarms:</value>
+                        </label>                        
                         <bgcolor>0x500</bgcolor>
                         <hints>
                             <hint>dynamicspinner</hint>
@@ -47,7 +49,9 @@
                             <secured>false</secured>    
                             <enabled>true</enabled>
                             <bgcolor>0x200</bgcolor>
-                            <label language="en">My Label of my container</label>
+                            <label>
+                                <value type="literal" language="en">My Label of my container</value>
+                            </label>                        
                             <hints>
                                 <hint>vertical_linear</hint>
                             </hints>
@@ -68,7 +72,9 @@
                                     </onAction>
                                     <secured>false</secured>
                                     <enabled>true</enabled>
-                                    <label language="en">Start Oven</label>
+                                    <label>
+                                        <value type="literal" language="en">Start Oven</value>
+                                    </label>                                    
                                     <bgcolor>0x400</bgcolor>
                                     <hints>
                                         <hint>actionButton</hint>

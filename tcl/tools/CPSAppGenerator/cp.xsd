@@ -31,13 +31,30 @@
 ================================================================================
 -->
   <xs:complexType name="CodeOrValueStringWithLang">
-    <xs:simpleContent>
-      <xs:extension base="gen:NonEmptyString">
-        <xs:attribute name="code" type="xs:boolean" default="false"/>
-        <xs:attribute name="constant" type="xs:boolean" default="false"/>        
-        <xs:attribute name="language" type="gen:NameString" use="optional"/>
-      </xs:extension>
-    </xs:simpleContent>
+	<xs:choice>
+	  <xs:sequence>
+		  <xs:element name="code" type="gen:NonEmptyString" minOccurs="1" maxOccurs="1"/>
+	  </xs:sequence>
+	  <xs:sequence>
+		  <xs:element name="value" minOccurs="1" maxOccurs="unbounded">
+			  <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="gen:NonEmptyString">
+					<xs:attribute name="language" type="gen:NameString" use="required"/>
+					<xs:attribute name="type" use="required">
+					  <xs:simpleType>
+						<xs:restriction base="gen:NonEmptyString">
+						  <xs:pattern value="constant"/>
+						  <xs:pattern value="literal"/>
+						</xs:restriction>
+					  </xs:simpleType>
+					</xs:attribute>
+				  </xs:extension>
+				</xs:simpleContent>
+			  </xs:complexType>
+		  </xs:element>
+	  </xs:sequence>
+	</xs:choice>
   </xs:complexType>
   <xs:complexType name="CodeOrValueString">
     <xs:simpleContent>
@@ -147,8 +164,14 @@
       <xs:element name="label" type="gen:CodeOrValueStringWithLang" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="bgcolor" type="gen:CodeOrValueString" minOccurs="0" maxOccurs="1"/>
       <xs:element name="hints" type="gen:PropertyHints" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="constraintVals" type="gen:ConstraintsType" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="constraintRange" type="gen:ConstraintRangeType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="constraintDefs" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:choice>
+			  <xs:element name="constraintVals" type="gen:ConstraintsType"/>
+			  <xs:element name="constraintRange" type="gen:ConstraintRangeType"/>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="unitMeasure" type="gen:CodeOrValueStringWithLang" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="dbusType" use="required">
@@ -188,16 +211,17 @@
       <xs:element name="secured" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
       <xs:element name="enabled" type="gen:CodeOrValueString" minOccurs="1" maxOccurs="1"/>
       <xs:element name="message" type="gen:CodeOrValueStringWithLang" minOccurs="1" maxOccurs="unbounded"/>
-      <xs:element name="numActions" type="xs:int" minOccurs="1" maxOccurs="1"/>
       <xs:element name="label" type="gen:CodeOrValueStringWithLang" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="bgcolor" type="gen:CodeOrValueString" minOccurs="0" maxOccurs="1"/>
       <xs:element name="hints" type="gen:DialogHints" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="labelAction1" type="gen:CodeOrValueStringWithLang" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="labelAction2" type="gen:CodeOrValueStringWithLang" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="labelAction3" type="gen:CodeOrValueStringWithLang" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="executeCode1" type="gen:NonEmptyString" minOccurs="1" maxOccurs="1"/>
-      <xs:element name="executeCode2" type="gen:NonEmptyString" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="executeCode3" type="gen:NonEmptyString" minOccurs="0" maxOccurs="1"/>
+	  <xs:element name="button" minOccurs="1" maxOccurs="3">
+        <xs:complexType>
+          <xs:sequence>
+			  <xs:element name="label" type="gen:CodeOrValueStringWithLang" minOccurs="1" maxOccurs="1"/>
+			  <xs:element name="executeCode" type="gen:NonEmptyString" minOccurs="1" maxOccurs="1"/>
+          </xs:sequence>
+        </xs:complexType>
+	  </xs:element>
     </xs:sequence>
   </xs:complexType>
   <!--
@@ -369,7 +393,8 @@
       <xs:element name="notificationActions" minOccurs="0" maxOccurs="1">
         <xs:complexType>
           <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="notificationActionDialog" minOccurs="1" maxOccurs="unbounded">
+
+            <xs:element name="dialog" minOccurs="1" maxOccurs="unbounded">
               <xs:complexType>
                 <xs:complexContent>
                   <xs:extension base="gen:DialogType">
@@ -378,7 +403,8 @@
                 </xs:complexContent>
               </xs:complexType>
             </xs:element>
-            <xs:element name="notificationActionContainer" minOccurs="1" maxOccurs="unbounded">
+
+            <xs:element name="container" minOccurs="1" maxOccurs="unbounded">
               <xs:complexType>
                 <xs:complexContent>
                   <xs:extension base="gen:ContainerType">

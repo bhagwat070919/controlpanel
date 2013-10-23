@@ -23,13 +23,20 @@ source_files = [
                 '../../src/CPSControllee/ControlPanelMain.c',
                 ]
 
-controlpanel_env.Append(CPPPATH = [
-                                   Dir('../../inc'),
-                                   Dir('inc'),
-                                  ])
+controlpanel_env['CONTROLPANEL_DEFINE_STRING'] = 'CONTROLPANEL_SERVICE'
+controlpanel_env['INCLUDE_DIRS'] =  [
+                     Dir('../../inc'),
+                     Dir('inc'),
+                 ]
 
-define_string = 'CONTROLPANEL_SERVICE'
-controlpanel_env.Append(CPPDEFINES = [define_string])
+
+controlpanel_env.Append(CPPPATH = controlpanel_env['INCLUDE_DIRS'])
+controlpanel_env.Append(CPPDEFINES = '$CONTROLPANEL_DEFINE_STRING')
+
+
+
+
+
 local_objs = controlpanel_env.Object(source_files)
 
 Export('controlpanel_env')
@@ -43,14 +50,13 @@ if not controlpanel_env.has_key('INDIV_BUILD'):
 
 # we are called as part of ControlPanel build, which needs 
 # server sample and About components
-controlpanel_env['SERSAMP_VARIANT_DIR'] = define_string.lower()
+controlpanel_env['SERSAMP_VARIANT_DIR'] = controlpanel_env['CONTROLPANEL_DEFINE_STRING'].lower()
 serversample_objs = controlpanel_env.SConscript('$SERVERSAMPLE_ROOT_FROM_COMPONENT/SConscript', {'env': controlpanel_env})
 
 prog = controlpanel_env.Program(target = target_name, 
 			source = [
     			local_objs,
-                controlpanel_env['aj_obj'],
                 serversample_objs,
+                controlpanel_env['aj_obj'],
 			])
-
 Return('prog')

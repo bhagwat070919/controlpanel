@@ -67,6 +67,15 @@ typedef struct {
     int32_t signals[MAX_NUM_LANGUAGES];
 } SetValueContext;
 
+typedef struct {
+    uint8_t signalType;
+    int32_t signalId;
+} Signal;
+
+typedef struct {
+    uint16_t numSignals;
+    Signal signals[MAX_NUM_LANGUAGES*2];
+} ExecuteActionContext;
 /**
  *
  * @return
@@ -74,24 +83,25 @@ typedef struct {
 void WidgetsInit();
 
 /**
- *
- * @param replyMsg
- * @param propId
- * @param context
- * @return
+ * Set Value of a property.
+ * @param replyMsg - reply message
+ * @param propId - id of property being changed
+ * @param context - setvaluecontext. can be used to send signals
+ * @return status
  */
 AJ_Status SetValueProperty(AJ_Message* replyMsg, uint32_t propId, void* context);
 
 /**
- *
- * @param msg
- * @param propId
- * @return
+ * Execute Action
+ * @param msg - the msg for the response
+ * @param msgId - the Action being executed
+ * @param context - ExecuteActionContext used to send signals as a result of action
+ * @return status
  */
-AJ_Status ExecuteAction(AJ_Message* msg, uint32_t propId);
+AJ_Status ExecuteAction(AJ_Message* msg, uint32_t msgId, ExecuteActionContext* context);
+
 
 /* Defines and functions for Tester App */
-
 typedef struct {
 	uint32_t msgId;
     uint16_t numParams;

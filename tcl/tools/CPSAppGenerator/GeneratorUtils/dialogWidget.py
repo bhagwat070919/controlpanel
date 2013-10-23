@@ -24,9 +24,7 @@ class Dialog (common.Widget):
         self.nonSecuredInterfaceName = "DialogInterfaces"
         self.securedInterfaceName = "SecuredDialogInterfaces"
         self.hintPrefix = "DIALOG_HINT_"
-        self.execute1Cases = ""
-        self.execute2Cases = ""
-        self.execute3Cases = ""
+        self.executeCases = ""
         if isRoot:
             self.objectPathSuffix = ""  
 
@@ -46,9 +44,7 @@ class Dialog (common.Widget):
         self.generated.actionCases += "        		case {0}_EXEC_ACTION2:\\\n".format(capName)
         self.generated.actionCases += "        		case {0}_EXEC_ACTION3:\\\n".format(capName)
 
-        self.execute1Cases += "\t\tcase {0}_EXEC_ACTION1:\n".format(capName) 
-        self.execute2Cases += "\t\tcase {0}_EXEC_ACTION2:\n".format(capName) 
-        self.execute3Cases += "\t\tcase {0}_EXEC_ACTION3:\n".format(capName) 
+        self.executeCases += "\t\tcase {0}_EXEC_ACTION{1}:\n".format(capName, '{0}') 
 
     def generateTests(self, capName) : 
         common.Widget.generateTests(self, capName) 
@@ -76,36 +72,16 @@ class Dialog (common.Widget):
         self.generated.initFunction += "\n"
 
     def setNumActions (self) :
-        self.generated.initFunction += "\t{0}.numActions = {1};\n".format(self.name, self.element.numActions)
-
-    def generateOptionalVariables (self) :
-        self.setBgColor()
-        self.setLabel() 
-        self.setHints() 
-        self.setLabelAction("labelAction1") 
-        self.setLabelAction("labelAction2") 
-        self.setLabelAction("labelAction3") 
+        self.generated.initFunction += "\t{0}.numActions = {1};\n".format(self.name, len(self.element.button))
 
     def generateOnAction (self) :
+
         error = "AJ_MarshalErrorMsg(msg, &reply, AJ_ErrServiceUnknown);"
-
-        self.generated.executeAction += self.execute1Cases + "\t\t{0}\n".format("{")    
-        self.generated.executeAction += "\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n".format(self.element.executeCode1, "}")
-
-        self.generated.executeAction += self.execute2Cases + "\t\t{0}\n".format("{")    
-        if hasattr(self.element, "executeCode2") :
-            self.generated.executeAction += "\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n".format(self.element.executeCode2, "}")
-        else :
-            self.generated.executeAction += "\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n".format(error, "}")
-
-        self.generated.executeAction += self.execute3Cases + "\t\t{0}\n".format("{")    
-        if hasattr(self.element, "executeCode3") :
-            self.generated.executeAction += "\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n".format(self.element.executeCode3, "}")
-        else :
-            self.generated.executeAction += "\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n".format(error, "}")
-
-
-
-
-
+        for i in range(0, len(self.element.button)):
+            self.generated.executeAction += self.executeCases.format(str(i+1)) + "\t\t{\n"
+            self.generated.executeAction += """\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n""".format(self.element.button[i].executeCode, "}")
+            self.setLabelAction(i)
+        for i in range(len(self.element.button), 3):    
+            self.generated.executeAction += self.executeCases.format(str(i+1)) + "\t\t{0}\n".format("{")    
+            self.generated.executeAction += """\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n""".format(error, "}")
 

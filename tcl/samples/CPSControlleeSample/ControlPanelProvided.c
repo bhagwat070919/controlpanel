@@ -43,6 +43,13 @@ static const char* sampleUrlString = "www.ControlPanelTest.com";
 static DatePropertyValue date = { .fullYear = 2006, .month = 6, .mDay = 13 };
 static TimePropertyValue time = { .hour = 18, .minute = 0, .second = 0 };
 
+void addDismissSignal(ExecuteActionContext* context, int32_t dismissSignal)
+{
+	context->numSignals=1;
+	context->signals[0].signalId = dismissSignal;
+	context->signals[0].signalType = SIGNAL_TYPE_DISMISS;
+}
+
 const char* getUrlString()
 {
 	return sampleUrlString;
@@ -160,7 +167,7 @@ void* getStringVar()
     return &stringVar;
 }
 
-void setStringVar(char* newStringVar)
+void setStringVar(const char* newStringVar)
 {
     strncpy(stringVar, newStringVar, 99);
     stringVar[99] = '\0';

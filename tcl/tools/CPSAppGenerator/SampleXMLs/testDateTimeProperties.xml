@@ -13,7 +13,9 @@
                 <secured>false</secured>    
                 <enabled>true</enabled>
                 <bgcolor>0x200</bgcolor>
-                <label language="en">My Label of my container</label>
+                <label>
+                    <value type="literal" language="en">My Label of my container</value>
+                </label>
                 <hints>
                     <hint>horizontal_linear</hint>
                 </hints>

@@ -13,7 +13,9 @@
                 <secured>false</secured>    
                 <enabled>true</enabled>
                 <bgcolor>0x200</bgcolor>
-                <label language="en">My Label of my container</label>
+                <label>
+                    <value type="literal" language="en">My Label of my container</value>
+                </label>
                 <hints>
                     <hint>vertical_linear</hint>
                 </hints>
@@ -22,35 +24,41 @@
                         <name>heatProperty</name>
                         <getCode>getuint16Var</getCode>
                         <setCode>setuint16Var(%s)</setCode>
-                        <!--<language>en_US</language>-->
                         <secured>false</secured>
                         <enabled>true</enabled>
                         <writable>true</writable>
-                        <label code="true">getTestString</label>
+                        <label>
+                            <code>getTestString</code>
+                        </label>
                         <bgcolor>0x500</bgcolor>
                         <hints>
                             <hint>spinner</hint>
                         </hints>
-                        <constraintVals>
-                            <constraint>
-                                <display language="en">Regular</display>
-                                <value>175</value>
-                            </constraint>
-                            <constraint>
-                                <display language="en">Hot</display>
-                                <value>200</value>
-                            </constraint>
-                            <constraint>
-                                <display language="en">Very Hot</display>
-                                <value>225</value>
-                            </constraint>
-                        </constraintVals>
-                        <constraintRange>
-                            <min>175</min>
-                            <max>225</max>
-                            <increment>25</increment>
-                        </constraintRange>
-                        <unitMeasure language="en">Degrees</unitMeasure>
+                        <constraintDefs>
+                            <constraintVals>
+                                <constraint>
+                                    <display>
+                                        <value type="literal" language="en">Regular</value>
+                                    </display>
+                                    <value>175</value>
+                                </constraint>
+                                <constraint>
+                                    <display>
+                                        <value type="literal" language="en">Hot</value>
+                                    </display>
+                                    <value>200</value>
+                                </constraint>
+                                <constraint>
+                                    <display>
+                                        <value type="literal" language="en">Very Hot</value>
+                                    </display>
+                                    <value>225</value>
+                                </constraint>
+                            </constraintVals>
+                        </constraintDefs>
+                        <unitMeasure>
+                            <value type="literal" language="en">Degrees</value>
+                        </unitMeasure>
                     </scalarProperty>
                     <action>
                         <name>ovenAction</name>
@@ -59,7 +67,9 @@
                         </onAction>
                         <secured>false</secured>
                         <enabled>true</enabled>
-                        <label language="en">Start Oven</label>
+                        <label>
+                            <value type="literal" language="en">Start Oven</value>
+                        </label>
                         <bgcolor>0x400</bgcolor>
                         <hints>
                             <hint>actionButton</hint>

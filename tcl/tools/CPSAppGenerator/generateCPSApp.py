@@ -75,15 +75,15 @@ if hasattr(o.root.controlPanelDevice, "controlPanels") :
 
 ### Get and process all NotificationAction 
 if hasattr(o.root.controlPanelDevice, "notificationActions") :
-    if hasattr(o.root.controlPanelDevice.notificationActions, "notificationActionDialog") :
-        for notDialog in o.root.controlPanelDevice.notificationActions.notificationActionDialog :
+    if hasattr(o.root.controlPanelDevice.notificationActions, "dialog") :
+        for notDialog in o.root.controlPanelDevice.notificationActions.dialog :
             generated.addNotificationAction(notDialog)
             dialog = dw.Dialog(generated, notDialog, generated.ObjectPathPrefix + notDialog.name + "/REPLACE_LANG", notDialog.attr["languageSet"], 1)
             dialog.generate()
-    if hasattr(o.root.controlPanelDevice.notificationActions, "notificationActionContainer") : 
-        for notContainer in o.root.controlPanelDevice.notificationActions.notificationActionContainer :
+    if hasattr(o.root.controlPanelDevice.notificationActions, "container") : 
+        for notContainer in o.root.controlPanelDevice.notificationActions.container :
             generated.addNotificationAction(notContainer)
-            container = cw.Container(generated, notContainer, generated.ObjectPathPrefix + notDialog.name + "/REPLACE_LANG", notContainer.attr["languageSet"], 1)
+            container = cw.Container(generated, notContainer, generated.ObjectPathPrefix + notContainer.name + "/REPLACE_LANG", notContainer.attr["languageSet"], 1)
             container.generate()
 
 ### Finish up merging all the different components ###
