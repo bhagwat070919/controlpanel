@@ -48,6 +48,6 @@ public interface ControlPanelEventsListener {
 	 * @param panel {@link DeviceControlPanel} where the error has occurred
 	 * @param reason The error reason
 	 */
-	public void errorOccured(DeviceControlPanel panel, String reason);
+	public void errorOccurred(DeviceControlPanel panel, String reason);
 	
 }

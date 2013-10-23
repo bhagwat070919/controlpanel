@@ -25,6 +25,10 @@
 namespace ajn {
 namespace services {
 
+/**
+ * ConstraintValue - a union combining all possible values
+ * that can make up a constraint
+ */
 typedef union {
     uint16_t uint16Value;
     int16_t int16Value;
@@ -44,44 +48,136 @@ typedef union {
  */
 class ConstraintList {
   public:
+
+    /**
+     * Constructor for ConstraintList
+     */
     ConstraintList();
+
+    /**
+     * Destructor for ConstraintList
+     */
     virtual ~ConstraintList();
 
+    /**
+     * Set the value for the Constraint
+     * @param value - value to be Constrained to
+     */
     void setConstraintValue(uint16_t value);
+
+    /**
+     * Set the value for the Constraint
+     * @param value - value to be Constrained to
+     */
     void setConstraintValue(int16_t value);
+
+    /**
+     * Set the value for the Constraint
+     * @param value - value to be Constrained to
+     */
     void setConstraintValue(uint32_t value);
+
+    /**
+     * Set the value for the Constraint
+     * @param value - value to be Constrained to
+     */
     void setConstraintValue(int32_t value);
+
+    /**
+     * Set the value for the Constraint
+     * @param value - value to be Constrained to
+     */
     void setConstraintValue(uint64_t value);
+
+    /**
+     * Set the value for the Constraint
+     * @param value - value to be Constrained to
+     */
     void setConstraintValue(int64_t value);
+
+    /**
+     * Set the value for the Constraint
+     * @param value - value to be Constrained to
+     */
     void setConstraintValue(double value);
-    void setConstraintValue(qcc::String value);
 
-    PropertyType getPropertyType() const;
+    /**
+     * Set the value for the Constraint
+     * @param value - value to be Constrained to
+     */
+    void setConstraintValue(qcc::String const& value);
 
+    /**
+     * Get the Constraint Value
+     * @return the Constraint Value
+     */
     ConstraintValue getConstraintValue() const;
 
-    GetStringFptr getGetDisplay() const;
+    /**
+     * Get the Property Type of the Constraint
+     * @return propertyType of the Constraint
+     */
+    PropertyType getPropertyType() const;
 
-    void setGetDisplay(GetStringFptr getDisplay);
-
+    /**
+     * Get the Display vector
+     * @return vector of the Display Values
+     */
     const std::vector<qcc::String>& getDisplay() const;
 
+    /**
+     * Set the Display vector
+     * @param display - vector of the display values
+     */
     void setDisplay(const std::vector<qcc::String>& display);
 
-    QStatus getConstraintForArg(MsgArg& val, int16_t languageIndx, PropertyType propertyType);
+    /**
+     * Get the function pointer to get the display values
+     * @return the GetDisplay function pointer
+     */
+    GetStringFptr getGetDisplay() const;
+
+    /**
+     * Set the GetDisplay function pointer
+     * @param getDisplay - the function pointer to get the display values
+     */
+    void setGetDisplay(GetStringFptr getDisplay);
+
+    /**
+     * fill the MsgArg passed in with the Constraint
+     * @param val - msgArg to fill
+     * @param languageIndx - the languageIndx for the Display value
+     * @param propertyType - the property Type expected
+     * @return status - success/failure
+     */
+    QStatus fillConstraintArg(MsgArg& val, int16_t languageIndx, PropertyType propertyType);
 
   private:
+
+    /**
+     * Property Type of Constraint
+     */
     PropertyType m_PropertyType;
 
+    /**
+     * The Constraint Value of the Cosntraint
+     */
     ConstraintValue m_ConstraintValue;
 
+    /**
+     * The Display value of the Constraint
+     */
     std::vector<qcc::String> m_Display;
 
+    /**
+     * The GetDisplay function pointer of the Constraint
+     */
     GetStringFptr m_GetDisplay;
 
+    /**
+     * A local string to store the Constraint if the property Type is a string
+     */
     qcc::String m_ConstraintValueString;
-
-    qcc::String TAG;
 };
 
 } /* namespace services */

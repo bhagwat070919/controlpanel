@@ -418,7 +418,7 @@ public class DeviceDetailFragment extends Fragment {
 		}
 		
 		@Override
-		public void errorOccured(ControllableDevice device, final String reason)
+		public void errorOccurred(ControllableDevice device, final String reason)
 		{
 			final String text = "Error: '" + reason + "'";
 			Log.e(TAG, text);
@@ -443,8 +443,8 @@ public class DeviceDetailFragment extends Fragment {
 		}
 		
 		@Override
-		public void errorOccured(DeviceControlPanel deviceControlPanel, String reason) {
-			errorOccured(deviceControlPanel.getDevice(), reason);
+		public void errorOccurred(DeviceControlPanel deviceControlPanel, String reason) {
+			errorOccurred(deviceControlPanel.getDevice(), reason);
 		}
 
 		@Override

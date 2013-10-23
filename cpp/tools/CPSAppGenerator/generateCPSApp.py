@@ -63,9 +63,9 @@ generated.setControlDeviceData(o.root.controlPanelDevice.name, o.root.controlPan
 generated.setLanguageSets(o.root.controlPanelDevice.languageSet)
 
 ### Get and process HttpControlElements
-#if hasattr(o.root.controlPanelDevice, "url") :
-#    httpControl = http.HttpControl(generated, o.root.controlPanelDevice.url)
-#    httpControl.generate()
+if hasattr(o.root.controlPanelDevice, "url") :
+    httpControl = http.HttpControl(generated, o.root.controlPanelDevice.url)
+    httpControl.generate()
 
 ### Get and process all ControlPanels
 if hasattr(o.root.controlPanelDevice, "controlPanels") :

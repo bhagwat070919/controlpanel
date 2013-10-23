@@ -97,6 +97,9 @@ class Widget {
     virtual QStatus registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
                                     qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot = false);
 
+    virtual QStatus unregisterObjects(BusAttachment* bus);
+
+
     virtual WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
                                                    uint16_t langIndx, QStatus& status) = 0;
 

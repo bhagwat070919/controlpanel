@@ -31,6 +31,8 @@ class Dialog : public RootWidget {
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
                                            uint16_t langIndx, QStatus& status);
 
+    virtual QStatus unregisterObjects(BusAttachment* bus);
+
     virtual void executeAction1CallBack();
     virtual void executeAction2CallBack();
     virtual void executeAction3CallBack();

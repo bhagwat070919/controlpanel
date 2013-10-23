@@ -15,9 +15,9 @@
  ******************************************************************************/
 
 #include "alljoyn/controlpanel/ActionWithDialog.h"
+#include "../BusObjects/ActionBusObject.h"
 #include "../ControlPanelConstants.h"
 #include "alljoyn/controlpanel/ControlPanelService.h"
-#include "../BusObjects/ActionBusObject.h"
 
 using namespace ajn;
 using namespace services;
@@ -37,23 +37,19 @@ WidgetBusObject* ActionWithDialog::createWidgetBusObject(BusAttachment* bus, qcc
     return new ActionBusObject(bus, objectPath, langIndx, status, this);
 }
 
-void ActionWithDialog::executeCallBack()
+QStatus ActionWithDialog::addChildDialog(Dialog* childDialog)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-    if (logger)
-        logger->warn(TAG, "Execute Call back should not be called for an ActionWithDialog with a Dialog");
-}
-
-QStatus ActionWithDialog::addChildDialog(Dialog* childElement)
-{
-    if (!childElement)
+    if (!childDialog) {
+        if (logger)
+            logger->warn(TAG, "Cannot add a childDialog that is NULL");
         return ER_BAD_ARG_1;
+    }
 
-    m_Dialog = childElement;
+    m_Dialog = childDialog;
 
-    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (logger)
-        logger->debug(TAG, "Adding childDialog named: " + childElement->getWidgetName());
+        logger->debug(TAG, "Adding childDialog named: " + childDialog->getWidgetName());
     return ER_OK;
 }
 
@@ -70,7 +66,7 @@ QStatus ActionWithDialog::registerObjects(BusAttachment* bus, LanguageSet const&
 
     if (!m_Dialog) {
         if (logger)
-            logger->warn(TAG, "Could not register. ActionWithDialog with Dialog is missing Dialog");
+            logger->warn(TAG, "Could not register. ActionWithDialog is missing the child Dialog");
         return ER_FAIL;
     }
 
@@ -80,6 +76,28 @@ QStatus ActionWithDialog::registerObjects(BusAttachment* bus, LanguageSet const&
             logger->warn(TAG, "Could not register childDialog objects");
         return status;
     }
-
     return status;
+}
+
+QStatus ActionWithDialog::unregisterObjects(BusAttachment* bus)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    QStatus returnStatus = ER_OK;
+
+    QStatus status = Widget::unregisterObjects(bus);
+    if (status != ER_OK) {
+        if (logger)
+            logger->warn(TAG, "Could not unregister BusObjects");
+        returnStatus = status;
+    }
+
+    if (m_Dialog) {
+        status = m_Dialog->unregisterObjects(bus);
+        if (status != ER_OK) {
+            if (logger)
+                logger->warn(TAG, "Could not unregister Objects for the childDialog");
+            returnStatus = status;
+        }
+    }
+    return returnStatus;
 }

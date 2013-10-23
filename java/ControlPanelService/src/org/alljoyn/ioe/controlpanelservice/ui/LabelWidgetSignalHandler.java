@@ -84,7 +84,7 @@ public class LabelWidgetSignalHandler implements Label {
         } catch (ControlPanelException cpe) {
             msg += ", but failed to refresh the LabelWidget properties";
             Log.e(TAG, msg);
-            eventsListener.errorOccured(labelWidget.controlPanel, msg);
+            eventsListener.errorOccurred(labelWidget.controlPanel, msg);
             return;
         }
 

@@ -246,7 +246,7 @@ public class AlertDialogWidget extends UIElement {
             String msg = "Device: '" + device.getDeviceId() +
                          "', AlertDialogWidget, failed to register signal handler, Error: '" + cpe.getMessage() + "'";
             Log.e(TAG, msg);
-            controlPanel.getEventsListener().errorOccured(controlPanel, msg);
+            controlPanel.getEventsListener().errorOccurred(controlPanel, msg);
         }
         
 	}//registerSignalHandler

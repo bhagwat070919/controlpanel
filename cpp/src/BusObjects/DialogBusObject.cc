@@ -100,18 +100,20 @@ void DialogBusObject::DialogExecute(const ajn::InterfaceDescription::Member* mem
     if (member->name.compare(AJ_METHOD_ACTION1) == 0) {
         if (logger)
             logger->debug(TAG, "Execute Action was called");
-        return ((Dialog*)m_Widget)->executeAction1CallBack();
+        ((Dialog*)m_Widget)->executeAction1CallBack();
     } else if (member->name.compare(AJ_METHOD_ACTION2) == 0) {
         if (logger)
             logger->debug(TAG, "Execute Action was called");
-        return ((Dialog*)m_Widget)->executeAction2CallBack();
+        ((Dialog*)m_Widget)->executeAction2CallBack();
     } else if (member->name.compare(AJ_METHOD_ACTION3) == 0) {
         if (logger)
             logger->debug(TAG, "Execute Action was called");
-        return ((Dialog*)m_Widget)->executeAction3CallBack();
+        ((Dialog*)m_Widget)->executeAction3CallBack();
     }
     if (logger)
         logger->warn(TAG, "Unknown Execute Action was called");
+    MsgArg replyArg;
+    MethodReply(msg, &replyArg, 0);
 }
 
 QStatus DialogBusObject::Get(const char* ifcName, const char* propName, MsgArg& val)

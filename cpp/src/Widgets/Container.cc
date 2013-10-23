@@ -101,3 +101,30 @@ QStatus Container::registerObjects(BusAttachment* bus, LanguageSet const& langua
     return status;
 }
 
+QStatus Container::unregisterObjects(BusAttachment* bus)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    QStatus returnStatus = ER_OK;
+    QStatus status = Widget::unregisterObjects(bus);
+    if (status != ER_OK) {
+        if (logger)
+            logger->warn(TAG, "Could not unregister BusObjects");
+        returnStatus = status;
+    }
+
+    if (m_NotificationActionBusObject) {
+        bus->UnregisterBusObject(*m_NotificationActionBusObject);
+        delete m_NotificationActionBusObject;
+        m_NotificationActionBusObject = 0;
+    }
+
+    for (size_t indx = 0; indx < m_ChildElements.size(); indx++) {
+        status = m_ChildElements[indx]->unregisterObjects(bus);
+        if (status != ER_OK) {
+            if (logger)
+                logger->warn(TAG, "Could not unregister Objects for the childElement");
+            returnStatus = status;
+        }
+    }
+    return ER_OK;
+}

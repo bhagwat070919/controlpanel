@@ -243,3 +243,43 @@ QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPa
     return status;
 }
 
+void ControlPanelGenerated::Shutdown()
+{
+    if (rootContainerControlPanel) {
+        delete (rootContainerControlPanel);
+        rootContainerControlPanel = 0;
+    }
+    if (rootContainer) {
+        delete (rootContainer);
+        rootContainer = 0;
+    }
+    if (CurrentTemp) {
+        delete (CurrentTemp);
+        CurrentTemp = 0;
+    }
+    if (heatProperty) {
+        delete (heatProperty);
+        heatProperty = 0;
+    }
+    if (ovenAction) {
+        delete (ovenAction);
+        ovenAction = 0;
+    }
+    if (lightAction) {
+        delete (lightAction);
+        lightAction = 0;
+    }
+    if (lightConfirm) {
+        delete (lightConfirm);
+        lightConfirm = 0;
+    }
+    if (areYouSureNotificationAction) {
+        delete (areYouSureNotificationAction);
+        areYouSureNotificationAction = 0;
+    }
+    if (areYouSure) {
+        delete (areYouSure);
+        areYouSure = 0;
+    }
+
+}

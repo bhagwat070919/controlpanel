@@ -14,33 +14,35 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "AreYouSure.h"
-#include "../provided/ControlPanelProvided.h"
+#ifndef HTTPCONTROLBUSOBJECT_H_
+#define HTTPCONTROLBUSOBJECT_H_
 
-using namespace ajn;
-using namespace services;
+#include "alljoyn/BusAttachment.h"
+#include "alljoyn/BusObject.h"
+#include "alljoyn/InterfaceDescription.h"
+#include "alljoyn/controlpanel/HttpControl.h"
 
-AreYouSure::AreYouSure(qcc::String name) : Dialog(name)
-{
+namespace ajn {
+namespace services {
 
-}
+class HttpControlBusObject : public BusObject {
+  public:
 
-AreYouSure::~AreYouSure()
-{
+    HttpControlBusObject(BusAttachment* bus, qcc::String const& servicePath,
+                         QStatus& status, HttpControl* httpControl);
 
-}
+    virtual ~HttpControlBusObject();
 
-void AreYouSure::executeAction1CallBack()
-{
-    //AJ_Printf("Execute Action1 was called\n");addDismissSignal(context, NOTIFICATION_ACTION_AREYOUSURE_SIGNAL_DISMISS);;
-}
+    void HttpControlGetUrl(const ajn::InterfaceDescription::Member* member, ajn::Message& msg);
 
-void AreYouSure::executeAction2CallBack()
-{
-    executeActionNotDefined();;
-}
+  private:
 
-void AreYouSure::executeAction3CallBack()
-{
-    executeActionNotDefined();;
-}
+    HttpControl* m_HttpControl;
+
+    qcc::String const& TAG;
+};
+
+} /* namespace services */
+} /* namespace ajn */
+#endif /* HTTPCONTROLBUSOBJECT_H_ */
+

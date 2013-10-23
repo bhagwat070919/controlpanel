@@ -22,11 +22,11 @@
 #include "alljoyn/controlpanel/GenericLogger.h"
 #include <vector>
 
-namespace ajn{
-namespace services{
+namespace ajn {
+namespace services {
 
 class ControlPanelBusListener : public BusListener, public SessionPortListener,
-                                public SessionListener {
+    public SessionListener {
 
   public:
 

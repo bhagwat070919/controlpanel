@@ -39,8 +39,7 @@ ControlPanel* ControlPanel::createControlPanel(LanguageSet* languageSet)
 }
 
 ControlPanel::ControlPanel(LanguageSet const& languageSet) :
-    m_LanguageSet(languageSet), m_RootContainer(0),
-    m_ControlPanelBusObject(0),     m_NotificationActionBusObject(0)
+    m_LanguageSet(languageSet), m_RootContainer(0), m_ControlPanelBusObject(0)
 {
 
 }
@@ -78,6 +77,18 @@ QStatus ControlPanel::registerObjects(BusAttachment* bus, qcc::String const& uni
         return ER_BUS_OBJ_ALREADY_EXISTS;
     }
 
+    if (!bus) {
+        if (logger)
+            logger->warn(TAG, "Could not register Object. Bus is NULL");
+        return ER_BAD_ARG_1;
+    }
+
+    if (!(bus->IsStarted() && bus->IsConnected())) {
+        if (logger)
+            logger->warn(TAG, "Could not register Object. Bus is not started or not connected");
+        return ER_BAD_ARG_1;
+    }
+
     AboutServiceApi* aboutService = AboutServiceApi::getInstance();
     if (!aboutService) {
         if (logger)
@@ -96,7 +107,7 @@ QStatus ControlPanel::registerObjects(BusAttachment* bus, qcc::String const& uni
     status = bus->RegisterBusObject(*m_ControlPanelBusObject);
     if (status != ER_OK) {
         if (logger)
-            logger->warn(TAG, "Could not register ControlPanelBysObject.");
+            logger->warn(TAG, "Could not register ControlPanelBusObject.");
         return status;
     }
 
@@ -104,22 +115,40 @@ QStatus ControlPanel::registerObjects(BusAttachment* bus, qcc::String const& uni
     interfaces.push_back(AJ_CONTROLPANEL_INTERFACE);
     aboutService->AddObjectDescription(objectPath, interfaces);
 
-    if (m_RootContainer->getIsDismissable()) {
-        m_NotificationActionBusObject = new NotificationActionBusObject(bus, objectPath.c_str(), status);
+    status = m_RootContainer->registerObjects(bus, m_LanguageSet, objectPath + "/", "", true);
+    return status;
+}
 
+QStatus ControlPanel::unregisterObjects(BusAttachment* bus)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    QStatus status = ER_OK;
+    if (!m_ControlPanelBusObject && !m_RootContainer) {
+        if (logger)
+            logger->info(TAG, "Can not unregister. BusObjects do not exist");
+        return status; //this does not need to fail
+    }
+
+    if (!bus) {
+        if (logger)
+            logger->warn(TAG, "Could not unregister Object. Bus is NULL");
+        return ER_BAD_ARG_1;
+    }
+
+    if (m_ControlPanelBusObject) {
+        bus->UnregisterBusObject(*m_ControlPanelBusObject);
+
+        delete m_ControlPanelBusObject;
+        m_ControlPanelBusObject = 0;
+    }
+
+    if (m_RootContainer) {
+        QStatus status = m_RootContainer->unregisterObjects(bus);
         if (status != ER_OK) {
             if (logger)
-                logger->warn(TAG, "Could not create NotificationActionBusObject");
-            return status;
-        }
-        status = bus->RegisterBusObject(*m_ControlPanelBusObject);
-        if (status != ER_OK) {
-            if (logger)
-                logger->warn(TAG, "Could not register ControlPanelBysObject.");
-            return status;
+                logger->warn(TAG, "Could not unregister RootContainer.");
         }
     }
-    status = m_RootContainer->registerObjects(bus, m_LanguageSet, objectPath + "/", "", true);
     return status;
 }
 

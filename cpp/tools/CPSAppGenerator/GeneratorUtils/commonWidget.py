@@ -45,6 +45,8 @@ class Widget:
         self.generated.initCode += """\n    {0} = new {1}("{0}"{2});\n""".format(self.name, self.widgetName, self.additionalParams)
         self.generated.initCode += """    CHECK({0}->{1}({2}));\n\n""".format(self.parentName, self.parentAddFunc, self.name)
 
+        self.generated.shutdown += """    if ({0}) {1}\n        delete ({0});\n        {0} = 0;\n    {2}\n""".format(self.name, "{", "}")
+
     def generateMandatoryVariables (self) :
 
         self.setEnabled()

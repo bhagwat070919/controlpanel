@@ -88,7 +88,7 @@ public class ContainerWidgetSignalHandler implements Container, ContainerSecured
 		} catch (ControlPanelException cpe) {
 			msg += ", but failed to refresh the Container properties";
 			Log.e(TAG, msg);
-			eventsListener.errorOccured(containerWidget.controlPanel, msg);
+			eventsListener.errorOccurred(containerWidget.controlPanel, msg);
 			return;
 		}
 				

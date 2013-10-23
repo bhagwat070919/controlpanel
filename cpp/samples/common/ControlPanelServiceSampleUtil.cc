@@ -16,6 +16,7 @@
 
 #include <algorithm>
 #include "ControlPanelServiceSampleUtil.h"
+#include "PinKeyXListener.h"
 #include "alljoyn/about/AboutServiceApi.h"
 #include "alljoyn/about/AnnouncementRegistrar.h"
 
@@ -47,6 +48,7 @@ BusAttachment* ControlPanelServiceSampleUtil::prepareBusAttachment(GenericLogger
         return NULL;
     }
 
+    ControlPanelServiceSampleUtil::EnableSecurity(bus);
     return bus;
 }
 
@@ -148,3 +150,8 @@ QStatus ControlPanelServiceSampleUtil::addSessionlessMatch(BusAttachment*bus)
     return bus->AddMatch("sessionless='t',type='error'");
 }
 
+QStatus ControlPanelServiceSampleUtil::EnableSecurity(BusAttachment* bus)
+{
+    QStatus status = bus->EnablePeerSecurity("ALLJOYN_PIN_KEYX", new PinKeyXListener());
+    return status;
+}

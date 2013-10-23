@@ -19,6 +19,7 @@
 
 #include "alljoyn/controlpanel/ControlPanel.h"
 #include "alljoyn/controlpanel/NotificationAction.h"
+#include "alljoyn/controlpanel/HttpControl.h"
 
 namespace ajn {
 namespace services {
@@ -33,7 +34,11 @@ class ControlPanelControllee {
 
     void addNotificationAction(NotificationAction* notificationAction);
 
+    QStatus setHttpControl(HttpControl* httpControl);
+
     QStatus registerObjects(BusAttachment* bus);
+
+    QStatus unregisterObjects(BusAttachment* bus);
 
   private:
 
@@ -45,7 +50,7 @@ class ControlPanelControllee {
 
     std::vector<NotificationAction*> m_NotificationActions;
 
-
+    HttpControl* m_HttpControl;
 };
 
 } /* namespace services */

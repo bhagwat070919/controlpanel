@@ -109,7 +109,7 @@ public class AlertDialogWidgetSignalHandler implements AlertDialog, AlertDialogS
         } catch (ControlPanelException cpe) {
             msg += ", but failed to refresh the Container properties";
             Log.e(TAG, msg);
-            eventsListener.errorOccured(alertDialog.controlPanel, msg);
+            eventsListener.errorOccurred(alertDialog.controlPanel, msg);
             return;
         }       
               

@@ -177,7 +177,7 @@ public class ControllableDevice implements ConnManagerEventsListener {
 		Log.d(TAG, "Device: '" + deviceId + "' starting session with sender: '" + sender + "'");
 		Status status = connMgr.joinSession(sender, deviceId);
 		if ( status != Status.OK ) {
-			deviceEventsListener.errorOccured(this, "Failed to join session: '" + status + "'");
+			deviceEventsListener.errorOccurred(this, "Failed to join session: '" + status + "'");
 			return;
 		}
 	}//startSession
@@ -189,7 +189,8 @@ public class ControllableDevice implements ConnManagerEventsListener {
 		if ( sessionId == null ) {
 			return;
 		}
-
+		
+		Log.d(TAG, "endSession has been called, leaving the session");
 		connMgr.leaveSession(sessionId);
 		sessionId 		 = null;
 		
@@ -511,7 +512,7 @@ public class ControllableDevice implements ConnManagerEventsListener {
 			} catch (ControlPanelException cpe) {
 				String error = "Failed to fill the ControlPanelCollection of the  unit: '" + unit.getUnitId() + "'";
 				Log.e(TAG, error);
-				deviceEventsListener.errorOccured(this, error);
+				deviceEventsListener.errorOccurred(this, error);
 			}
 		}//for unit
 		
@@ -561,6 +562,6 @@ public class ControllableDevice implements ConnManagerEventsListener {
 		connMgr.unregisterEventListener(ConnManagerEventType.SESSION_LOST, this);
 		connMgr.unregisterEventListener(ConnManagerEventType.SESSION_JOIN_FAIL, this);
 		
-		deviceEventsListener.errorOccured(this, "Received SESSION_JOIN_FAIL event");
+		deviceEventsListener.errorOccurred(this, "Received SESSION_JOIN_FAIL event");
 	}//handleSessionJoinedFailed
 }

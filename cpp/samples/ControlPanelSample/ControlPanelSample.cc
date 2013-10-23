@@ -37,18 +37,22 @@ BusAttachment* bus = 0;
 ControlPanelService* controlPanelService = 0;
 ControlPanelControllee* controlPanelControllee = 0;
 
-void signal_callback_handler(int32_t signum)
+void exitApp(int32_t signum)
 {
     std::cout << "Program Finished" << std::endl;
-    //clean up
-    controlPanelService->shutdown();
+
     ControlPanelServiceSampleUtil::aboutServiceDestroy(bus, controlpanelBusListener);
+    if (controlPanelService)
+        controlPanelService->shutdownControllee();
+    ControlPanelGenerated::Shutdown();
     if (controlPanelControllee)
         delete controlPanelControllee;
     if (controlpanelBusListener)
         delete controlpanelBusListener;
     if (propertyStoreImpl)
         delete (propertyStoreImpl);
+    if (controlPanelService)
+        delete controlPanelService;
     if (bus)
         delete bus;
 
@@ -61,10 +65,14 @@ int32_t main()
     QStatus status;
 
     // Allow CTRL+C to end application
-    signal(SIGINT, signal_callback_handler);
+    signal(SIGINT, exitApp);
     std::cout << "Beginning ControlPanel Application. (Press CTRL+C to end application)" << std::endl;
 
     // Initialize Service objects
+#ifdef QCC_USING_BD
+    PasswordManager::SetCredentials("ALLJOYN_PIN_KEYX", "000000");
+#endif
+
     controlpanelBusListener = new ControlPanelBusListener();;
     controlPanelService = ControlPanelService::getInstance();
     controlPanelService->setLogLevel(Log::LogLevel::LEVEL_DEBUG);
@@ -72,7 +80,7 @@ int32_t main()
     bus = ControlPanelServiceSampleUtil::prepareBusAttachment(controlPanelService->getLogger());
     if (bus == NULL) {
         std::cout << "Could not initialize BusAttachment." << std::endl;
-        return 1;
+        exitApp(1);
     }
 
     qcc::String device_id = "123456", device_name = "testdeviceName";
@@ -83,29 +91,28 @@ int32_t main()
                                                                 controlpanelBusListener, SERVICE_PORT);
     if (status != ER_OK) {
         std::cout << "Could not register bus object." << std::endl;
-        return 1;
+        exitApp(1);
     }
 
     status = ControlPanelGenerated::PrepareWidgets(controlPanelControllee); //TODO send ptr to ptr?
     if (status != ER_OK) {
         std::cout << "Could not prepare Widgets." << std::endl;
-        return 1;
+        exitApp(1);
     }
 
     status = controlPanelService->initControllee(bus, controlPanelControllee);
     if (status != ER_OK) {
         std::cout << "Could not initialize Controllee." << std::endl;
-        return 1;
+        exitApp(1);
     }
 
     status = ControlPanelServiceSampleUtil::aboutServiceAnnounce();
     if (status != ER_OK) {
         std::cout << "Could not announce." << std::endl;
-        return 1;
+        exitApp(1);
     }
 
     while (1) {
         sleep(1);
     }
-    return 0;
 }

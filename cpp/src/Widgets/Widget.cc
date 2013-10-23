@@ -45,6 +45,18 @@ QStatus Widget::registerObjects(BusAttachment* bus, LanguageSet const& languageS
                                 qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    if (!bus) {
+        if (logger)
+            logger->warn(TAG, "Could not register Object. Bus is NULL");
+        return ER_BAD_ARG_1;
+    }
+
+    if (!(bus->IsStarted() && bus->IsConnected())) {
+        if (logger)
+            logger->warn(TAG, "Could not register Object. Bus is not started or not connected");
+        return ER_BAD_ARG_1;
+    }
+
     QStatus status = ER_OK;
     const std::vector<qcc::String>& languages = languageSet.getLanguages();
     qcc::String newObjectPathSuffix = isRoot ? objectPathSuffix : objectPathSuffix + "/" + m_Name;
@@ -65,6 +77,30 @@ QStatus Widget::registerObjects(BusAttachment* bus, LanguageSet const& languageS
         m_BusObjects.push_back(busObject);
     }
     return status;
+}
+
+QStatus Widget::unregisterObjects(BusAttachment* bus)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    if (!bus) {
+        if (logger)
+            logger->warn(TAG, "Could not register Object. Bus is NULL");
+        return ER_BAD_ARG_1;
+    }
+
+    if (!(bus->IsStarted() && bus->IsConnected())) {
+        if (logger)
+            logger->warn(TAG, "Could not register Object. Bus is not started or not connected");
+        return ER_BAD_ARG_1;
+    }
+
+    std::vector<WidgetBusObject*>::iterator it;
+    for (it = m_BusObjects.begin(); it != m_BusObjects.end(); it++) {
+        bus->UnregisterBusObject(*(*it));
+        m_BusObjects.erase(it);
+        delete *it;
+    }
+    return ER_OK;
 }
 
 QStatus Widget::SendPropertyChangedSignal()

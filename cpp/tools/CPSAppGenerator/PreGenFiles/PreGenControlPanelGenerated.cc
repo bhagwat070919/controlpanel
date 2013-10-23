@@ -50,3 +50,7 @@ QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPa
     return status;
 }
 
+void ControlPanelGenerated::Shutdown()
+{
+//SHUTDOWN_GO_HERE
+}

@@ -19,7 +19,7 @@
 
 #include "alljoyn/BusAttachment.h"
 #include "alljoyn/controlpanel/PropertyType.h"
-#include "alljoyn/controlpanel/Widget.h" //TODO figure out function ptrs
+#include "alljoyn/controlpanel/Widget.h"
 
 namespace ajn {
 namespace services {
@@ -38,12 +38,12 @@ typedef union {
  * Constraint Range class to define a range of
  * Values and constrain a property to those values
  * The Constraint is applied on the controller side.
- * No validations are done in the Controllee
+ * No validations are done in the Controlee
  */
 class ConstraintRange {
   public:
     ConstraintRange();
-    ConstraintRange( const ConstraintRange &constraintRange);
+    ConstraintRange(const ConstraintRange& constraintRange);
     virtual ~ConstraintRange();
     const ConstraintRangeVal& getIncrementValue() const;
     const ConstraintRangeVal& getMaxValue() const;
@@ -86,8 +86,6 @@ class ConstraintRange {
     ConstraintRangeVal m_IncrementValue;
 
     PropertyType m_PropertyType;
-
-    qcc::String TAG;
 };
 
 } /* namespace services */

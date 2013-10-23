@@ -34,6 +34,8 @@ class ControlPanel {
 
     QStatus registerObjects(BusAttachment* bus, qcc::String const& unitName);
 
+    QStatus unregisterObjects(BusAttachment* bus);
+
   private:
 
     ControlPanel(LanguageSet const& languageSet);
@@ -43,8 +45,6 @@ class ControlPanel {
     Container* m_RootContainer;
 
     BusObject* m_ControlPanelBusObject;
-
-    BusObject* m_NotificationActionBusObject;
 
     static qcc::String const& TAG;
 };

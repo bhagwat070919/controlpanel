@@ -148,7 +148,7 @@ public class LabelWidget extends UIElement {
             String msg = "Device: '" + device.getDeviceId() +
                          "', LabelWidget, failed to register signal handler, Error: '" + cpe.getMessage() + "'";
             Log.e(TAG, msg);
-            controlPanel.getEventsListener().errorOccured(controlPanel, msg);
+            controlPanel.getEventsListener().errorOccurred(controlPanel, msg);
         }
 	}//registerSignalHandler
 	

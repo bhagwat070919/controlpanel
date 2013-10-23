@@ -190,7 +190,7 @@ public class ContainerWidget extends UIElement {
 			String msg = "Device: '" + device.getDeviceId() + 
 					     "', ContainerWidget, failed to register signal handler, Error: '" + cpe.getMessage() + "'";
 			Log.e(TAG, msg);
-			controlPanel.getEventsListener().errorOccured(controlPanel, msg);
+			controlPanel.getEventsListener().errorOccurred(controlPanel, msg);
 		}
 	}//registerSignalHandler
 
@@ -295,7 +295,7 @@ public class ContainerWidget extends UIElement {
 	            }//try
 	    		catch (Exception e) {
 	    			 Log.w(TAG, "An error occurred during creation the Object: '" + path + "', device: '" + device.getDeviceId() + "'");
-					 controlPanel.getEventsListener().errorOccured(controlPanel, e.getMessage());
+					 controlPanel.getEventsListener().errorOccurred(controlPanel, e.getMessage());
 					 try {
 						ErrorWidget errorWidget = new ErrorWidget(UIElementType.ERROR_WIDGET, ifName, path, controlPanel, childNode.getChidren());
 						errorWidget.setError(e.getMessage());

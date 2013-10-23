@@ -146,12 +146,12 @@ public class ControlPanelTestApp extends DefaultDeviceRegistry implements Device
 	}//sessionLost
 
 	@Override
-	public void errorOccured(ControllableDevice device, String reason) {
+	public void errorOccurred(ControllableDevice device, String reason) {
 		Log.e(TAG, "Found error: '" + reason + "'");
-	}//errorOccured
+	}//errorOccurred
 
 	@Override
-	public void errorOccured(DeviceControlPanel panel, String reason) {
+	public void errorOccurred(DeviceControlPanel panel, String reason) {
 		Log.e(TAG, "An error occurred in the DeviceControlPanel, name: '" + panel.getObjPath() + "' Panels name: '" + panel.getCollection().getName() + "', Reason: '" + reason + "'");
 	}
 

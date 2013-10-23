@@ -108,5 +108,32 @@ QStatus NotificationAction::registerObjects(BusAttachment* bus, qcc::String cons
     return m_RootWidget->registerObjects(bus, m_LanguageSet, objectPath + "/", "", true);
 }
 
+QStatus NotificationAction::unregisterObjects(BusAttachment* bus)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    QStatus status = ER_OK;
+    if (!m_NotificationActionBusObject && !m_RootWidget) {
+        if (logger)
+            logger->info(TAG, "Can not unregister. BusObjects do not exist");
+        return status; //this does not need to fail
+    }
+
+    if (!bus) {
+        if (logger)
+            logger->warn(TAG, "Could not unregister Object. Bus is NULL");
+        return ER_BAD_ARG_1;
+    }
+
+    if (m_RootWidget) {
+        status = m_RootWidget->unregisterObjects(bus);
+        if (status != ER_OK) {
+            if (logger)
+                logger->warn(TAG, "Could not unregister RootContainer.");
+        }
+    }
+    m_NotificationActionBusObject = 0; //TODO: who's responsible for unregistering. NA or RootWidget?
+    return ER_OK;
+}
+
 } /* namespace services */
 } /* namespace ajn */

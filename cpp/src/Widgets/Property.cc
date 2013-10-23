@@ -378,7 +378,7 @@ QStatus Property::getOptParamsForArg(MsgArg& val, int16_t languageIndx)
 
         MsgArg* constraintListArrayArg = new MsgArg[m_ConstraintList.size()];
         for (uint16_t indx = 0; indx < m_ConstraintList.size(); indx++) {
-            status = m_ConstraintList[indx].getConstraintForArg(constraintListArrayArg[indx], languageIndx, m_PropertyType);
+            status = m_ConstraintList[indx].fillConstraintArg(constraintListArrayArg[indx], languageIndx, m_PropertyType);
             if (status != ER_OK)
                 break;
         }

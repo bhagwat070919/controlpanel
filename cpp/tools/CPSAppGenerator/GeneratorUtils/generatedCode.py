@@ -27,6 +27,7 @@ class Generator:
         self.initCode = ""
         self.varDecl = ""
         self.varDef = ""
+        self.shutdown = ""
 
     def setControlDeviceData(self, unitName, headerCode) :
         self.unitName = unitName
@@ -53,6 +54,8 @@ class Generator:
         self.initCode += """    if (!{0})\n        return ER_FAIL;\n""".format(name)
         self.initCode += """    controlPanelControllee->addControlPanel({0});\n""".format(name)
 
+        self.shutdown += """    if ({0}) {1}\n        delete ({0});\n        {0} = 0;\n    {2}\n""".format(name, "{", "}")
+
     def addNotificationAction(self, rootElement, languageSet) :
         name = rootElement.name + "NotificationAction"
         self.varDecl += """    static ajn::services::NotificationAction* {0};\n""".format(name)
@@ -61,6 +64,8 @@ class Generator:
         self.initCode += """\n    {0} = NotificationAction::createNotificationAction(LanguageSets::get("{1}"));\n""".format(name, languageSet)
         self.initCode += """    if (!{0})\n        return ER_FAIL;\n""".format(name)
         self.initCode += """    controlPanelControllee->addNotificationAction({0});\n""".format(name)
+
+        self.shutdown += """    if ({0}) {1}\n        delete ({0});\n        {0} = 0;\n    {2}\n""".format(name, "{", "}")
 
     def initializeFiles(self) :
 
@@ -118,5 +123,6 @@ class Generator:
         self.genSrcFile = self.genSrcFile.replace("//STATIC_DECLARATION_HERE", self.varDef)
         self.genSrcFile = self.genSrcFile.replace("//LANGUAGESET_CODE_HERE", self.languageSetsCode)
         self.genSrcFile = self.genSrcFile.replace("//INITCODE_GO_HERE", self.initCode)
+        self.genSrcFile = self.genSrcFile.replace("//SHUTDOWN_GO_HERE", self.shutdown)
 
 

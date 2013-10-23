@@ -22,7 +22,9 @@ using namespace ajn;
 using namespace services;
 using namespace cpsConsts;
 
-ConstraintRange::ConstraintRange() : m_PropertyType(UNDEFINED), TAG(cpsConsts::TAG_CONSTRAINTRANGE)
+#define TAG TAG_CONSTRAINTRANGE
+
+ConstraintRange::ConstraintRange() : m_PropertyType(UNDEFINED)
 {
     m_MinValue.uint16Value = 0;
     m_MaxValue.uint16Value = 0;

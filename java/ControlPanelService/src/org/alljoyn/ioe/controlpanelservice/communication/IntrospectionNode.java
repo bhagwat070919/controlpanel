@@ -197,6 +197,9 @@ public class IntrospectionNode {
 	 * @throws ControlPanelException If failed to get the introspection
 	 */
 	public static String getInstrospection(BusAttachment bus, String busName, String objPath, int sessionId) throws ControlPanelException {
+		
+		Log.v("IntrospectionNode", "Introspecting the Object: '" + objPath + "', BusUniqueName: '" + busName + "', sessionId: '" + sessionId + "'");
+		
 		ProxyBusObject proxyObj = bus.getProxyBusObject(busName, objPath, sessionId, new Class<?>[]{Introspectable.class});
 		Introspectable introObj = proxyObj.getInterface(Introspectable.class);
 		

@@ -14,33 +14,36 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "AreYouSure.h"
-#include "../provided/ControlPanelProvided.h"
+#ifndef HTTPCONTROL_H_
+#define HTTPCONTROL_H_
 
-using namespace ajn;
-using namespace services;
+#include "alljoyn/BusAttachment.h"
+#include "alljoyn/BusObject.h"
+#include "qcc/String.h"
 
-AreYouSure::AreYouSure(qcc::String name) : Dialog(name)
-{
+namespace ajn {
+namespace services {
 
-}
+class HttpControl {
+  public:
+    HttpControl(qcc::String url);
+    virtual ~HttpControl();
 
-AreYouSure::~AreYouSure()
-{
+    QStatus registerObjects(BusAttachment* bus, qcc::String const& unitName);
 
-}
+    QStatus unregisterObjects(BusAttachment* bus);
 
-void AreYouSure::executeAction1CallBack()
-{
-    //AJ_Printf("Execute Action1 was called\n");addDismissSignal(context, NOTIFICATION_ACTION_AREYOUSURE_SIGNAL_DISMISS);;
-}
+    QStatus getUrlForArg(MsgArg& val);
 
-void AreYouSure::executeAction2CallBack()
-{
-    executeActionNotDefined();;
-}
+  private:
 
-void AreYouSure::executeAction3CallBack()
-{
-    executeActionNotDefined();;
-}
+    qcc::String m_Url;
+
+    BusObject* m_HttpControlBusObject;
+
+    qcc::String const& TAG;
+};
+} //namespace services
+} //namespace ajn
+
+#endif /* HTTPCONTROL_H_ */

@@ -104,7 +104,7 @@ public class PropertyWidgetSignalHandler implements PropertyControlSecured, Prop
 		} catch (ControlPanelException cpe) {
 			msg += ", but failed to unmarshal the received data, Error: '" + cpe.getMessage() + "'";
 			Log.e(TAG, msg);
-			eventsListener.errorOccured(propertyWidget.controlPanel, msg);
+			eventsListener.errorOccurred(propertyWidget.controlPanel, msg);
 		}
 	}//ValueChanged
 
@@ -128,7 +128,7 @@ public class PropertyWidgetSignalHandler implements PropertyControlSecured, Prop
         catch(ControlPanelException cpe) {
         	 msg += ", but failed to refresh the widget properties";
         	 Log.e(TAG, msg);
-             eventsListener.errorOccured(propertyWidget.controlPanel, msg);
+             eventsListener.errorOccurred(propertyWidget.controlPanel, msg);
              return;
         }
         

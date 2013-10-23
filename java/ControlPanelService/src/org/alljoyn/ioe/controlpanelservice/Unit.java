@@ -180,12 +180,12 @@ public class Unit {
 		
 		ControlPanelCollection coll = panelCollections.get(collName);
 		if ( coll == null ) {
-			Log.i(TAG, "Received a new ControlPanelCollection objPath: '" + objPath + "', creating...");
+			Log.i(TAG, "Received a new ControlPanelCollection Name: '" + collName + "' objPath: '" + objPath + "', creating...");
 			coll = new ControlPanelCollection(device, this, collName, objPath);
 			panelCollections.put(collName, coll);
 		}
 		else {
-			Log.d(TAG, "Received a known ControlPanelCollection objPath: '" + objPath + "'");
+			Log.d(TAG, "Received a known ControlPanelCollection Name: '" + collName + "' objPath: '" + objPath + "'");
 		}
 		
 		Integer sessionId = device.getSessionId();

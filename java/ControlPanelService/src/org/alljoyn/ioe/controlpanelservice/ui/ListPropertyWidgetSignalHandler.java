@@ -148,7 +148,7 @@ public class ListPropertyWidgetSignalHandler implements ListPropertyControl, Lis
         } catch (ControlPanelException cpe) {
             msg += ", but failed to read the new values, Error: '" + cpe.getMessage() + "'";
             Log.e(TAG, msg);
-            eventsListener.errorOccured(listPropertyWidget.controlPanel, msg);
+            eventsListener.errorOccurred(listPropertyWidget.controlPanel, msg);
         }
 	}//ValueChanged
 
@@ -172,7 +172,7 @@ public class ListPropertyWidgetSignalHandler implements ListPropertyControl, Lis
         catch(ControlPanelException cpe) {
              msg += ", but failed to refresh the widget properties";
              Log.e(TAG, msg);
-             eventsListener.errorOccured(listPropertyWidget.controlPanel, msg);
+             eventsListener.errorOccurred(listPropertyWidget.controlPanel, msg);
              return;
         }
 

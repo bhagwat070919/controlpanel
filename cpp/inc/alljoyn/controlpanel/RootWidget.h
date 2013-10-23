@@ -31,7 +31,8 @@ class RootWidget : public Widget {
     QStatus SendDismissSignal();
 
     QStatus setNotificationActionBusObject(BusObject* notificationActionBusObject);
-  private:
+
+  protected:
 
     BusObject* m_NotificationActionBusObject;
 };

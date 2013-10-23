@@ -32,6 +32,8 @@ class Container : public RootWidget {
     QStatus registerObjects(BusAttachment* bus, LanguageSet const& m_LanguageSet,
                             qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot = false);
 
+    QStatus unregisterObjects(BusAttachment* bus);
+
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
                                            uint16_t langIndx, QStatus& status);
 

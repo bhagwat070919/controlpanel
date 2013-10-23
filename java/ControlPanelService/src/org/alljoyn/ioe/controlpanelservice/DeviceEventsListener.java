@@ -44,5 +44,5 @@ public interface DeviceEventsListener {
 	 * @param device The {@link ControllableDevice} where the error has occurred
 	 * @param reason The error reason
 	 */
-	public void errorOccured(ControllableDevice device, String reason);
+	public void errorOccurred(ControllableDevice device, String reason);
 }

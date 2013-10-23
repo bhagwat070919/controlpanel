@@ -14,30 +14,30 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "ActionBusObject.h"
+#include "HttpControlBusObject.h"
 #include "../ControlPanelConstants.h"
 #include "alljoyn/controlpanel/ControlPanelService.h"
-#include "alljoyn/controlpanel/Action.h"
+#include "alljoyn/controlpanel/HttpControl.h"
 
 using namespace qcc;
 namespace ajn {
 namespace services {
 using namespace cpsConsts;
 
-ActionBusObject::ActionBusObject(BusAttachment* bus, String const& servicePath, uint16_t langIndx,
-                                 QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_ACTION_BUSOBJECT, widget)
+HttpControlBusObject::HttpControlBusObject(BusAttachment* bus, String const& servicePath,
+                                           QStatus& status, HttpControl* httpControl) : BusObject(servicePath.c_str()),
+    m_HttpControl(httpControl), TAG(TAG_HTTPCONTROL_BUSOBJECT)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     status = ER_OK;
 
-    String interfaceName = widget->getIsSecured() ? AJ_SECURED_ACTION_INTERFACE : AJ_ACTION_INTERFACE;
-    InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
+    InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(AJ_HTTPCONTROL_INTERFACE.c_str());
     if (!intf) {
         do {
-            CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf, widget->getIsSecured()));
-            CHECK_AND_BREAK(addDefaultInterfaceVariables(intf));
-            CHECK_AND_BREAK(intf->AddMethod(AJ_METHOD_EXECUTE.c_str(), AJPARAM_EMPTY.c_str(),
-                                            AJPARAM_EMPTY.c_str(), AJPARAM_EMPTY.c_str()));
+            CHECK_AND_BREAK(bus->CreateInterface(AJ_HTTPCONTROL_INTERFACE.c_str(), intf, false));
+            CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_VERSION.c_str(), AJPARAM_UINT16.c_str(), PROP_ACCESS_READ));
+            CHECK_AND_BREAK(intf->AddMethod(AJ_METHOD_GETROOTURL.c_str(), AJPARAM_EMPTY.c_str(),
+                                            AJPARAM_STR.c_str(), AJ_PROPERTY_URL.c_str()));
             intf->Activate();
         } while (0);
     }
@@ -55,30 +55,40 @@ ActionBusObject::ActionBusObject(BusAttachment* bus, String const& servicePath, 
     }
 
     //Get the signal methods for future use
-    m_SignalPropertyChanged = intf->GetMember(AJ_SIGNAL_PROPERTIES_CHANGED.c_str());
-    const ajn::InterfaceDescription::Member* execMember = intf->GetMember(AJ_METHOD_EXECUTE.c_str());
+    const ajn::InterfaceDescription::Member* getRootUrlMember = intf->GetMember(AJ_METHOD_GETROOTURL.c_str());
 
-    status = AddMethodHandler(execMember, static_cast<MessageReceiver::MethodHandler>(&ActionBusObject::ActionExecute));
+    status = AddMethodHandler(getRootUrlMember, static_cast<MessageReceiver::MethodHandler>(&HttpControlBusObject::HttpControlGetUrl));
     if (status != ER_OK) {
         if (logger)
             logger->warn(TAG, "Could not register the SignalHandler");
         return;
     }
     if (logger)
-        logger->debug(TAG, "Created ActionBusObject successfully");
+        logger->debug(TAG, "Created HttpControlBusObject successfully");
 }
 
-void ActionBusObject::ActionExecute(const ajn::InterfaceDescription::Member* member, ajn::Message& msg)
+void HttpControlBusObject::HttpControlGetUrl(const ajn::InterfaceDescription::Member* member, ajn::Message& msg)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (logger)
         logger->debug(TAG, "Execute was called");
-    ((Action*)m_Widget)->executeCallBack();
-    MsgArg replyArg;
-    MethodReply(msg, &replyArg, 0);
+
+    MsgArg url;
+    QStatus status = m_HttpControl->getUrlForArg(url);
+    if (status != ER_OK) {
+        if (logger)
+            logger->warn(TAG, "Could not set Url");
+        return;
+    }
+
+    status = MethodReply(msg, &url, 1);
+    if (ER_OK != status) {
+        if (logger)
+            logger->warn(TAG, "Did not reply successfully");
+    }
 }
 
-ActionBusObject::~ActionBusObject() {
+HttpControlBusObject::~HttpControlBusObject() {
 }
 
 } /* namespace services */

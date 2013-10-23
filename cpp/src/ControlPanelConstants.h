@@ -42,13 +42,16 @@ static const qcc::String TAG_LABEL_BUSOBJECT = "LabelBusObject";
 static const qcc::String TAG_ACTION_BUSOBJECT = "ActionBusObject";
 static const qcc::String TAG_DIALOG_BUSOBJECT = "DialogBusObject";
 static const qcc::String TAG_PROPERTY_BUSOBJECT = "PropertyBusObject";
+static const qcc::String TAG_HTTPCONTROL_BUSOBJECT = "HttpControlBusObject";
 static const qcc::String TAG_CONTAINER_WIDGET = "ContainerWidget";
 static const qcc::String TAG_ACTION_WIDGET = "ActionWidget";
 static const qcc::String TAG_PROPERTY_WIDGET = "PropertyWidget";
 static const qcc::String TAG_LABEL_WIDGET = "LabelWidget";
 static const qcc::String TAG_DIALOG_WIDGET = "DialogWidget";
+static const qcc::String TAG_HTTPCONTROL = "HttpControl";
 static const qcc::String TAG_CONSTRAINTLIST = "ConstraintList";
 static const qcc::String TAG_CONSTRAINTRANGE = "ConstraintRange";
+
 
 static const qcc::String AJ_OBJECTPATH_PREFIX = "/ControlPanel/";
 static const qcc::String AJ_CONTROLPANEL_INTERFACE = "org.alljoyn.ControlPanel.ControlPanel";
@@ -71,6 +74,7 @@ static const qcc::String AJ_PROPERTY_LABEL = "Label";
 static const qcc::String AJ_PROPERTY_VALUE = "Value";
 static const qcc::String AJ_PROPERTY_MESSAGE = "Message";
 static const qcc::String AJ_PROPERTY_NUMACTIONS = "NumActions";
+static const qcc::String AJ_PROPERTY_URL = "Url";
 
 static const qcc::String AJ_SIGNAL_PROPERTIES_CHANGED = "MetadataChanged";
 static const qcc::String AJ_SIGNAL_VALUE_CHANGED = "ValueChanged";

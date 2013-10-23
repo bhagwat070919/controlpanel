@@ -21,6 +21,7 @@
 #include "alljoyn/controlpanel/GenericLogger.h"
 #include "alljoyn/controlpanel/ControlPanelControllee.h"
 #include "alljoyn/controlpanel/ControlPanelBusListener.h"
+#include "alljoyn/controlpanel/CPSLogger.h"
 
 namespace ajn {
 namespace services {
@@ -49,9 +50,10 @@ class ControlPanelService {
     QStatus initControllee(BusAttachment* bus, ControlPanelControllee* controlPanelControllee);
 
     /**
-     * Cleanup and get ready for shutdown
+     * Remove locally stored controllee. Allows a new call to initControllee to be made
+     * @return status
      */
-    void shutdown();
+    QStatus shutdownControllee();
 
     /**
      * Receive GenericLogger* to use for logging
@@ -133,6 +135,11 @@ class ControlPanelService {
      * Logger that is used in library
      */
     GenericLogger* logger;
+
+    /**
+     * Logger that is used in library
+     */
+    CPSLogger cpsLogger;
 
     /**
      * Tag for logging

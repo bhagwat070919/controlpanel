@@ -34,6 +34,8 @@ class NotificationAction {
 
     QStatus registerObjects(BusAttachment* bus, qcc::String const& unitName);
 
+    QStatus unregisterObjects(BusAttachment* bus);
+
   private:
 
     NotificationAction(LanguageSet const& languageSet);
@@ -50,3 +52,5 @@ class NotificationAction {
 } /* namespace services */
 } /* namespace ajn */
 #endif /* NOTIFICATIONACTION_H_ */
+
+

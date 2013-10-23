@@ -15,9 +15,8 @@
  ******************************************************************************/
 
 #include "alljoyn/controlpanel/Action.h"
-#include "../ControlPanelConstants.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
 #include "../BusObjects/ActionBusObject.h"
+#include "../ControlPanelConstants.h"
 
 using namespace ajn;
 using namespace services;
@@ -36,9 +35,3 @@ WidgetBusObject* Action::createWidgetBusObject(BusAttachment* bus, qcc::String c
 {
     return new ActionBusObject(bus, objectPath, langIndx, status, this);
 }
-
-QStatus Action::addChildDialog(Dialog* childElement)
-{
-    return ER_NOT_IMPLEMENTED;
-}
-

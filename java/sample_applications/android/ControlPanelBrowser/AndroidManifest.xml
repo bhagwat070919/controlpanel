@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.alljoyn.ioe.controlpanelbrowser"
-    android:versionCode="000013"
-    android:versionName="00.00.13" >
+    android:versionCode="000014"
+    android:versionName="00.00.14" >
 
     <uses-sdk
         android:minSdkVersion="11"

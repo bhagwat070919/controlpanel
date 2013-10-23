@@ -18,23 +18,44 @@
 #define ACTION_H_
 
 #include "alljoyn/controlpanel/Widget.h"
-#include "alljoyn/controlpanel/Dialog.h"
-#include <map>
 
 namespace ajn {
 namespace services {
 
+/**
+ * Action Class. Used to display a Button.
+ * This is an abstract class. The executeCallback function needs to be overridden.
+ */
 class Action : public Widget {
   public:
+
+    /**
+     * Constructor for Action class
+     * @param name - name of Widget
+     */
     Action(qcc::String name);
+
+    /**
+     * Destructor for Action Class
+     */
     virtual ~Action();
 
+    /**
+     * creates and returns the appropriate BusObject for this Widget
+     * @param bus - the bus used to create the widget
+     * @param objectPath - the objectPath of the widget
+     * @param langIndx - the language Indx
+     * @param status - the status indicating success or failure
+     * @return a newly created WidgetBusObject
+     */
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
                                            uint16_t langIndx, QStatus& status);
 
+    /**
+     * Callback for when Action is executed.
+     * Pure virtual function that needs to be implemented.
+     */
     virtual void executeCallBack() = 0;
-
-    QStatus addChildDialog(Dialog* childElement);
 };
 } //namespace services
 } //namespace ajn

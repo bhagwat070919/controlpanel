@@ -38,6 +38,8 @@ class ControlPanelGenerated {
 
     static void PrepareLanguageSets();
 
+    static void Shutdown();
+
     static bool languageSetsDone;
 
   private:

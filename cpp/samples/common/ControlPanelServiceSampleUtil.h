@@ -76,7 +76,7 @@ class ControlPanelServiceSampleUtil {
      * @param bus
      * @return status - success/fail
      */
-    static QStatus addSessionlessMatch(ajn::BusAttachment*bus);
+    static QStatus addSessionlessMatch(ajn::BusAttachment* bus);
 
   private:
 
@@ -94,6 +94,12 @@ class ControlPanelServiceSampleUtil {
      * Supported Languages
      */
     static const char* SUPPORTED_LANGUAGES[];
+
+    /**
+     * EnableSecurity
+     * @return
+     */
+    static QStatus EnableSecurity(ajn::BusAttachment* bus);
 };
 
 #endif /* CONTROLPANELSERVICESAMPLEUTIL_H_ */

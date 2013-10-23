@@ -33,6 +33,23 @@ Dialog::~Dialog()
 {
 }
 
+QStatus Dialog::unregisterObjects(BusAttachment* bus)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    QStatus status = Widget::unregisterObjects(bus);
+    if (status != ER_OK) {
+        if (logger)
+            logger->warn(TAG, "Could not unregister BusObjects");
+    }
+
+    if (m_NotificationActionBusObject) {
+        bus->UnregisterBusObject(*m_NotificationActionBusObject);
+        delete m_NotificationActionBusObject;
+        m_NotificationActionBusObject = 0;
+    }
+    return status;
+}
+
 GetStringFptr Dialog::getGetMessage() const
 {
     return m_GetMessage;

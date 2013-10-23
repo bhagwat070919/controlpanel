@@ -94,7 +94,7 @@ public class ActionWidgetSignalHandler implements ActionControl, ActionControlSe
         catch(ControlPanelException cpe) {
             msg += ", but failed to refresh the ActionWidget properties";
             Log.e(TAG, msg);
-            eventsListener.errorOccured(actionWidget.controlPanel, msg);
+            eventsListener.errorOccurred(actionWidget.controlPanel, msg);
             return;
         }
 

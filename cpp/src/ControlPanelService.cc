@@ -19,7 +19,6 @@
 
 #include <alljoyn/PasswordManager.h>
 #include "alljoyn/controlpanel/ControlPanelService.h"
-#include "alljoyn/controlpanel/CPSLogger.h"
 #include "ControlPanelConstants.h"
 
 using namespace ajn;
@@ -32,10 +31,9 @@ uint16_t const ControlPanelService::CONTROLPANEL_SERVICE_VERSION = 1;
 
 ControlPanelService* ControlPanelService::getInstance()
 {
-    if (!s_Instance) {
-        PasswordManager::SetCredentials("ALLJOYN_PIN_KEYX", "000000");
+    if (!s_Instance)
         s_Instance = new ControlPanelService();
-    }
+
     return s_Instance;
 }
 
@@ -43,13 +41,21 @@ ControlPanelService::ControlPanelService() :
     m_Bus(0), m_BusListener(0), m_ControlPanelControllee(0),
     logger(0), TAG(TAG_CONTROLPANELSERVICE)
 {
-    CPSLogger* cpsLogger = new CPSLogger();
-    setLogger(cpsLogger);
+    setLogger(&cpsLogger);
 }
 
 ControlPanelService::~ControlPanelService()
 {
+    if (logger) logger->debug(TAG, "Shutting down");
 
+    if (m_BusListener) {
+        if (m_Bus)
+            m_Bus->UnregisterBusListener(*m_BusListener);
+        delete m_BusListener;
+        m_BusListener = 0;
+    }
+    if (this == s_Instance)
+        s_Instance = 0;
 }
 
 uint16_t ControlPanelService::getVersion()
@@ -122,14 +128,27 @@ QStatus ControlPanelService::initControllee(BusAttachment* bus, ControlPanelCont
     return m_Bus->BindSessionPort(sp, opts, *m_BusListener);
 }
 
-void ControlPanelService::shutdown()
+QStatus ControlPanelService::shutdownControllee()
 {
-    if (logger) logger->debug(TAG, "Shutdown");
+    QStatus returnStatus;
+
+    if (!m_ControlPanelControllee) {
+        if (logger)
+            logger->info(TAG, "ControlPanelControllee not initialized. Returning");
+        return ER_OK;
+    }
 
     if (!m_Bus) {
         if (logger)
-            logger->warn(TAG, "Something went wrong. Could not shut down property");
-        return;
+            logger->info(TAG, "Bus not set.");
+        return ER_BUS_BUS_NOT_STARTED;
+    }
+
+    QStatus status = m_ControlPanelControllee->unregisterObjects(m_Bus);
+    if (status != ER_OK) {
+        if (logger)
+            logger->warn(TAG, "Could not unregister the BusObjects");
+        returnStatus = status;
     }
 
     if (m_BusListener) {
@@ -138,11 +157,18 @@ void ControlPanelService::shutdown()
         m_BusListener = 0;
     }
 
-    //if (m_ControlPanelControllee)
-    //TODO: unregister all objects
+    TransportMask transportMask = TRANSPORT_ANY;
+    SessionPort sp = CONTROLPANELSERVICE_PORT;
+    SessionOpts opts(SessionOpts::TRAFFIC_MESSAGES, false, SessionOpts::PROXIMITY_ANY, transportMask);
+    status = m_Bus->UnbindSessionPort(sp);
+    if (status != ER_OK) {
+        if (logger)
+            logger->warn(TAG, "Could not unbind the SessionPort");
+        returnStatus = status;
+    }
 
-    s_Instance = 0;
-    delete this;
+    m_ControlPanelControllee = 0;
+    return returnStatus;
 }
 
 BusAttachment* ControlPanelService::getBusAttachment()

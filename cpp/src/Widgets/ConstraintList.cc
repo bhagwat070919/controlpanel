@@ -22,7 +22,9 @@ using namespace ajn;
 using namespace services;
 using namespace cpsConsts;
 
-ConstraintList::ConstraintList() : m_PropertyType(UNDEFINED), m_GetDisplay(0), TAG(TAG_CONSTRAINTLIST)
+#define TAG TAG_CONSTRAINTLIST
+
+ConstraintList::ConstraintList() : m_PropertyType(UNDEFINED), m_GetDisplay(0)
 {
 }
 
@@ -72,7 +74,7 @@ void ConstraintList::setConstraintValue(double value)
     m_PropertyType = DOUBLE_PROPERTY;
 }
 
-void ConstraintList::setConstraintValue(qcc::String value)
+void ConstraintList::setConstraintValue(qcc::String const& value)
 {
     m_ConstraintValueString = value;
     m_ConstraintValue.charValue = m_ConstraintValueString.c_str();
@@ -89,16 +91,6 @@ PropertyType ConstraintList::getPropertyType() const
     return m_PropertyType;
 }
 
-GetStringFptr ConstraintList::getGetDisplay() const
-{
-    return m_GetDisplay;
-}
-
-void ConstraintList::setGetDisplay(GetStringFptr getDisplay)
-{
-    m_GetDisplay = getDisplay;
-}
-
 const std::vector<qcc::String>& ConstraintList::getDisplay() const
 {
     return m_Display;
@@ -109,16 +101,35 @@ void ConstraintList::setDisplay(const std::vector<qcc::String>& display)
     m_Display = display;
 }
 
-QStatus ConstraintList::getConstraintForArg(MsgArg& val, int16_t languageIndx, PropertyType propertyType)
+GetStringFptr ConstraintList::getGetDisplay() const
 {
-    if (m_PropertyType != propertyType)
-        return ER_BUS_SIGNATURE_MISMATCH;
+    return m_GetDisplay;
+}
 
-    if (!m_Display.size() && !m_GetDisplay)
-        return ER_BUS_MEMBER_MISSING;  //TODO: bad return message
+void ConstraintList::setGetDisplay(GetStringFptr getDisplay)
+{
+    m_GetDisplay = getDisplay;
+}
+
+QStatus ConstraintList::fillConstraintArg(MsgArg& val, int16_t languageIndx, PropertyType propertyType)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+
+    if (m_PropertyType != propertyType) {
+        if (logger)
+            logger->warn(TAG, "Could not fill the Constraint Arg. PropertyTypes do not match");
+        return ER_FAIL;
+    }
+
+    if (!m_Display.size() && !m_GetDisplay) {
+        if (logger)
+            logger->warn(TAG, "Could not fill the Constraint Arg. Display is not set");
+        return ER_FAIL;
+    }
 
     QStatus status;
     MsgArg* valueArg = new MsgArg();
+
     switch (propertyType) {
     case UINT16_PROPERTY:
         status = valueArg->Set(AJPARAM_UINT16.c_str(), m_ConstraintValue.uint16Value);
@@ -156,6 +167,7 @@ QStatus ConstraintList::getConstraintForArg(MsgArg& val, int16_t languageIndx, P
         status = ER_BUS_BAD_SIGNATURE;
         break;
     }
+
     if (status != ER_OK) {
         GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
         if (logger)

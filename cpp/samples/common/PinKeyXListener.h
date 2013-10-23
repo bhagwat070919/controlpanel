@@ -14,33 +14,16 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "AreYouSure.h"
-#include "../provided/ControlPanelProvided.h"
+#ifndef PINKEYXLISTENER_H_
+#define PINKEYXLISTENER_H_
 
-using namespace ajn;
-using namespace services;
+#include "alljoyn/AuthListener.h"
 
-AreYouSure::AreYouSure(qcc::String name) : Dialog(name)
-{
+class PinKeyXListener : public ajn::AuthListener {
+    bool RequestCredentials(const char* authMechanism, const char* authPeer,
+                            uint16_t authCount, const char* userId, uint16_t credMask, Credentials& creds);
 
-}
+    void AuthenticationComplete(const char* authMechanism, const char* authPeer, bool success);
+};
 
-AreYouSure::~AreYouSure()
-{
-
-}
-
-void AreYouSure::executeAction1CallBack()
-{
-    //AJ_Printf("Execute Action1 was called\n");addDismissSignal(context, NOTIFICATION_ACTION_AREYOUSURE_SIGNAL_DISMISS);;
-}
-
-void AreYouSure::executeAction2CallBack()
-{
-    executeActionNotDefined();;
-}
-
-void AreYouSure::executeAction3CallBack()
-{
-    executeActionNotDefined();;
-}
+#endif /* PINKEYXLISTENER_H_ */
