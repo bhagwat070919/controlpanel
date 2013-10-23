@@ -20,8 +20,8 @@
 using namespace ajn;
 using namespace services;
 
-ControlPanelBusListener::ControlPanelBusListener () :
-		BusListener(), SessionPortListener(), m_SessionPort(0)
+ControlPanelBusListener::ControlPanelBusListener() :
+    BusListener(), SessionPortListener(), m_SessionPort(0)
 {
 }
 
@@ -31,21 +31,21 @@ ControlPanelBusListener::~ControlPanelBusListener()
 
 void ControlPanelBusListener::setSessionPort(ajn::SessionPort sessionPort)
 {
-	m_SessionPort = sessionPort;
+    m_SessionPort = sessionPort;
 }
 
 SessionPort ControlPanelBusListener::getSessionPort()
 {
-	return m_SessionPort;
+    return m_SessionPort;
 }
 
 bool ControlPanelBusListener::AcceptSessionJoiner(ajn::SessionPort sessionPort, const char* joiner, const ajn::SessionOpts& opts)
 {
-	if (sessionPort != m_SessionPort) {
-		return false;
-	}
+    if (sessionPort != m_SessionPort) {
+        return false;
+    }
 
-	std::cout << "Accepting JoinSessionRequest" << std::endl;
+    std::cout << "Accepting JoinSessionRequest" << std::endl;
     return true;
 }
 

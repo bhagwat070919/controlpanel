@@ -25,20 +25,20 @@ namespace services {
 using namespace cpsConsts;
 
 ActionBusObject::ActionBusObject(BusAttachment* bus, String const& servicePath, uint16_t langIndx,
-		QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_ACTION_BUSOBJECT, widget)
+                                 QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_ACTION_BUSOBJECT, widget)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-	status = ER_OK;
+    status = ER_OK;
 
-	String interfaceName = widget->getIsSecured() ? AJ_SECURED_ACTION_INTERFACE : AJ_ACTION_INTERFACE;
-	InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
+    String interfaceName = widget->getIsSecured() ? AJ_SECURED_ACTION_INTERFACE : AJ_ACTION_INTERFACE;
+    InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
     if (!intf) {
         do {
-    	CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf, widget->getIsSecured()));
-    	CHECK_AND_BREAK(addDefaultInterfaceVariables(intf));
-    	CHECK_AND_BREAK(intf->AddMethod(AJ_METHOD_EXECUTE.c_str(), AJPARAM_EMPTY.c_str(),
-    			AJPARAM_EMPTY.c_str(), AJPARAM_EMPTY.c_str()));
-    	intf->Activate();
+            CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf, widget->getIsSecured()));
+            CHECK_AND_BREAK(addDefaultInterfaceVariables(intf));
+            CHECK_AND_BREAK(intf->AddMethod(AJ_METHOD_EXECUTE.c_str(), AJPARAM_EMPTY.c_str(),
+                                            AJPARAM_EMPTY.c_str(), AJPARAM_EMPTY.c_str()));
+            intf->Activate();
         } while (0);
     }
     if (status != ER_OK) {
@@ -60,9 +60,9 @@ ActionBusObject::ActionBusObject(BusAttachment* bus, String const& servicePath, 
 
     status = AddMethodHandler(execMember, static_cast<MessageReceiver::MethodHandler>(&ActionBusObject::ActionExecute));
     if (status != ER_OK) {
-         if (logger)
-             logger->warn(TAG, "Could not register the SignalHandler");
-         return;
+        if (logger)
+            logger->warn(TAG, "Could not register the SignalHandler");
+        return;
     }
     if (logger)
         logger->debug(TAG, "Created ActionBusObject successfully");

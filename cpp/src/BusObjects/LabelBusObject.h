@@ -23,12 +23,12 @@ namespace ajn {
 namespace services {
 
 class LabelBusObject : public WidgetBusObject {
-public:
-	LabelBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
-			uint16_t langIndx, QStatus& status, Widget* widget);
-	virtual ~LabelBusObject();
+  public:
+    LabelBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
+                   uint16_t langIndx, QStatus& status, Widget* widget);
+    virtual ~LabelBusObject();
 
-	QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
+    QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
 };
 
 } /* namespace services */

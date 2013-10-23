@@ -23,13 +23,15 @@ namespace ajn {
 namespace services {
 
 class DialogBusObject : public WidgetBusObject {
-public:
-	DialogBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
-			uint16_t langIndx, QStatus& status, Widget* widget);
+  public:
+    DialogBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
+                    uint16_t langIndx, QStatus& status, Widget* widget);
 
-	virtual ~DialogBusObject();
+    virtual ~DialogBusObject();
 
     void DialogExecute(const ajn::InterfaceDescription::Member* member, ajn::Message& msg);
+
+    QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
 };
 
 } /* namespace services */

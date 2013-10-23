@@ -26,7 +26,7 @@
  */
 static const char Version[] = "@Version>q";
 static const char States[] = "@States>u";
-static const char OptParams[] = "@OptParams>(a{qv})";
+static const char OptParams[] = "@OptParams>a{qv}";
 static const char Value[] = "@Value=v";
 static const char ValueForListProp[] = "@Value=a(qs)";
 static const char Message[] = "@Message>s";

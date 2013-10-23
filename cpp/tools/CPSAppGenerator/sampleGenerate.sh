@@ -1,31 +1,25 @@
+#!/bin/bash
 # Copyright 2013, Qualcomm Innovation Center, Inc.
 #
 #    All rights reserved.
 #    This file is licensed under the 3-clause BSD license in the NOTICE.txt
 #    file for this project. A copy of the 3-clause BSD license is found at:
 #
-#        http://opensource.org/licenses/BSD-3-Clause. 
+#        http://opensource.org/licenses/BSD-3-Clause.
 #
 #    Unless required by applicable law or agreed to in writing, software
 #    distributed under the license is distributed on an "AS IS" BASIS,
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the license for the specific language governing permissions and
 #    limitations under the license.
+#
+echo "Generating code for testOneOfEachWidget.xml"
 
-import os
-Import('env')
+INITIAL_DIR=`pwd` # Save current dir
+cd `dirname $0`       # Go to script dir
 
-returnValue = []
+python generateCPSApp.py SampleXMLs/testOneOfEachWidget.xml ../../samples/generated/ 
 
-docenv = env.Clone()
+cd ${INITIAL_DIR}
 
-# Build docs
-if docenv['DOCS'] == 'html':
-    # the target directory 'docs/tmp' is never built this will cause doxygen 
-    # to run every time DOCS == 'html'
-    generateDocs = docenv.Doxygen(source='Doxygen_html', target=[Dir('tmp'), Dir('html')])
-    returnValue = docenv.Install('$NS_DIST_DIR/docs', Dir('html'))
-    docenv.Clean('Doxygen_html', Dir('html'))
-    docenv.Depends(returnValue, generateDocs)
 
-Return('returnValue')

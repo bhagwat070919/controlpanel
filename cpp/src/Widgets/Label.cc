@@ -16,7 +16,7 @@
 
 #include "alljoyn/controlpanel/Label.h"
 #include "../ControlPanelConstants.h"
-#include "../BusObjects/ActionBusObject.h"
+#include "../BusObjects/LabelBusObject.h"
 
 using namespace ajn;
 using namespace services;
@@ -30,14 +30,14 @@ Label::~Label()
 {
 }
 
-GetLabelFptr Label::getGetLabel() const
+GetStringFptr Label::getGetLabel() const
 {
     return m_GetLabelForLabel;
 }
 
-void Label::setGetLabel(GetLabelFptr getLabel)
+void Label::setGetLabel(GetStringFptr getLabel)
 {
-	m_GetLabelForLabel = getLabel;
+    m_GetLabelForLabel = getLabel;
 }
 
 const std::vector<qcc::String>& Label::getLabel() const
@@ -47,19 +47,20 @@ const std::vector<qcc::String>& Label::getLabel() const
 
 void Label::setLabel(const std::vector<qcc::String>& label)
 {
-	m_LabelForLabel = label;
+    m_LabelForLabel = label;
 }
 
 QStatus Label::getLabelForArg(MsgArg& val, int16_t languageIndx)
 {
-	if (!m_Label.size() & !m_GetLabel)
-	    return ER_BUS_PROPERTY_VALUE_NOT_SET;
+    if (!m_LabelForLabel.size() & !m_GetLabelForLabel)
+        return ER_BUS_PROPERTY_VALUE_NOT_SET;
 
-	return val.Set(AJPARAM_STR.c_str(), m_GetLabel? m_GetLabel(languageIndx) : m_Label[languageIndx].c_str());
+    return val.Set(AJPARAM_STR.c_str(), m_GetLabelForLabel ? m_GetLabelForLabel(languageIndx) :
+                   m_LabelForLabel[languageIndx].c_str());
 }
 
 WidgetBusObject* Label::createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-		uint16_t langIndx, QStatus status)
+                                              uint16_t langIndx, QStatus status)
 {
-	return new ActionBusObject(bus, objectPath, langIndx, status, this);
+    return new LabelBusObject(bus, objectPath, langIndx, status, this);
 }

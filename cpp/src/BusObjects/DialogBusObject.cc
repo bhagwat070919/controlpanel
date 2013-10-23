@@ -25,27 +25,27 @@ namespace services {
 using namespace cpsConsts;
 
 DialogBusObject::DialogBusObject(BusAttachment* bus, String const& servicePath, uint16_t langIndx,
-		QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_DIALOG_BUSOBJECT, widget)
+                                 QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_DIALOG_BUSOBJECT, widget)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-	status = ER_OK;
+    status = ER_OK;
 
-	String interfaceName = widget->getIsSecured() ? AJ_SECURED_DIALOG_INTERFACE : AJ_DIALOG_INTERFACE;
-	InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
+    String interfaceName = widget->getIsSecured() ? AJ_SECURED_DIALOG_INTERFACE : AJ_DIALOG_INTERFACE;
+    InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
     if (!intf) {
         do {
-    	CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf, widget->getIsSecured()));
-    	CHECK_AND_BREAK(addDefaultInterfaceVariables(intf));
-    	CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_MESSAGE.c_str(), AJPARAM_STR.c_str(), PROP_ACCESS_READ));
-    	CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_NUMACTIONS.c_str(), AJPARAM_UINT16.c_str(), PROP_ACCESS_READ));
-    	CHECK_AND_BREAK(intf->AddMethod(AJ_METHOD_ACTION1.c_str(), AJPARAM_EMPTY.c_str(),
-    			AJPARAM_EMPTY.c_str(), AJPARAM_EMPTY.c_str()));
-    	CHECK_AND_BREAK(intf->AddMethod(AJ_METHOD_ACTION2.c_str(), AJPARAM_EMPTY.c_str(),
-    			AJPARAM_EMPTY.c_str(), AJPARAM_EMPTY.c_str()));
-    	CHECK_AND_BREAK(intf->AddMethod(AJ_METHOD_ACTION3.c_str(), AJPARAM_EMPTY.c_str(),
-    			AJPARAM_EMPTY.c_str(), AJPARAM_EMPTY.c_str()));
+            CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf, widget->getIsSecured()));
+            CHECK_AND_BREAK(addDefaultInterfaceVariables(intf));
+            CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_MESSAGE.c_str(), AJPARAM_STR.c_str(), PROP_ACCESS_READ));
+            CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_NUMACTIONS.c_str(), AJPARAM_UINT16.c_str(), PROP_ACCESS_READ));
+            CHECK_AND_BREAK(intf->AddMethod(AJ_METHOD_ACTION1.c_str(), AJPARAM_EMPTY.c_str(),
+                                            AJPARAM_EMPTY.c_str(), AJPARAM_EMPTY.c_str()));
+            CHECK_AND_BREAK(intf->AddMethod(AJ_METHOD_ACTION2.c_str(), AJPARAM_EMPTY.c_str(),
+                                            AJPARAM_EMPTY.c_str(), AJPARAM_EMPTY.c_str()));
+            CHECK_AND_BREAK(intf->AddMethod(AJ_METHOD_ACTION3.c_str(), AJPARAM_EMPTY.c_str(),
+                                            AJPARAM_EMPTY.c_str(), AJPARAM_EMPTY.c_str()));
 
-    	intf->Activate();
+            intf->Activate();
         } while (0);
     }
     if (status != ER_OK) {
@@ -70,23 +70,23 @@ DialogBusObject::DialogBusObject(BusAttachment* bus, String const& servicePath, 
 
     status = AddMethodHandler(execMember1, static_cast<MessageReceiver::MethodHandler>(&DialogBusObject::DialogExecute));
     if (status != ER_OK) {
-         if (logger)
-             logger->warn(TAG, "Could not register the MethodHandler");
-         return;
+        if (logger)
+            logger->warn(TAG, "Could not register the MethodHandler");
+        return;
     }
 
     status = AddMethodHandler(execMember2, static_cast<MessageReceiver::MethodHandler>(&DialogBusObject::DialogExecute));
     if (status != ER_OK) {
-         if (logger)
-             logger->warn(TAG, "Could not register the MethodHandler");
-         return;
+        if (logger)
+            logger->warn(TAG, "Could not register the MethodHandler");
+        return;
     }
 
     status = AddMethodHandler(execMember3, static_cast<MessageReceiver::MethodHandler>(&DialogBusObject::DialogExecute));
     if (status != ER_OK) {
-         if (logger)
-             logger->warn(TAG, "Could not register the MethodHandler");
-         return;
+        if (logger)
+            logger->warn(TAG, "Could not register the MethodHandler");
+        return;
     }
 
     if (logger)
@@ -101,19 +101,34 @@ void DialogBusObject::DialogExecute(const ajn::InterfaceDescription::Member* mem
         if (logger)
             logger->debug(TAG, "Execute Action was called");
         return ((Dialog*)m_Widget)->executeAction1CallBack();
-    }
-    else if (member->name.compare(AJ_METHOD_ACTION2) == 0) {
+    } else if (member->name.compare(AJ_METHOD_ACTION2) == 0) {
         if (logger)
             logger->debug(TAG, "Execute Action was called");
         return ((Dialog*)m_Widget)->executeAction2CallBack();
-    }
-    else if (member->name.compare(AJ_METHOD_ACTION3) == 0) {
+    } else if (member->name.compare(AJ_METHOD_ACTION3) == 0) {
         if (logger)
             logger->debug(TAG, "Execute Action was called");
         return ((Dialog*)m_Widget)->executeAction3CallBack();
     }
     if (logger)
         logger->warn(TAG, "Unknown Execute Action was called");
+}
+
+QStatus DialogBusObject::Get(const char* ifcName, const char* propName, MsgArg& val)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    if (logger)
+        logger->debug(TAG, "Get property was called - in DialogBusObject class:\n");
+
+    if (0 == strcmp(AJ_PROPERTY_NUMACTIONS.c_str(), propName)) {
+        return ((Dialog*)m_Widget)->getNumActionForArg(val, languageIndx);
+    }
+
+    if (0 == strcmp(AJ_PROPERTY_MESSAGE.c_str(), propName)) {
+        return ((Dialog*)m_Widget)->getMessageForArg(val, languageIndx);
+    }
+
+    return WidgetBusObject::Get(ifcName, propName, val);
 }
 
 DialogBusObject::~DialogBusObject() {

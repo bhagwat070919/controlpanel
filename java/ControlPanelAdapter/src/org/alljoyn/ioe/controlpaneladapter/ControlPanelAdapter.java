@@ -529,6 +529,7 @@ public class ControlPanelAdapter
 		} catch (ControlPanelException e) {
 			Log.e(TAG, "propertyWidget.getCurrentValue() failed, initializing property without current value", e);
 		}
+		Log.d(TAG, "Propert current value: " +currentValue);
 
 		final LinearLayout layout = new LinearLayout(uiContext);
 		layout.setOrientation(LinearLayout.VERTICAL);
@@ -575,15 +576,25 @@ public class ControlPanelAdapter
 			int increment = 
 					ValueType.SHORT.equals(valueType) ? ((Short)incrementT) :
 						ValueType.INT.equals(valueType) ? ((Integer)incrementT) : 0;	
+			int position = 0;
 			for (int i=min; i<=max; i+=increment) {
+				boolean isDefault = false;
 				switch (valueType) {
 				case SHORT:
-					adapter.add(new LabelValuePair(String.valueOf(i), (short)i));
+					short shortI = (short)i;
+					adapter.add(new LabelValuePair(String.valueOf(i), shortI));
+					isDefault = Short.valueOf(shortI).equals(currentValue);
 					break;
 				case INT: default: {
 					adapter.add(new LabelValuePair(String.valueOf(i), i));
+					isDefault = Integer.valueOf(i).equals(currentValue);
 				}
 				}
+				Log.d(TAG, "Added spinner item, Value: " + i + (isDefault?" (default)":""));
+				if (isDefault) {
+					selection = position; 
+				}
+				position++;
 			}
 		}
 

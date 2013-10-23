@@ -24,18 +24,18 @@ namespace ajn {
 namespace services {
 
 class LanguageSets {
-public:
-	LanguageSets();
+  public:
+    LanguageSets();
 
-	virtual ~LanguageSets();
+    virtual ~LanguageSets();
 
-	static void add(qcc::String const& languageSetName, LanguageSet const& languageSet);
+    static void add(qcc::String const& languageSetName, LanguageSet const& languageSet);
 
-	static LanguageSet* get(qcc::String const& languageSetName);
+    static LanguageSet* get(qcc::String const& languageSetName);
 
-private:
+  private:
 
-	static std::map<qcc::String, LanguageSet> languageSets;
+    static std::map<qcc::String, LanguageSet> languageSets;
 };
 
 } /* namespace services */

@@ -25,25 +25,25 @@ namespace ajn {
 namespace services {
 
 class NotificationActionBusObject : public BusObject {
-public:
-	NotificationActionBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath, QStatus& status);
+  public:
+    NotificationActionBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath, QStatus& status);
 
-	virtual ~NotificationActionBusObject();
+    virtual ~NotificationActionBusObject();
 
-	QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
+    QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
 
-	QStatus Set(const char* ifcName, const char* propName, MsgArg& val);
+    QStatus Set(const char* ifcName, const char* propName, MsgArg& val);
 
-	QStatus SendDismissSignal();
+    QStatus SendDismissSignal();
 
-private:
+  private:
 
     /**
      * The pointer used to send signal/register Signal Handler
      */
     const ajn::InterfaceDescription::Member* m_SignalDismiss;
 
-	qcc::String const& TAG;
+    qcc::String const& TAG;
 
 };
 

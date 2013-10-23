@@ -113,7 +113,7 @@ case DE_AT_AREYOUSURE_EXEC_ACTION3: \
 
 #define GET_URL_CASES
 
-#define CONTROLPANELAPPOBJECTS  {  rootContainerObjectPath, ControlPanelInterfaces  }, \
+#define CONTROLPANELAPPOBJECTS     {  rootContainerObjectPath, ControlPanelInterfaces  }, \
     {  enRootcontainerObjectPath, ContainerInterfaces  }, \
     {  de_ATRootcontainerObjectPath, ContainerInterfaces  }, \
     {  enCurrenttempObjectPath, LabelPropertyInterfaces  }, \
@@ -363,7 +363,7 @@ typedef struct {
 
 #define NUMBER_OF_TESTS //NUM_TESTS_GO_HERE
 
-#define ALL_REPLY_CASES //ALL_REPLIES_GO_HERE
+#define ALL_REPLY_CASES                //ALL_REPLIES_GO_HERE
 
 void TestsInit(CPSTest* testsToRun);
 

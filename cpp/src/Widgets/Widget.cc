@@ -31,86 +31,86 @@ using namespace cpsConsts;
 
 Widget::Widget(qcc::String const& name, qcc::String const& tag) : m_Name(name)
 {
-	m_IsSecured = false;
-	m_InterfaceVersion = 1;
-	m_States = 0;
-	m_GetEnabled = 0;
-	m_GetWritable = 0;
-	m_GetLabel = 0;
-	m_BgColor = UINT32_MAX;
-	m_GetBgColor = 0;
+    m_IsSecured = false;
+    m_InterfaceVersion = 1;
+    m_States = 0;
+    m_GetEnabled = 0;
+    m_GetWritable = 0;
+    m_GetLabel = 0;
+    m_BgColor = UINT32_MAX;
+    m_GetBgColor = 0;
 }
 
 QStatus Widget::registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
-		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot)
+                                qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot)
 {
-	std::cout << "Prefix, Suffix, name: " << objectPathPrefix.c_str() << " "
-		<< objectPathSuffix.c_str() << " " << m_Name.c_str() << std::endl;
+    std::cout << "Prefix, Suffix, name: " << objectPathPrefix.c_str() << " "
+              << objectPathSuffix.c_str() << " " << m_Name.c_str() << std::endl;
 
-	GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-	QStatus status;
-	const std::vector<qcc::String>& languages = languageSet.getLanguages();
-	qcc::String newObjectPathSuffix = isRoot? objectPathSuffix : objectPathSuffix + "/" + m_Name;
-	for (size_t indx = 0; indx < languages.size(); indx++) {
-		qcc::String objectPath = objectPathPrefix + languages[indx] + newObjectPathSuffix;
-		std::cout << "ObjectPath is: " << objectPath.c_str() << std::endl;
-		WidgetBusObject* busObject = createWidgetBusObject(bus, objectPath, indx, status);
-		if (status != ER_OK) {
-			if (logger)
-				logger->warn(TAG, "Could not Create BusObject for Action");
-			return status;
-		}
-		status = bus->RegisterBusObject(*busObject);
-		if (status != ER_OK) {
-			if (logger)
-				logger->warn(TAG, "Could not register BusObject for Action");
-			return status;
-		}
-		m_BusObjects.push_back(busObject);
-	}
-	return status;
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    QStatus status;
+    const std::vector<qcc::String>& languages = languageSet.getLanguages();
+    qcc::String newObjectPathSuffix = isRoot ? objectPathSuffix : objectPathSuffix + "/" + m_Name;
+    for (size_t indx = 0; indx < languages.size(); indx++) {
+        qcc::String objectPath = objectPathPrefix + languages[indx] + newObjectPathSuffix;
+        std::cout << "ObjectPath is: " << objectPath.c_str() << std::endl;
+        WidgetBusObject* busObject = createWidgetBusObject(bus, objectPath, indx, status);
+        if (status != ER_OK) {
+            if (logger)
+                logger->warn(TAG, "Could not Create BusObject for Action");
+            return status;
+        }
+        status = bus->RegisterBusObject(*busObject);
+        if (status != ER_OK) {
+            if (logger)
+                logger->warn(TAG, "Could not register BusObject for Action");
+            return status;
+        }
+        m_BusObjects.push_back(busObject);
+    }
+    return status;
 }
 
 QStatus Widget::SendPropertyChangedSignal()
 {
-	GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-	QStatus status;
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    QStatus status;
 
-	for (size_t indx = 0; indx < m_BusObjects.size(); indx++) {
-		status = m_BusObjects[indx]->SendPropertyChangedSignal();
-		if (status != ER_OK) {
+    for (size_t indx = 0; indx < m_BusObjects.size(); indx++) {
+        status = m_BusObjects[indx]->SendPropertyChangedSignal();
+        if (status != ER_OK) {
             if (logger)
-            	logger->warn(TAG, "Could not send Property Changed Signal");
+                logger->warn(TAG, "Could not send Property Changed Signal");
             return status;
-		}
-	}
-	return status;
+        }
+    }
+    return status;
 }
 
 qcc::String const& Widget::getWidgetName()
 {
-	return m_Name;
+    return m_Name;
 }
 
 bool Widget::getIsSecured()
 {
-	return m_IsSecured;
+    return m_IsSecured;
 }
 
 void Widget::setEnabled(uint8_t enabled)
 {
-	if (enabled)
-		m_States = m_States | STATE_ENABLED;
-	else
-		m_States = m_States & ~STATE_ENABLED;
+    if (enabled)
+        m_States = m_States | STATE_ENABLED;
+    else
+        m_States = m_States & ~STATE_ENABLED;
 }
 
 void Widget::setWritable(uint8_t writeable)
 {
-	if (writeable)
-		m_States = m_States | STATE_WRITABLE;
-	else
-		m_States = m_States & ~STATE_WRITABLE;
+    if (writeable)
+        m_States = m_States | STATE_WRITABLE;
+    else
+        m_States = m_States & ~STATE_WRITABLE;
 }
 
 Widget::~Widget()
@@ -120,158 +120,171 @@ Widget::~Widget()
 
 uint32_t Widget::getBgColor() const
 {
-	return m_BgColor;
+    return m_BgColor;
 }
 
 void Widget::setBgColor(uint32_t bgColor)
 {
-	this->m_BgColor = bgColor;
+    this->m_BgColor = bgColor;
 }
 
-GetBgColorFptr Widget::getGetBgColor() const
+GetUint32Fptr Widget::getGetBgColor() const
 {
-	return m_GetBgColor;
+    return m_GetBgColor;
 }
 
-void Widget::setGetBgColor(GetBgColorFptr getBgColor)
+void Widget::setGetBgColor(GetUint32Fptr getBgColor)
 {
-	m_GetBgColor = getBgColor;
+    m_GetBgColor = getBgColor;
 }
 
-GetEnabledFptr Widget::getGetEnabled() const
+GetUint8Fptr Widget::getGetEnabled() const
 {
-	return m_GetEnabled;
+    return m_GetEnabled;
 }
 
-void Widget::setGetEnabled(GetEnabledFptr getEnabled)
+void Widget::setGetEnabled(GetUint8Fptr getEnabled)
 {
-	m_GetEnabled = getEnabled;
+    m_GetEnabled = getEnabled;
 }
 
-GetLabelFptr Widget::getGetLabel() const
+GetStringFptr Widget::getGetLabel() const
 {
-	return m_GetLabel;
+    return m_GetLabel;
 }
 
-void Widget::setGetLabel(GetLabelFptr getLabel)
+void Widget::setGetLabel(GetStringFptr getLabel)
 {
-	m_GetLabel = getLabel;
+    m_GetLabel = getLabel;
 }
 
-GetWritableFptr Widget::getGetWritable() const
+GetUint8Fptr Widget::getGetWritable() const
 {
-	return m_GetWritable;
+    return m_GetWritable;
 }
 
-void Widget::setGetWritable(GetWritableFptr getWritable)
+void Widget::setGetWritable(GetUint8Fptr getWritable)
 {
-	m_GetWritable = getWritable;
+    m_GetWritable = getWritable;
 }
 
 const std::vector<uint16_t>& Widget::getHints() const
 {
-	return m_Hints;
+    return m_Hints;
 }
 
 void Widget::setHints(const std::vector<uint16_t>& hints)
 {
-	m_Hints = hints;
+    m_Hints = hints;
 }
 
 const uint16_t Widget::getInterfaceVersion() const
 {
-	return m_InterfaceVersion;
+    return m_InterfaceVersion;
 }
 
 void Widget::setInterfaceVersion(uint16_t interfaceVersion)
 {
-	m_InterfaceVersion = interfaceVersion;
+    m_InterfaceVersion = interfaceVersion;
 }
 
 const std::vector<qcc::String>& Widget::getLabel() const
 {
-	return m_Label;
+    return m_Label;
 }
 
 void Widget::setLabel(const std::vector<qcc::String>& label)
 {
-	m_Label = label;
+    m_Label = label;
 }
 
 void Widget::setIsSecured(bool secured)
 {
-	m_IsSecured = secured;
+    m_IsSecured = secured;
 }
 
 uint32_t Widget::getStates() const
 {
-	return m_States;
+    return m_States;
 }
 
 void Widget::setStates(uint8_t enabled, uint8_t writable)
 {
-	setEnabled(enabled);
-	setWritable(writable);
+    setEnabled(enabled);
+    setWritable(writable);
 }
 
 QStatus Widget::GetVersionForArg(MsgArg& val, int16_t languageIndx)
 {
-	return val.Set(AJPARAM_UINT16.c_str(), m_InterfaceVersion);
+    return val.Set(AJPARAM_UINT16.c_str(), m_InterfaceVersion);
 }
 
 QStatus Widget::getStatesForArg(MsgArg& val, int16_t languageIndx)
 {
-	if (m_GetEnabled)
-		setEnabled(m_GetEnabled());
-	if (m_GetWritable)
-		setWritable(m_GetWritable());
-	return val.Set(AJPARAM_UINT32.c_str(), m_States);
+    if (m_GetEnabled)
+        setEnabled(m_GetEnabled());
+    if (m_GetWritable)
+        setWritable(m_GetWritable());
+    return val.Set(AJPARAM_UINT32.c_str(), m_States);
 }
 
 QStatus Widget::getOptParamsForArg(MsgArg& val, int16_t languageIndx,
-		MsgArg* optParams, int32_t& optParamIndx) //TODO Memory leak if set fails?
+                                   MsgArg* optParams, size_t& optParamIndx)
 {
-	QStatus status;
+    QStatus status = ER_OK;
 
-	if (m_Label.size() || m_GetLabel) {
-		MsgArg* labelArg = new MsgArg(AJPARAM_STR.c_str(), m_GetLabel?
-				m_GetLabel(languageIndx) : m_Label[languageIndx].c_str());
+    if (m_Label.size() || m_GetLabel) {
+        MsgArg* labelArg = new MsgArg(AJPARAM_STR.c_str(), m_GetLabel ?
+                                      m_GetLabel(languageIndx) : m_Label[languageIndx].c_str());
 
-		CHECK_AND_RETURN(optParams[optParamIndx].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
-				OPT_PARAM_KEYS::LABEL_KEY, labelArg));
-		optParams[optParamIndx++].SetOwnershipFlags(MsgArg::OwnsArgs, true);
-	}
+        if ((status = optParams[optParamIndx].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
+                                                  OPT_PARAM_KEYS::LABEL_KEY, labelArg)) != ER_OK) {
+            delete labelArg;
+            return status;
+        }
+        optParams[optParamIndx++].SetOwnershipFlags(MsgArg::OwnsArgs, true);
+    }
 
-	if (m_BgColor != UINT32_MAX || m_GetBgColor) {
-		MsgArg* bgColorArg = new MsgArg(AJPARAM_UINT32.c_str(), m_GetBgColor?
-				m_GetBgColor() : m_BgColor);
+    if (m_BgColor != UINT32_MAX || m_GetBgColor) {
+        MsgArg* bgColorArg = new MsgArg(AJPARAM_UINT32.c_str(), m_GetBgColor ?
+                                        m_GetBgColor() : m_BgColor);
 
-		CHECK_AND_RETURN(optParams[optParamIndx].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
-				OPT_PARAM_KEYS::BGCOLOR_KEY, bgColorArg));
-		optParams[optParamIndx++].SetOwnershipFlags(MsgArg::OwnsArgs, true);
-	}
+        if ((status = optParams[optParamIndx].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
+                                                  OPT_PARAM_KEYS::BGCOLOR_KEY, bgColorArg)) != ER_OK) {
+            delete bgColorArg;
+            return status;
+        }
+        optParams[optParamIndx++].SetOwnershipFlags(MsgArg::OwnsArgs, true);
+    }
 
-	if (m_Hints.size()) {
-		MsgArg* hintsArg = new MsgArg(AJPARAM_ARRAY_UINT16.c_str(),
-				m_Hints.size(), m_Hints.data());
-		CHECK_AND_RETURN(optParams[optParamIndx].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
-				OPT_PARAM_KEYS::HINT_KEY, hintsArg));
-		optParams[optParamIndx++].SetOwnershipFlags(MsgArg::OwnsArgs, true);
-	}
-	return status;
+    if (m_Hints.size()) {
+        MsgArg* hintsArg = new MsgArg(AJPARAM_ARRAY_UINT16.c_str(),
+                                      m_Hints.size(), m_Hints.data());
+        if ((status = optParams[optParamIndx].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
+                                                  OPT_PARAM_KEYS::HINT_KEY, hintsArg)) != ER_OK) {
+            delete hintsArg;
+            return status;
+        }
+        optParams[optParamIndx++].SetOwnershipFlags(MsgArg::OwnsArgs, true);
+    }
+    return status;
 }
 
 QStatus Widget::getOptParamsForArg(MsgArg& val, int16_t languageIndx)
 {
-	QStatus status;
-	MsgArg* optParams = new MsgArg[OPT_PARAM_KEYS::NUM_OPT_PARAMS];
+    QStatus status;
+    MsgArg* optParams = new MsgArg[OPT_PARAM_KEYS::NUM_OPT_PARAMS];
 
-	int32_t optParamIndx = 0;
+    size_t optParamIndx = 0;
 
-	CHECK_AND_RETURN(getOptParamsForArg(val, languageIndx, optParams, optParamIndx));
-
-    if (!optParamIndx)
-	    return val.Set(AJPARAM_OPTPARAM.c_str(), optParamIndx, NULL);
-	return val.Set(AJPARAM_OPTPARAM.c_str(), optParamIndx, optParams);
+    status = getOptParamsForArg(val, languageIndx, optParams, optParamIndx);
+    if (status != ER_OK) {
+        GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+        if (logger)
+            logger->warn(TAG, "Could not marshal optParams");
+        delete[] optParams;
+        return status;
+    }
+    return val.Set(AJPARAM_ARRAY_DICT_UINT16_VAR.c_str(), optParamIndx, optParams);
 }
 

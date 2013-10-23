@@ -25,23 +25,23 @@ namespace ajn {
 namespace services {
 
 class Action : public Widget {
-public:
-	Action(qcc::String name);
-	virtual ~Action();
+  public:
+    Action(qcc::String name);
+    virtual ~Action();
 
-	WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-			uint16_t langIndx, QStatus status);
+    WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
+                                           uint16_t langIndx, QStatus status);
 
-	virtual void executeCallBack(); //TODO make abstract and remove from c
+    virtual void executeCallBack();     //TODO make abstract and remove from c
 
     QStatus addChildDialog(Dialog* childElement);
 
     virtual QStatus registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
-    		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot);
+                                    qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot);
 
-private:
+  private:
 
-	Dialog* m_Dialog;
+    Dialog* m_Dialog;
 };
 } //namespace services
 } //namespace ajn

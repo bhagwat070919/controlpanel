@@ -24,27 +24,27 @@ namespace ajn {
 namespace services {
 
 class Label : public Widget {
-public:
-	Label(qcc::String name);
-	virtual ~Label();
+  public:
+    Label(qcc::String name);
+    virtual ~Label();
 
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-    		uint16_t langIndx, QStatus status);
+                                           uint16_t langIndx, QStatus status);
 
-	virtual GetLabelFptr getGetLabel() const;
+    virtual GetStringFptr getGetLabel() const;
 
-	virtual void setGetLabel(GetLabelFptr getLabel);
+    virtual void setGetLabel(GetStringFptr getLabel);
 
-	virtual const std::vector<qcc::String>& getLabel() const;
+    virtual const std::vector<qcc::String>& getLabel() const;
 
-	virtual void setLabel(const std::vector<qcc::String>& label);
+    virtual void setLabel(const std::vector<qcc::String>& label);
 
     QStatus getLabelForArg(MsgArg& val, int16_t languageIndx);
 
-private:
+  private:
 
     std::vector<qcc::String> m_LabelForLabel;
-    GetLabelFptr m_GetLabelForLabel;
+    GetStringFptr m_GetLabelForLabel;
 };
 } //namespace services
 } //namespace ajn

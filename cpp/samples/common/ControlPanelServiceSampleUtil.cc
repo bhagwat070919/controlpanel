@@ -85,21 +85,21 @@ PropertyStoreImpl* ControlPanelServiceSampleUtil::preparePropertyStore(qcc::Stri
 }
 
 QStatus ControlPanelServiceSampleUtil::prepareAboutService(BusAttachment* bus,
-		PropertyStoreImpl* propertyStoreImpl, ControlPanelBusListener* busListener, uint16_t port)
+                                                           PropertyStoreImpl* propertyStoreImpl, ControlPanelBusListener* busListener, uint16_t port)
 {
-	if (!bus)
-		return ER_BAD_ARG_1;
+    if (!bus)
+        return ER_BAD_ARG_1;
 
-	if (!propertyStoreImpl)
-		return ER_BAD_ARG_2;
+    if (!propertyStoreImpl)
+        return ER_BAD_ARG_2;
 
-	if (!busListener)
-		return ER_BAD_ARG_3;
+    if (!busListener)
+        return ER_BAD_ARG_3;
 
     AboutServiceApi::Init(*bus, *propertyStoreImpl);
     AboutServiceApi* aboutService = AboutServiceApi::getInstance();
     if (!aboutService)
-    	return ER_BUS_NOT_ALLOWED;
+        return ER_BUS_NOT_ALLOWED;
 
     busListener->setSessionPort(port);
     bus->RegisterBusListener(*busListener);
@@ -110,11 +110,11 @@ QStatus ControlPanelServiceSampleUtil::prepareAboutService(BusAttachment* bus,
 
     QStatus status = bus->BindSessionPort(sp, opts, *busListener);
     if (status != ER_OK)
-    	return status;
+        return status;
 
     status = aboutService->Register(port);
     if (status != ER_OK)
-    	return status;
+        return status;
 
     return (bus->RegisterBusObject(*aboutService));
 }
@@ -123,18 +123,18 @@ QStatus ControlPanelServiceSampleUtil::aboutServiceAnnounce()
 {
     AboutServiceApi* aboutService = AboutServiceApi::getInstance();
     if (!aboutService)
-    	return ER_BUS_NOT_ALLOWED;
+        return ER_BUS_NOT_ALLOWED;
 
     return (aboutService->Announce());
 }
 
 void ControlPanelServiceSampleUtil::aboutServiceDestroy(BusAttachment* bus,
-		ControlPanelBusListener* busListener)
+                                                        ControlPanelBusListener* busListener)
 {
-	if (busListener) {
+    if (busListener) {
         bus->UnregisterBusListener(*busListener);
         bus->UnbindSessionPort(busListener->getSessionPort());
-	}
+    }
 
     AboutServiceApi::DestroyInstance();
     return;
@@ -142,8 +142,8 @@ void ControlPanelServiceSampleUtil::aboutServiceDestroy(BusAttachment* bus,
 
 QStatus ControlPanelServiceSampleUtil::addSessionlessMatch(BusAttachment*bus)
 {
-	if (!bus)
-		return ER_BAD_ARG_1;
+    if (!bus)
+        return ER_BAD_ARG_1;
 
     return bus->AddMatch("sessionless='t',type='error'");
 }

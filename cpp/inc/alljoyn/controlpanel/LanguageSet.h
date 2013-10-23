@@ -25,23 +25,23 @@ namespace services {
 
 class LanguageSet {
 
-public:
-	LanguageSet(qcc::String const& languageSetName);
+  public:
+    LanguageSet(qcc::String const& languageSetName);
 
-	virtual ~LanguageSet();
+    virtual ~LanguageSet();
 
-	void addLanguage(qcc::String const& language);
+    void addLanguage(qcc::String const& language);
 
-	const std::vector<qcc::String>& getLanguages() const;
+    const std::vector<qcc::String>& getLanguages() const;
 
-	const qcc::String& getLanguageSetName() const;
+    const qcc::String& getLanguageSetName() const;
 
-	const size_t getNumLanguages() const;
+    const size_t getNumLanguages() const;
 
-private:
-	qcc::String m_LanguageSetName;
+  private:
+    qcc::String m_LanguageSetName;
 
-	std::vector<qcc::String> m_Languages;
+    std::vector<qcc::String> m_Languages;
 };
 
 } /* namespace services */

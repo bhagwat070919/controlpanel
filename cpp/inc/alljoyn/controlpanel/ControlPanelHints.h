@@ -23,46 +23,45 @@ namespace ajn {
 namespace services {
 
 enum LAYOUT_HINTS {
-	VERTICAL_LINEAR = 1,
-	HORIZONTAL_LINEAR = 2
+    VERTICAL_LINEAR = 1,
+    HORIZONTAL_LINEAR = 2
 };
 
 enum DIALOG_HINTS {
-	ALERTDIALOG = 1
+    ALERTDIALOG = 1
 };
 
 enum PROPERTY_HINTS {
-	SWITCH = 1,
-	CHECKBOX = 2,
-	SPINNER = 3,
-	RADIOBUTTON = 4,
-	SLIDER = 5,
-	TIMEPICKER = 6,
-	DATEPICKER = 7,
-	NUMBERPICKER = 8,
-	KEYPAD = 9,
-	ROTARYKNOB = 10,
-	TEXTVIEW = 11,
-	NUMERICVIEW = 12,
-	EDITTEXT = 13
+    SWITCH = 1,
+    CHECKBOX = 2,
+    SPINNER = 3,
+    RADIOBUTTON = 4,
+    SLIDER = 5,
+    TIMEPICKER = 6,
+    DATEPICKER = 7,
+    NUMBERPICKER = 8,
+    KEYPAD = 9,
+    ROTARYKNOB = 10,
+    TEXTVIEW = 11,
+    NUMERICVIEW = 12,
+    EDITTEXT = 13
 };
 
 enum LABEL_HINTS {
-	TEXTLABEL = 1
+    TEXTLABEL = 1
 };
 
 enum LIST_PROPERTY_HINTS {
-	DYNAMICSPINNER = 1
+    DYNAMICSPINNER = 1
 };
 
 enum ACTION_HINTS {
-	ACTIONBUTTON = 1
+    ACTIONBUTTON = 1
 };
 
-} //namespace cpsConsts
 } //namespace services
 } //namespace ajn
 
-#endif
+#endif /* CONTROLPANELHINTS_H_ */
 
 

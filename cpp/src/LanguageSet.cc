@@ -20,7 +20,7 @@ namespace ajn {
 namespace services {
 
 LanguageSet::LanguageSet(qcc::String const& languageSetName) :
-     m_LanguageSetName(languageSetName)
+    m_LanguageSetName(languageSetName)
 {
 }
 
@@ -35,17 +35,17 @@ void LanguageSet::addLanguage(qcc::String const& language)
 
 const std::vector<qcc::String>& LanguageSet::getLanguages() const
 {
-	return m_Languages;
+    return m_Languages;
 }
 
 const qcc::String& LanguageSet::getLanguageSetName() const
 {
-	return m_LanguageSetName;
+    return m_LanguageSetName;
 }
 
 const size_t LanguageSet::getNumLanguages() const
 {
-	return m_Languages.size();
+    return m_Languages.size();
 }
 
 } /* namespace services */

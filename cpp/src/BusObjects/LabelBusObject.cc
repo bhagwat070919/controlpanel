@@ -25,18 +25,18 @@ namespace services {
 using namespace cpsConsts;
 
 LabelBusObject::LabelBusObject(BusAttachment* bus, String const& servicePath, uint16_t langIndx,
-		QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_LABEL_BUSOBJECT, widget)
+                               QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_LABEL_BUSOBJECT, widget)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-	status = ER_OK;
+    status = ER_OK;
 
-	InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(AJ_LABEL_INTERFACE.c_str());
+    InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(AJ_LABEL_INTERFACE.c_str());
     if (!intf) {
         do {
-    	CHECK_AND_BREAK(bus->CreateInterface(AJ_LABEL_INTERFACE.c_str(), intf));
-    	CHECK_AND_BREAK(addDefaultInterfaceVariables(intf));
-    	CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_LABEL.c_str(), AJPARAM_STR.c_str(), PROP_ACCESS_READ));
-    	intf->Activate();
+            CHECK_AND_BREAK(bus->CreateInterface(AJ_LABEL_INTERFACE.c_str(), intf));
+            CHECK_AND_BREAK(addDefaultInterfaceVariables(intf));
+            CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_LABEL.c_str(), AJPARAM_STR.c_str(), PROP_ACCESS_READ));
+            intf->Activate();
         } while (0);
     }
     if (status != ER_OK) {
@@ -63,7 +63,7 @@ QStatus LabelBusObject::Get(const char* ifcName, const char* propName, MsgArg& v
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (logger)
-        logger->debug(TAG, "Get property was called - in WidgetBusObject class:\n");
+        logger->debug(TAG, "Get property was called - in LabelBusObject class:\n");
 
     if (0 == strcmp(AJ_PROPERTY_LABEL.c_str(), propName)) {
         return ((Label*)m_Widget)->getLabelForArg(val, languageIndx);

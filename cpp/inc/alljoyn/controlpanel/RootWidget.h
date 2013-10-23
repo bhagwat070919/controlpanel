@@ -22,19 +22,18 @@
 namespace ajn {
 namespace services {
 
-class RootWidget : public Widget
-{
-public:
+class RootWidget : public Widget {
+  public:
 
-	RootWidget(qcc::String name, qcc::String tag);
-	virtual ~RootWidget();
+    RootWidget(qcc::String name, qcc::String tag);
+    virtual ~RootWidget();
 
-	QStatus SendDismissSignal();
+    QStatus SendDismissSignal();
 
-	QStatus setNotificationActionBusObject(BusObject* notificationActionBusObject);
-private:
+    QStatus setNotificationActionBusObject(BusObject* notificationActionBusObject);
+  private:
 
-	BusObject* m_NotificationActionBusObject;
+    BusObject* m_NotificationActionBusObject;
 };
 } //namespace services
 } //namespace ajn

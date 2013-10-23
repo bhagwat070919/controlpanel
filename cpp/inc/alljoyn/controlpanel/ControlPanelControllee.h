@@ -24,22 +24,22 @@ namespace ajn {
 namespace services {
 
 class ControlPanelControllee {
-public:
-	ControlPanelControllee(qcc::String const& unitName);
+  public:
+    ControlPanelControllee(qcc::String const& unitName);
 
-	virtual ~ControlPanelControllee();
+    virtual ~ControlPanelControllee();
 
-	void addControlPanel(ControlPanel* controlPanel);
+    void addControlPanel(ControlPanel* controlPanel);
 
-	void addNotificationAction(NotificationAction* notificationAction);
+    void addNotificationAction(NotificationAction* notificationAction);
 
-	QStatus registerObjects(BusAttachment* bus);
+    QStatus registerObjects(BusAttachment* bus);
 
-private :
+  private:
 
-	qcc::String const& TAG;
+    qcc::String const& TAG;
 
-	qcc::String m_UnitName;
+    qcc::String m_UnitName;
 
     std::vector<ControlPanel*> m_ControlPanels;
 

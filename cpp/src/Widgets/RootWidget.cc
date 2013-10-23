@@ -22,7 +22,7 @@ using namespace ajn;
 using namespace services;
 
 RootWidget::RootWidget(qcc::String name, qcc::String tag) : Widget(name, tag),
-		m_NotificationActionBusObject(0)
+    m_NotificationActionBusObject(0)
 {
 }
 
@@ -33,25 +33,25 @@ RootWidget::~RootWidget()
 QStatus RootWidget::SendDismissSignal()
 {
     if (!m_NotificationActionBusObject)
-    	return ER_BUS_OBJECT_NOT_REGISTERED;
+        return ER_BUS_OBJECT_NOT_REGISTERED;
 
     return ((NotificationActionBusObject*)m_NotificationActionBusObject)->SendDismissSignal();
 }
 
 QStatus RootWidget::setNotificationActionBusObject(BusObject* notificationActionBusObject)
 {
-	GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
 
-	if (!notificationActionBusObject) {
-    	if (logger)
-    	    logger->warn(TAG, "Could not add a NULL notificationActionBusObject");
-		return ER_BAD_ARG_1;
-	}
+    if (!notificationActionBusObject) {
+        if (logger)
+            logger->warn(TAG, "Could not add a NULL notificationActionBusObject");
+        return ER_BAD_ARG_1;
+    }
 
     if (m_NotificationActionBusObject) {
-    	if (logger)
-    	    logger->warn(TAG, "Could not set notificationActionBusObject. NotificationActionBusObject already set");
-    	return ER_BUS_PROPERTY_ALREADY_EXISTS;
+        if (logger)
+            logger->warn(TAG, "Could not set notificationActionBusObject. NotificationActionBusObject already set");
+        return ER_BUS_PROPERTY_ALREADY_EXISTS;
     }
 
     m_NotificationActionBusObject = notificationActionBusObject;

@@ -58,60 +58,60 @@ uint16_t ControlPanelService::getVersion()
 
 QStatus ControlPanelService::initControllee(BusAttachment* bus, ControlPanelControllee* controlPanelControllee)
 {
-	if (!bus) {
-	    if (logger)
-	    	logger->warn(TAG, "Bus cannot be NULL");
-		return ER_BAD_ARG_1;
-	}
+    if (!bus) {
+        if (logger)
+            logger->warn(TAG, "Bus cannot be NULL");
+        return ER_BAD_ARG_1;
+    }
 
-	if (!bus->IsStarted()) {
-	    if (logger)
-	    	logger->warn(TAG, "Bus is not started");
-		return ER_BAD_ARG_1;
-	}
+    if (!bus->IsStarted()) {
+        if (logger)
+            logger->warn(TAG, "Bus is not started");
+        return ER_BAD_ARG_1;
+    }
 
-	if (!bus->IsConnected()) {
-	    if (logger)
-	    	logger->warn(TAG, "Bus is not connected");
-		return ER_BAD_ARG_1;
-	}
+    if (!bus->IsConnected()) {
+        if (logger)
+            logger->warn(TAG, "Bus is not connected");
+        return ER_BAD_ARG_1;
+    }
 
     if (m_Bus && m_Bus->GetUniqueName().compare(bus->GetUniqueName()) != 0) {
-	    if (logger)
-	    	logger->warn(TAG, "Bus is already set to different BusAttachment");
-		return ER_BAD_ARG_1;
-	}
+        if (logger)
+            logger->warn(TAG, "Bus is already set to different BusAttachment");
+        return ER_BAD_ARG_1;
+    }
 
-	if (!controlPanelControllee) {
-	    if (logger)
-	    	logger->warn(TAG, "ControlPanelControllee cannot be null");
-		return ER_BAD_ARG_2;
-	}
+    if (!controlPanelControllee) {
+        if (logger)
+            logger->warn(TAG, "ControlPanelControllee cannot be null");
+        return ER_BAD_ARG_2;
+    }
 
-	if (m_ControlPanelControllee) {
-	    if (logger)
-	    	logger->warn(TAG, "ControlPanelControllee already initialized");
-		return ER_BUS_OBJ_ALREADY_EXISTS;
-	}
+    if (m_ControlPanelControllee) {
+        if (logger)
+            logger->warn(TAG, "ControlPanelControllee already initialized");
+        return ER_BUS_OBJ_ALREADY_EXISTS;
+    }
 
-	if (m_BusListener) {
-	    if (logger)
-	    	logger->warn(TAG, "BusListener already initialized");
-		return ER_BUS_OBJ_ALREADY_EXISTS;
-	}
+    if (m_BusListener) {
+        if (logger)
+            logger->warn(TAG, "BusListener already initialized");
+        return ER_BUS_OBJ_ALREADY_EXISTS;
+    }
 
-	m_Bus = bus;
-	m_ControlPanelControllee = controlPanelControllee;
+    m_Bus = bus;
+    m_ControlPanelControllee = controlPanelControllee;
 
-	QStatus status = controlPanelControllee->registerObjects(bus);
+    QStatus status = controlPanelControllee->registerObjects(bus);
     if (status != ER_OK) {
-	    if (logger)
-	    	logger->warn(TAG, "Could not register the BusObjects");
-    	return status;
+        if (logger)
+            logger->warn(TAG, "Could not register the BusObjects");
+        return status;
     }
 
     m_BusListener = new ControlPanelBusListener();
-	m_BusListener->setSessionPort(CONTROLPANELSERVICE_PORT);
+    m_BusListener->setSessionPort(CONTROLPANELSERVICE_PORT);
     m_Bus->RegisterBusListener(*m_BusListener);
 
     TransportMask transportMask = TRANSPORT_ANY;
@@ -126,9 +126,9 @@ void ControlPanelService::shutdown()
     if (logger) logger->debug(TAG, "Shutdown");
 
     if (!m_Bus) {
-	    if (logger)
-	    	logger->warn(TAG, "Something went wrong. Could not shut down property");
-	    return;
+        if (logger)
+            logger->warn(TAG, "Something went wrong. Could not shut down property");
+        return;
     }
 
     if (m_BusListener) {
@@ -138,7 +138,7 @@ void ControlPanelService::shutdown()
     }
 
     //if (m_ControlPanelControllee)
-    	//TODO: unregister all objects
+    //TODO: unregister all objects
 
     s_Instance = 0;
     delete this;
@@ -158,7 +158,7 @@ GenericLogger* ControlPanelService::setLogger(GenericLogger* newLogger)
     if (logger) {
         setLogLevel(prevLogLevel);
         // reroute internal AJ logging to logger
-   //     NSLogger::RegisterCallBack(logger); TODO
+        //     NSLogger::RegisterCallBack(logger); TODO
     }
     return prevLogger;
 }
@@ -170,7 +170,7 @@ GenericLogger* ControlPanelService::getLogger()
 
 Log::LogLevel ControlPanelService::setLogLevel(Log::LogLevel newLogLevel)
 {
-    return logger ? logger->setLogLevel(newLogLevel) : Log::LogLevel::LEVEL_INFO;//NSLogger::getDefaultLogLevel();
+    return logger ? logger->setLogLevel(newLogLevel) : Log::LogLevel::LEVEL_INFO; //NSLogger::getDefaultLogLevel();
 }
 
 Log::LogLevel ControlPanelService::getLogLevel()

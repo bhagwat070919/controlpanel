@@ -113,7 +113,7 @@ case DE_AT_AREYOUSURE_EXEC_ACTION3: \
 
 #define GET_URL_CASES
 
-#define CONTROLPANELAPPOBJECTS  {  rootContainerObjectPath, ControlPanelInterfaces  }, \
+#define CONTROLPANELAPPOBJECTS     {  rootContainerObjectPath, ControlPanelInterfaces  }, \
     {  enRootcontainerObjectPath, ContainerInterfaces  }, \
     {  de_ATRootcontainerObjectPath, ContainerInterfaces  }, \
     {  enCurrenttempObjectPath, LabelPropertyInterfaces  }, \
@@ -363,7 +363,7 @@ typedef struct {
 
 #define NUMBER_OF_TESTS 30
 
-#define ALL_REPLY_CASES                                 case AJ_REPLY_ID(EN_ROOTCONTAINER_GET_ALL_VALUES): \
+#define ALL_REPLY_CASES                case AJ_REPLY_ID(EN_ROOTCONTAINER_GET_ALL_VALUES): \
 case AJ_REPLY_ID(DE_AT_ROOTCONTAINER_GET_ALL_VALUES): \
 case AJ_REPLY_ID(EN_CURRENTTEMP_GET_ALL_VALUES): \
 case AJ_REPLY_ID(DE_AT_CURRENTTEMP_GET_ALL_VALUES): \

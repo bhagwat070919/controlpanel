@@ -24,18 +24,18 @@ namespace services {
 using namespace cpsConsts;
 
 ContainerBusObject::ContainerBusObject(BusAttachment* bus, String const& servicePath, uint16_t langIndx,
-		QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_CONTAINER_BUSOBJECT, widget)
+                                       QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_CONTAINER_BUSOBJECT, widget)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-	status = ER_OK;
+    status = ER_OK;
 
-	String interfaceName = widget->getIsSecured() ? AJ_SECURED_CONTAINER_INTERFACE : AJ_CONTAINER_INTERFACE;
-	InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
+    String interfaceName = widget->getIsSecured() ? AJ_SECURED_CONTAINER_INTERFACE : AJ_CONTAINER_INTERFACE;
+    InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
     if (!intf) {
         do {
-    	CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf, widget->getIsSecured()));
-    	CHECK_AND_BREAK(addDefaultInterfaceVariables(intf));
-    	intf->Activate();
+            CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf, widget->getIsSecured()));
+            CHECK_AND_BREAK(addDefaultInterfaceVariables(intf));
+            intf->Activate();
         } while (0);
     }
     if (status != ER_OK) {

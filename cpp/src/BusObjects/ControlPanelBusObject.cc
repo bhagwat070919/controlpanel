@@ -26,18 +26,18 @@ using namespace cpsConsts;
 #define CONTROLPANEL_INTERFACE_VERSION 1
 
 ControlPanelBusObject::ControlPanelBusObject(BusAttachment* bus, String const& servicePath,
-		QStatus& status) : BusObject(servicePath.c_str()), TAG(TAG_CONTROLPANELBUSOBJECT)
+                                             QStatus& status) : BusObject(servicePath.c_str()), TAG(TAG_CONTROLPANELBUSOBJECT)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-	status = ER_OK;
+    status = ER_OK;
 
-	String interfaceName = AJ_CONTROLPANEL_INTERFACE;
-	InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
+    String interfaceName = AJ_CONTROLPANEL_INTERFACE;
+    InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
     if (!intf) {
         do {
-    	CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf));
-    	CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_VERSION.c_str(), AJPARAM_UINT16.c_str(), PROP_ACCESS_READ));
-    	intf->Activate();
+            CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf));
+            CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_VERSION.c_str(), AJPARAM_UINT16.c_str(), PROP_ACCESS_READ));
+            intf->Activate();
         } while (0);
     }
     if (status != ER_OK) {

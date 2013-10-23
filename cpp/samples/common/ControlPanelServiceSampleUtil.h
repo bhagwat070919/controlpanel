@@ -55,7 +55,7 @@ class ControlPanelServiceSampleUtil {
      * @return Qstatus
      */
     static QStatus prepareAboutService(ajn::BusAttachment*bus, PropertyStoreImpl*propertyStoreImpl,
-    		ControlPanelBusListener* busListener, uint16_t port);
+                                       ControlPanelBusListener* busListener, uint16_t port);
 
     /**
      * static method aboutServiceAnnounce

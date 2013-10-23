@@ -26,19 +26,19 @@ using namespace cpsConsts;
 #define NOTIFICATIONACTION_INTERFACE_VERSION 1
 
 NotificationActionBusObject::NotificationActionBusObject(BusAttachment* bus, String const& servicePath,
-		QStatus& status) : BusObject(servicePath.c_str()), m_SignalDismiss(0), TAG(TAG_NOTIFICATIONACTIONBUSOBJECT)
+                                                         QStatus& status) : BusObject(servicePath.c_str()), m_SignalDismiss(0), TAG(TAG_NOTIFICATIONACTIONBUSOBJECT)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-	status = ER_OK;
+    status = ER_OK;
 
-	String interfaceName = AJ_NOTIFICATIONACTION_INTERFACE;
-	InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
+    String interfaceName = AJ_NOTIFICATIONACTION_INTERFACE;
+    InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
     if (!intf) {
         do {
-    	CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf));
-    	CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_VERSION.c_str(), AJPARAM_UINT16.c_str(), PROP_ACCESS_READ));
-    	CHECK_AND_BREAK(intf->AddSignal(AJ_SIGNAL_DISMISS.c_str(), AJPARAM_EMPTY.c_str(), AJPARAM_EMPTY.c_str()));
-    	intf->Activate();
+            CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf));
+            CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_VERSION.c_str(), AJPARAM_UINT16.c_str(), PROP_ACCESS_READ));
+            CHECK_AND_BREAK(intf->AddSignal(AJ_SIGNAL_DISMISS.c_str(), AJPARAM_EMPTY.c_str(), AJPARAM_EMPTY.c_str()));
+            intf->Activate();
         } while (0);
     }
     if (status != ER_OK) {

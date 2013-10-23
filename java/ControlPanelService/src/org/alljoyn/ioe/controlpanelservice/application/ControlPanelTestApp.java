@@ -232,7 +232,7 @@ public class ControlPanelTestApp extends DefaultDeviceRegistry implements Device
 				   " label: '" + container.getLabel() + "' bgColor:  " + container.getBgColor() + "  enabled: " + container.isEnabled());
 		
 		List<LayoutHintsType> layHints = container.getLayoutHints();
-		if ( layHints.size() == 0 ) {
+		if ( layHints == null || layHints.size() == 0 ) {
 			Log.i(TAG, "Not found layout hints");
 		}
 		Log.i(TAG, "LayoutHints: " + layHints);

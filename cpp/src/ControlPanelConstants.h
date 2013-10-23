@@ -41,11 +41,14 @@ static const qcc::String TAG_CONTAINER_BUSOBJECT = "ContainerBusObject";
 static const qcc::String TAG_LABEL_BUSOBJECT = "LabelBusObject";
 static const qcc::String TAG_ACTION_BUSOBJECT = "ActionBusObject";
 static const qcc::String TAG_DIALOG_BUSOBJECT = "DialogBusObject";
+static const qcc::String TAG_PROPERTY_BUSOBJECT = "PropertyBusObject";
 static const qcc::String TAG_CONTAINER_WIDGET = "ContainerWidget";
 static const qcc::String TAG_ACTION_WIDGET = "ActionWidget";
 static const qcc::String TAG_PROPERTY_WIDGET = "PropertyWidget";
 static const qcc::String TAG_LABEL_WIDGET = "LabelWidget";
 static const qcc::String TAG_DIALOG_WIDGET = "DialogWidget";
+static const qcc::String TAG_CONSTRAINTLIST = "ConstraintList";
+static const qcc::String TAG_CONSTRAINTRANGE = "ConstraintRange";
 
 static const qcc::String AJ_OBJECTPATH_PREFIX = "/ControlPanel/";
 static const qcc::String AJ_CONTROLPANEL_INTERFACE = "org.alljoyn.ControlPanel.ControlPanel";
@@ -80,25 +83,34 @@ static const qcc::String AJ_METHOD_ACTION3 = "Action3";
 static const qcc::String AJ_METHOD_GETROOTURL = "GetRootURL";
 
 static const qcc::String AJPARAM_EMPTY = "";
+static const qcc::String AJPARAM_VAR = "v";
 static const qcc::String AJPARAM_STR = "s";
+static const qcc::String AJPARAM_BOOL = "b";
 static const qcc::String AJPARAM_UINT16 = "q";
+static const qcc::String AJPARAM_INT16 = "n";
 static const qcc::String AJPARAM_UINT32 = "u";
-static const qcc::String AJPARAM_OPTPARAM = "(a{qv})";
+static const qcc::String AJPARAM_INT32 = "i";
+static const qcc::String AJPARAM_UINT64 = "t";
+static const qcc::String AJPARAM_INT64 = "x";
+static const qcc::String AJPARAM_DOUBLE = "d";
 static const qcc::String AJPARAM_DICT_UINT16_VAR = "{qv}";
 static const qcc::String AJPARAM_ARRAY_DICT_UINT16_VAR = "a{qv}";
 static const qcc::String AJPARAM_ARRAY_UINT16 = "aq";
+static const qcc::String AJPARAM_STRUCT_VAR_STR = "(vs)";
+static const qcc::String AJPARAM_ARRAY_STRUCT_VAR_STR = "a(vs)";
+static const qcc::String AJPARAM_STRUCT_VAR_VAR_VAR = "(vvv)";
 
 enum OPT_PARAM_KEYS {
-	LABEL_KEY = 0,
-	BGCOLOR_KEY = 1,
-	HINT_KEY = 2,
-	UNIT_MEASURE = 3,
-	CONSTRAINT_LIST = 4,
-	CONSTRAINT_RANGE = 5,
-	LABEL_ACTION1 = 6,
-	LABEL_ACTION2 = 7,
-	LABEL_ACTION3 = 8,
-	NUM_OPT_PARAMS = 9
+    LABEL_KEY = 0,
+    BGCOLOR_KEY = 1,
+    HINT_KEY = 2,
+    UNIT_MEASURE = 3,
+    CONSTRAINT_LIST = 4,
+    CONSTRAINT_RANGE = 5,
+    LABEL_ACTION1 = 6,
+    LABEL_ACTION2 = 7,
+    LABEL_ACTION3 = 8,
+    NUM_OPT_PARAMS = 9
 };
 
 } //namespace cpsConsts

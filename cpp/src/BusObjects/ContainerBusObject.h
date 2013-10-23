@@ -23,10 +23,10 @@ namespace ajn {
 namespace services {
 
 class ContainerBusObject : public WidgetBusObject {
-public:
-	ContainerBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
-			uint16_t langIndx, QStatus& status, Widget* widget);
-	virtual ~ContainerBusObject();
+  public:
+    ContainerBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
+                       uint16_t langIndx, QStatus& status, Widget* widget);
+    virtual ~ContainerBusObject();
 };
 
 } /* namespace services */

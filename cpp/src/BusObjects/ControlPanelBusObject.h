@@ -25,18 +25,18 @@ namespace ajn {
 namespace services {
 
 class ControlPanelBusObject : public BusObject {
-public:
-	ControlPanelBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath, QStatus& status);
+  public:
+    ControlPanelBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath, QStatus& status);
 
-	virtual ~ControlPanelBusObject();
+    virtual ~ControlPanelBusObject();
 
-	QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
+    QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
 
-	QStatus Set(const char* ifcName, const char* propName, MsgArg& val);
+    QStatus Set(const char* ifcName, const char* propName, MsgArg& val);
 
-private:
+  private:
 
-	qcc::String const& TAG;
+    qcc::String const& TAG;
 };
 
 } /* namespace services */

@@ -44,9 +44,9 @@ void signal_callback_handler(int32_t signum)
     controlPanelService->shutdown();
     ControlPanelServiceSampleUtil::aboutServiceDestroy(bus, controlpanelBusListener);
     if (controlPanelControllee)
-    	delete controlPanelControllee;
+        delete controlPanelControllee;
     if (controlpanelBusListener)
-    	delete controlpanelBusListener;
+        delete controlpanelBusListener;
     if (propertyStoreImpl)
         delete (propertyStoreImpl);
     if (bus)
@@ -60,12 +60,12 @@ int32_t main()
 {
     QStatus status;
 
-	// Allow CTRL+C to end application
+    // Allow CTRL+C to end application
     signal(SIGINT, signal_callback_handler);
     std::cout << "Beginning ControlPanel Application. (Press CTRL+C to end application)" << std::endl;
 
     // Initialize Service objects
-	controlpanelBusListener = new ControlPanelBusListener();;
+    controlpanelBusListener = new ControlPanelBusListener();;
     controlPanelService = ControlPanelService::getInstance();
     bus = ControlPanelServiceSampleUtil::prepareBusAttachment(controlPanelService->getLogger());
     if (bus == NULL) {
@@ -78,7 +78,7 @@ int32_t main()
     propertyStoreImpl = ControlPanelServiceSampleUtil::preparePropertyStore(app_id, app_name, device_id, device_name);
 
     status = ControlPanelServiceSampleUtil::prepareAboutService(bus, propertyStoreImpl,
-        		controlpanelBusListener, SERVICE_PORT);
+                                                                controlpanelBusListener, SERVICE_PORT);
     if (status != ER_OK) {
         std::cout << "Could not register bus object." << std::endl;
         return 1;
@@ -107,7 +107,7 @@ int32_t main()
         std::cout << "Could not announce." << std::endl;
         return 1;
     }
-        
+
     while (1) {
         sleep(1);
     }

@@ -27,16 +27,15 @@
 namespace ajn {
 namespace services {
 
-typedef uint8_t (*GetEnabledFptr)();
-typedef uint8_t (*GetWritableFptr)();
-typedef uint32_t (*GetBgColorFptr)();
-typedef const char* (*GetLabelFptr)(uint16_t);
-typedef const char* (*GetMessageFptr)(uint16_t);
+typedef uint8_t (*GetUint8Fptr)();
+typedef uint32_t (*GetUint32Fptr)();
+typedef const char* (*GetStringFptr)(uint16_t);
 
 
 class Widget {
-public:
-	Widget(qcc::String const&  name, qcc::String const& tag);
+  public:
+    Widget(qcc::String const&  name, qcc::String const& tag);
+
     /**
      * Destructor for Widget
      */
@@ -50,7 +49,7 @@ public:
 
     /**
      * setWritable
-     * @param writeable
+     * @param writable
      */
     void setWritable(uint8_t writeable);
 
@@ -58,67 +57,67 @@ public:
 
     QStatus getStatesForArg(MsgArg& val, int16_t languageIndx);
 
-    QStatus getOptParamsForArg(MsgArg& val, int16_t languageIndx,
-    		MsgArg* optParams, int32_t& optParamIndx);
+    virtual QStatus getOptParamsForArg(MsgArg& val, int16_t languageIndx,
+                                       MsgArg* optParams, size_t& optParamIndx);
 
-    QStatus getOptParamsForArg(MsgArg& val, int16_t languageIndx);
+    virtual QStatus getOptParamsForArg(MsgArg& val, int16_t languageIndx);
 
-	uint32_t getBgColor() const;
-	void setBgColor(uint32_t bgColor);
+    uint32_t getBgColor() const;
+    void setBgColor(uint32_t bgColor);
 
-	GetBgColorFptr getGetBgColor() const;
-	void setGetBgColor(GetBgColorFptr getBgColor);
+    GetUint32Fptr getGetBgColor() const;
+    void setGetBgColor(GetUint32Fptr getBgColor);
 
-	GetEnabledFptr getGetEnabled() const;
-	void setGetEnabled(GetEnabledFptr getEnabled);
+    GetUint8Fptr getGetEnabled() const;
+    void setGetEnabled(GetUint8Fptr getEnabled);
 
-	virtual GetLabelFptr getGetLabel() const;
-	virtual void setGetLabel(GetLabelFptr getGetLabel);
+    virtual GetStringFptr getGetLabel() const;
+    virtual void setGetLabel(GetStringFptr getGetLabel);
 
-	GetWritableFptr getGetWritable() const;
-	void setGetWritable(GetWritableFptr getWritable);
+    GetUint8Fptr getGetWritable() const;
+    void setGetWritable(GetUint8Fptr getWritable);
 
-	const std::vector<uint16_t>& getHints() const;
-	void setHints(const std::vector<uint16_t>& hints);
+    const std::vector<uint16_t>& getHints() const;
+    void setHints(const std::vector<uint16_t>& hints);
 
-	const uint16_t getInterfaceVersion() const;
-	void setInterfaceVersion(uint16_t interfaceVersion);
+    const uint16_t getInterfaceVersion() const;
+    void setInterfaceVersion(uint16_t interfaceVersion);
 
-	virtual const std::vector<qcc::String>& getLabel() const;
-	virtual void setLabel(const std::vector<qcc::String>& label);
+    virtual const std::vector<qcc::String>& getLabel() const;
+    virtual void setLabel(const std::vector<qcc::String>& label);
 
-	void setIsSecured(bool secured);
+    void setIsSecured(bool secured);
     bool getIsSecured();
 
-	uint32_t getStates() const;
-	void setStates(uint8_t enabled, uint8_t writable);
+    uint32_t getStates() const;
+    void setStates(uint8_t enabled, uint8_t writable);
 
-	qcc::String const& getWidgetName();
+    qcc::String const& getWidgetName();
 
-	virtual QStatus registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
-			qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot = false);
+    virtual QStatus registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
+                                    qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot = false);
 
-	virtual WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-			uint16_t langIndx, QStatus status) = 0;
+    virtual WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
+                                                   uint16_t langIndx, QStatus status) = 0;
 
-	QStatus SendPropertyChangedSignal();
+    QStatus SendPropertyChangedSignal();
 
-protected:
+  protected:
 
     qcc::String m_Name;
 
     bool m_IsSecured;
-	uint16_t m_InterfaceVersion;
+    uint16_t m_InterfaceVersion;
 
-	uint32_t m_States;
-    GetEnabledFptr m_GetEnabled;
-    GetWritableFptr m_GetWritable;
+    uint32_t m_States;
+    GetUint8Fptr m_GetEnabled;
+    GetUint8Fptr m_GetWritable;
 
     uint32_t m_BgColor;
-    GetBgColorFptr m_GetBgColor;
+    GetUint32Fptr m_GetBgColor;
 
     std::vector<qcc::String> m_Label;
-    GetLabelFptr m_GetLabel;
+    GetStringFptr m_GetLabel;
 
     std::vector<uint16_t> m_Hints;
 

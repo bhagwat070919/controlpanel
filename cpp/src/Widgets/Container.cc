@@ -26,7 +26,7 @@ using namespace services;
 using namespace cpsConsts;
 
 Container::Container(qcc::String name) : RootWidget(name, TAG_CONTAINER_WIDGET),
-		m_IsDismissable(false)
+    m_IsDismissable(false)
 {
 }
 
@@ -47,7 +47,7 @@ void Container::setIsDismissable(bool isDismissable)
 QStatus Container::addChildElement(Widget* childElement)
 {
     if (!childElement)
-    	return ER_BAD_ARG_1;
+        return ER_BAD_ARG_1;
 
     std::cout << "Child name is: " << childElement->getWidgetName().c_str() << std::endl;
     m_ChildElements.push_back(childElement);
@@ -55,46 +55,45 @@ QStatus Container::addChildElement(Widget* childElement)
 }
 
 WidgetBusObject* Container::createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-		uint16_t langIndx, QStatus status)
+                                                  uint16_t langIndx, QStatus status)
 {
-	return new ContainerBusObject(bus, objectPath, langIndx, status, this);
+    return new ContainerBusObject(bus, objectPath, langIndx, status, this);
 }
 
 QStatus Container::registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
-		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot)
+                                   qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot)
 {
-	GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
 
-	QStatus status = Widget::registerObjects(bus, languageSet, objectPathPrefix, objectPathSuffix, isRoot);
-	if (status != ER_OK)
-	    return status;
+    QStatus status = Widget::registerObjects(bus, languageSet, objectPathPrefix, objectPathSuffix, isRoot);
+    if (status != ER_OK)
+        return status;
 
-    //TODO if m_RootContainer->isdismissable add notificaitonActionObjectPath
-	qcc::String newObjectPathSuffix = isRoot ? objectPathSuffix : objectPathSuffix + "/" + m_Name;
+    qcc::String newObjectPathSuffix = isRoot ? objectPathSuffix : objectPathSuffix + "/" + m_Name;
 
-	if (m_IsDismissable) {
+    if (m_IsDismissable) {
         NotificationActionBusObject* NAbusObject = new NotificationActionBusObject(bus, newObjectPathSuffix, status);
 
         if (status != ER_OK) {
-        	if (logger)
-        	    logger->warn(TAG, "Could not create NotificationActionBusObjects");
-        	return status;
+            if (logger)
+                logger->warn(TAG, "Could not create NotificationActionBusObjects");
+            return status;
         }
 
         status = setNotificationActionBusObject(NAbusObject);
         if (status != ER_OK) {
-        	if (logger)
-        	    logger->warn(TAG, "Could not set NotificationActionBusObjects");
-        	return status;
+            if (logger)
+                logger->warn(TAG, "Could not set NotificationActionBusObjects");
+            return status;
         }
-	}
+    }
 
     for (size_t indx = 0; indx < m_ChildElements.size(); indx++) {
         status = m_ChildElements[indx]->registerObjects(bus, languageSet, objectPathPrefix, newObjectPathSuffix);
         if (status != ER_OK) {
-        	if (logger)
-        	    logger->warn(TAG, "Could not register childElements objects");
-        	return status;
+            if (logger)
+                logger->warn(TAG, "Could not register childElements objects");
+            return status;
         }
     }
     return status;

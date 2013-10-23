@@ -81,17 +81,17 @@ AJ_Status marshalDialogOptParam(BaseWidget* widget, AJ_Message* reply, uint16_t 
 
     if (optParams->getLabelAction2) {
         const char* labelAction2 = optParams->getLabelAction2(language);
-        CPS_CHECK(AddBasicOptionalParam(reply, DIALOG_LABEL_ACTION1,
-                                        DIALOG_LABEL_ACTION1_SIG, &labelAction2));
+        CPS_CHECK(AddBasicOptionalParam(reply, DIALOG_LABEL_ACTION2,
+                                        DIALOG_LABEL_ACTION2_SIG, &labelAction2));
     } else if (optParams->labelAction2) {
         CPS_CHECK(AddBasicOptionalParam(reply, DIALOG_LABEL_ACTION2,
                                         DIALOG_LABEL_ACTION2_SIG, &optParams->labelAction2[language]));
     }
 
-    if (optParams->getLabelAction1) {
-        const char* labelAction3 = optParams->getLabelAction1(language);
-        CPS_CHECK(AddBasicOptionalParam(reply, DIALOG_LABEL_ACTION1,
-                                        DIALOG_LABEL_ACTION1_SIG, &labelAction3));
+    if (optParams->getLabelAction3) {
+        const char* labelAction3 = optParams->getLabelAction3(language);
+        CPS_CHECK(AddBasicOptionalParam(reply, DIALOG_LABEL_ACTION3,
+                                        DIALOG_LABEL_ACTION3_SIG, &labelAction3));
     } else if (optParams->labelAction3) {
         CPS_CHECK(AddBasicOptionalParam(reply, DIALOG_LABEL_ACTION3,
                                         DIALOG_LABEL_ACTION3_SIG, &optParams->labelAction3[language]));

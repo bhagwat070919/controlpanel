@@ -18,20 +18,76 @@
 #define PROPERTY_H_
 
 #include "alljoyn/controlpanel/Widget.h"
+#include "alljoyn/controlpanel/PropertyType.h"
+#include "alljoyn/controlpanel/ConstraintList.h"
+#include "alljoyn/controlpanel/ConstraintRange.h"
 #include <map>
 
 namespace ajn {
 namespace services {
 
+typedef union {
+    uint16_t* (*getUint16Value)();
+    int16_t* (*getInt16Value)();
+    uint32_t* (*getUint32Value)();
+    int32_t* (*getInt32Value)();
+    uint64_t* (*getUint64Value)();
+    int64_t* (*getInt64Value)();
+    double* (*getDoubleValue)();
+    char** (*getCharValue)();
+    bool* (*getBoolValue)(); //TODO not sure
+    //CPSDate* (*getDateValue)(); //TODO not sure
+    //CPSTime* (*getTimeValue)(); //TODO not sure
+} PropertyValue;
+
 class Property : public Widget {
-public:
-	Property(qcc::String name);
-	virtual ~Property();
+  public:
+    Property(qcc::String name, PropertyType propertyType);
+    virtual ~Property();
 
-	QStatus registerObjects(BusAttachment* bus, LanguageSet const& m_LanguageSet,
-			qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix);
+    WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
+                                           uint16_t langIndx, QStatus status);
 
-private:
+    QStatus getPropertyValueForArg(MsgArg& val, int16_t languageIndx);
+
+    QStatus setPropertyValue(MsgArg& val, int16_t languageIndx);
+
+    QStatus getOptParamsForArg(MsgArg& val, int16_t languageIndx);
+
+    QStatus SendValueChangedSignal();
+
+  private:
+
+    PropertyType m_PropertyType;
+
+    PropertyValue m_Value;
+
+    std::vector<qcc::String> m_UnitOfMeasure;
+    GetStringFptr m_GetUnitOfMeasure;
+
+    std::vector<ConstraintList> m_ConstraintList;
+
+    ConstraintRange m_ConstraintRange;
+
+    virtual QStatus setValue(bool value);
+
+    virtual QStatus setValue(uint16_t value);
+
+    virtual QStatus setValue(int16_t value);
+
+    virtual QStatus setValue(uint32_t value);
+
+    virtual QStatus setValue(int32_t value);
+
+    virtual QStatus setValue(uint64_t value);
+
+    virtual QStatus setValue(int64_t value);
+
+    virtual QStatus setValue(double value);
+
+    virtual QStatus setValue(char* value);
+
+    QStatus defaultErrorSetValue();
 };
 } //namespace services
 } //namespace ajn

@@ -37,10 +37,10 @@ void LanguageSets::add(String const& languageSetName, LanguageSet const& languag
 
 LanguageSet* LanguageSets::get(String const& languageSetName)
 {
-	std::map<String, LanguageSet>::iterator it;
-	if ((it = languageSets.find(languageSetName)) != languageSets.end())
-		return &it->second;
-	return 0;
+    std::map<String, LanguageSet>::iterator it;
+    if ((it = languageSets.find(languageSetName)) != languageSets.end())
+        return &it->second;
+    return 0;
 }
 
 

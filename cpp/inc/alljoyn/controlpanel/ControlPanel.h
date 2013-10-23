@@ -24,15 +24,15 @@ namespace ajn {
 namespace services {
 
 class ControlPanel {
-public:
-	ControlPanel(LanguageSet const& languageSet);
-	virtual ~ControlPanel();
+  public:
+    ControlPanel(LanguageSet const& languageSet);
+    virtual ~ControlPanel();
 
-	QStatus setRootContainer(Container* rootContainer);
+    QStatus setRootContainer(Container* rootContainer);
 
-	QStatus registerObjects(BusAttachment* bus, qcc::String const& unitName);
+    QStatus registerObjects(BusAttachment* bus, qcc::String const& unitName);
 
-private:
+  private:
     LanguageSet const& m_LanguageSet;
 
     Container* m_RootContainer;

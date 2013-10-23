@@ -24,17 +24,17 @@ namespace ajn {
 namespace services {
 
 class NotificationAction {
-public:
+  public:
 
-	NotificationAction(LanguageSet const& languageSet);
+    NotificationAction(LanguageSet const& languageSet);
 
-	virtual ~NotificationAction();
+    virtual ~NotificationAction();
 
-	QStatus setRootWidget(RootWidget* rootWidget);
+    QStatus setRootWidget(RootWidget* rootWidget);
 
-	QStatus registerObjects(BusAttachment* bus, qcc::String const& unitName);
+    QStatus registerObjects(BusAttachment* bus, qcc::String const& unitName);
 
-private:
+  private:
 
     LanguageSet const& m_LanguageSet;
 

@@ -27,31 +27,31 @@ namespace services {
 class Widget;
 
 class WidgetBusObject : public ajn::BusObject {
-public:
-	WidgetBusObject(qcc::String const& servicePath, uint16_t langIndx, qcc::String const& tag, Widget* widget);
-	virtual ~WidgetBusObject();
+  public:
+    WidgetBusObject(qcc::String const& servicePath, uint16_t langIndx, qcc::String const& tag, Widget* widget);
+    virtual ~WidgetBusObject();
 
-	virtual QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
+    virtual QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
 
-	virtual QStatus Set(const char* ifcName, const char* propName, MsgArg& val);
+    virtual QStatus Set(const char* ifcName, const char* propName, MsgArg& val);
 
-	virtual QStatus SendPropertyChangedSignal();
+    virtual QStatus SendPropertyChangedSignal();
 
-protected:
+  protected:
 
-	/**
-	 * addDefaultInterfaceVariables
-	 * @param intf
-	 * @return
-	 */
-	QStatus addDefaultInterfaceVariables(InterfaceDescription* intf);
+    /**
+     * addDefaultInterfaceVariables
+     * @param intf
+     * @return
+     */
+    QStatus addDefaultInterfaceVariables(InterfaceDescription* intf);
 
-	/**
-	 * Pointer to Widget represented by this busobject
-	 */
-	Widget* m_Widget;
+    /**
+     * Pointer to Widget represented by this busobject
+     */
+    Widget* m_Widget;
 
-	uint16_t languageIndx;
+    uint16_t languageIndx;
 
     /**
      * The pointer used to send signal/register Signal Handler
@@ -61,7 +61,7 @@ protected:
     /**
      *
      */
-	qcc::String TAG;
+    qcc::String TAG;
 };
 } //namespace services
 } //namespace ajn

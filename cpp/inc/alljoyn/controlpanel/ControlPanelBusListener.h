@@ -23,17 +23,17 @@
 
 class ControlPanelBusListener : public ajn::BusListener, public ajn::SessionPortListener {
 
-public:
+  public:
 
-	/**
-	 * Constructor of ControlPanelBusListener
-	 * @param sessionPort
-	 */
-	ControlPanelBusListener();
+    /**
+     * Constructor of ControlPanelBusListener
+     * @param sessionPort
+     */
+    ControlPanelBusListener();
 
-	/**
-	 * Destructor of ControlPanelBusListener
-	 */
+    /**
+     * Destructor of ControlPanelBusListener
+     */
     ~ControlPanelBusListener();
 
     /**
@@ -57,7 +57,7 @@ public:
      */
     ajn::SessionPort getSessionPort();
 
-private:
+  private:
 
     /**
      * The port used as part of the join session request

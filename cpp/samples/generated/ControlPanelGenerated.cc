@@ -24,7 +24,7 @@ using namespace services;
 
 QStatus ControlPanelGenerated::PrepareLanguageSets()
 {
-	LanguageSet myLanguages("myLanguages");
+    LanguageSet myLanguages("myLanguages");
     myLanguages.addLanguage("en");
     LanguageSets::add(myLanguages.getLanguageSetName(), myLanguages);
     return ER_OK;
@@ -32,15 +32,15 @@ QStatus ControlPanelGenerated::PrepareLanguageSets()
 
 QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPanelControllee)
 {
-	if (controlPanelControllee)
-		return ER_BAD_ARG_1;
+    if (controlPanelControllee)
+        return ER_BAD_ARG_1;
 
     QStatus status = ER_OK;
     controlPanelControllee = new ControlPanelControllee("MyDevice");
 
     LanguageSet* langSet = LanguageSets::get("myLanguages");
     if (!langSet)
-    	return ER_PARSE_ERROR;
+        return ER_PARSE_ERROR;
 
     ControlPanel* controlPanel = new ControlPanel(*langSet);
     controlPanelControllee->addControlPanel(controlPanel);
@@ -52,6 +52,10 @@ QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPa
 
     Label* label = new Label("CurrentTemp");
     CHECK(container->addChildElement(label));
+
+    std::vector<qcc::String> labels;
+    labels.push_back("TestLabel");
+    label->setLabel(labels);
 
     return ER_OK;
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<controlPanelDevice xmlns="http://www.alljoyn.org/controlpanel/gen">
+    <name>MyDevice</name>
+    <headerCode>#include "ControlPanelProvided.h"</headerCode>
+    <url>http://MyControlPanelUrl.com</url>  
+    <languageSet name="myLanguages">
+        <language>en</language>
+    </languageSet>
+    <controlPanels>
+        <controlPanel languageSet="myLanguages">
+            <rootContainer>
+                <name>rootContainer</name>
+                <secured>false</secured>    
+                <enabled>true</enabled>
+                <bgcolor>0x200</bgcolor>
+                <label>
+                    <value type="literal" language="en">My Label of my container</value>
+                </label>
+                <hints>
+                    <hint>horizontal_linear</hint>
+                </hints>
+                <elements>
+                    <dateProperty>
+                        <name>myDateProperty</name>
+                        <getCode>getDateProperty</getCode>
+                        <setCode>setDateProperty(%s)</setCode>
+                        <secured>false</secured>
+                        <enabled>true</enabled>
+                        <writable>true</writable>
+                    </dateProperty>
+                    <timeProperty>
+                        <name>myTimeProperty</name>
+                        <getCode>getTimeProperty</getCode>
+                        <setCode>setTimeProperty(%s)</setCode>
+                        <secured>false</secured>
+                        <enabled>true</enabled>
+                        <writable>true</writable>
+                    </timeProperty>
+                </elements>
+            </rootContainer>
+        </controlPanel>
+    </controlPanels>
+</controlPanelDevice>

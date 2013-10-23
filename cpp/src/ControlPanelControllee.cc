@@ -23,7 +23,7 @@ namespace services {
 using namespace cpsConsts;
 
 ControlPanelControllee::ControlPanelControllee(qcc::String const& unitName) :
-		TAG(TAG_CONTROLPANELCONTROLLEE), m_UnitName(unitName)
+    TAG(TAG_CONTROLPANELCONTROLLEE), m_UnitName(unitName)
 {
 }
 
@@ -35,33 +35,33 @@ ControlPanelControllee::~ControlPanelControllee()
 
 void ControlPanelControllee::addControlPanel(ControlPanel* controlPanel)
 {
-	m_ControlPanels.push_back(controlPanel);
+    m_ControlPanels.push_back(controlPanel);
 }
 
 void ControlPanelControllee::addNotificationAction(NotificationAction* notificationAction)
 {
-	m_NotificationActions.push_back(notificationAction);
+    m_NotificationActions.push_back(notificationAction);
 }
 
 QStatus ControlPanelControllee::registerObjects(BusAttachment* bus)
 {
-	GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-	QStatus status;
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    QStatus status;
     for (size_t indx = 0; indx < m_ControlPanels.size(); indx++) {
         status = m_ControlPanels[indx]->registerObjects(bus, m_UnitName);
         if (status != ER_OK) {
-        	if (logger)
-        	    logger->warn(TAG, "Could not register Objects for the ControlPanels");
-        	return status;
+            if (logger)
+                logger->warn(TAG, "Could not register Objects for the ControlPanels");
+            return status;
         }
     }
 
     for (size_t indx = 0; indx < m_NotificationActions.size(); indx++) {
         status = m_NotificationActions[indx]->registerObjects(bus, m_UnitName);
         if (status != ER_OK) {
-        	if (logger)
-        	    logger->warn(TAG, "Could not register Objects for the ControlPanels");
-        	return status;
+            if (logger)
+                logger->warn(TAG, "Could not register Objects for the ControlPanels");
+            return status;
         }
     }
     return status;

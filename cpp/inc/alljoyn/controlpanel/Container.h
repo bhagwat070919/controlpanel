@@ -23,25 +23,25 @@ namespace ajn {
 namespace services {
 
 class Container : public RootWidget {
-public:
-	Container(qcc::String name);
-	virtual ~Container();
+  public:
+    Container(qcc::String name);
+    virtual ~Container();
 
     QStatus addChildElement(Widget* childElement);
 
     QStatus registerObjects(BusAttachment* bus, LanguageSet const& m_LanguageSet,
-    		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot = false);
+                            qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot = false);
 
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-    		uint16_t langIndx, QStatus status);
+                                           uint16_t langIndx, QStatus status);
 
-	bool getIsDismissable() const;
-	void setIsDismissable(bool isDismissable);
+    bool getIsDismissable() const;
+    void setIsDismissable(bool isDismissable);
 
-private:
-	std::vector<Widget*> m_ChildElements;
+  private:
+    std::vector<Widget*> m_ChildElements;
 
-	bool m_IsDismissable;
+    bool m_IsDismissable;
 
 };
 } //namespace services

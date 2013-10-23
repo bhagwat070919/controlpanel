@@ -36,6 +36,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -160,9 +161,14 @@ public class DeviceDetailFragment extends Fragment {
 		public void stop()
 		{
 			try {
+				Log.d(TAG, "Releasing the device control panel");
+				if (deviceControlPanel != null) {
+					deviceControlPanel.release();
+				}
 				Log.d(TAG, "Stopping the session with the device");
-				if (device != null)
+				if (device != null) {
 					device.endSession();
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -365,6 +371,7 @@ public class DeviceDetailFragment extends Fragment {
 			String language_IETF_RFC5646_java = Locale.getDefault().toString(); //"en_US", "es_SP"
 			String language_IETF_RFC5646 = language_IETF_RFC5646_java.replace('_', '-');
 			String languageISO639 = Locale.getDefault().getLanguage(); //"en", "es"
+			DeviceControlPanel previousControlPanel = deviceControlPanel; 
 			for(DeviceControlPanel controlPanel : controlPanels) {
 				String cpLanugage = controlPanel.getLanguage();
 				Log.d(TAG, String.format("Control Panel language: %s", cpLanugage));
@@ -385,31 +392,43 @@ public class DeviceDetailFragment extends Fragment {
 				Log.d(TAG, String.format("Defaulting to the control panel of language: %s", deviceControlPanel.getLanguage()));
 			}
 
+			Log.d(TAG, "Releasing the previous device control panel");
+			if (previousControlPanel != null) {
+				previousControlPanel.release();
+			}
 			onControlPanelSelected();
 		}
 
 		public void metadataChanged(ControllableDevice device, final UIElement uielement) {
 			UIElementType elementType = uielement.getElementType();
 			Log.d(TAG, "METADATA_CHANGED : Received metadata changed signal, device: '" + device.getDeviceId() + "', ObjPath: '" + uielement.getObjectPath() + "', element type: '" + elementType + "'");
-			getActivity().runOnUiThread(new Runnable(){
-				@Override
-				public void run()
-				{
-					controlPanelAdapter.onMetaDataChange(uielement);
-				}});
+			FragmentActivity activity = getActivity();
+			if (activity != null) {
+				activity.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						controlPanelAdapter.onMetaDataChange(uielement);
+					}
+				});
+			}
 		}
 		
 		@Override
 		public void errorOccured(ControllableDevice device, final String reason)
 		{
 			if (this.device.getDeviceId().equalsIgnoreCase(device.getDeviceId())) {
-				getActivity().runOnUiThread(new Runnable(){
-					@Override
-					public void run()
-					{
-						String text = "Received an error notification: '" + reason + "'";
-						Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
-					}});
+				final FragmentActivity activity = getActivity();
+				if (activity != null) {
+					activity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							String text = "Received an error notification: '"
+									+ reason + "'";
+							Toast.makeText(activity, text, Toast.LENGTH_LONG)
+									.show();
+						}
+					});
+				}
 			}
 		}
 
@@ -431,12 +450,15 @@ public class DeviceDetailFragment extends Fragment {
 			if (device.getDeviceId().equalsIgnoreCase(deviceControlPanel.getDevice().getDeviceId())) {
 				UIElementType elementType = uielement.getElementType();
 				Log.d(TAG, "Received metadataChanged : Received metadata changed signal, device: '" + device.getDeviceId() + "', ObjPath: '" + uielement.getObjectPath() + "', element type: '" + elementType + "'");
-				getActivity().runOnUiThread(new Runnable(){
-					@Override
-					public void run()
-					{
-						controlPanelAdapter.onMetaDataChange(uielement);
-					}});
+				FragmentActivity activity = getActivity();
+				if (activity != null) {
+					activity.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							controlPanelAdapter.onMetaDataChange(uielement);
+						}
+					});
+				}
 			}
 		}
 
@@ -446,14 +468,21 @@ public class DeviceDetailFragment extends Fragment {
 			if (device.getDeviceId().equalsIgnoreCase(deviceControlPanel.getDevice().getDeviceId())) {
 				if (controlPanelAdapter != null) {
 
-					getActivity().runOnUiThread(new Runnable(){
-						@Override
-						public void run()
-						{
-							controlPanelAdapter.onValueChange(uielement, newValue);
-							String text = "Received value changed signal, ObjPath: '" + uielement.getObjectPath() + "', NewValue: '" + newValue + "'";
-							Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-						}});
+					final FragmentActivity activity = getActivity();
+					if (activity != null) {
+						activity.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								controlPanelAdapter.onValueChange(uielement,
+										newValue);
+								String text = "Received value changed signal, ObjPath: '"
+										+ uielement.getObjectPath()
+										+ "', NewValue: '" + newValue + "'";
+								Toast.makeText(activity, text,
+										Toast.LENGTH_SHORT).show();
+							}
+						});
+					}
 				}
 			}
 		}

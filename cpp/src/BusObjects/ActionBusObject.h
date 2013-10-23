@@ -23,11 +23,11 @@ namespace ajn {
 namespace services {
 
 class ActionBusObject : public WidgetBusObject {
-public:
-	ActionBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
-			uint16_t langIndx, QStatus& status, Widget* widget);
+  public:
+    ActionBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
+                    uint16_t langIndx, QStatus& status, Widget* widget);
 
-	virtual ~ActionBusObject();
+    virtual ~ActionBusObject();
 
     void ActionExecute(const ajn::InterfaceDescription::Member* member, ajn::Message& msg);
 };
