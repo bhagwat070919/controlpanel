@@ -85,6 +85,12 @@ class ControlPanelService {
     ajn::BusAttachment* getBusAttachment();
 
     /**
+     * Get the BusListener
+     * @return ControlPanelBusListener
+     */
+    ControlPanelBusListener* getBusListener() const;
+
+    /**
      * Get the Version of the ControlPanelService
      * @return the ControlPanelService version
      */

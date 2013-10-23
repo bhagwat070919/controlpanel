@@ -25,6 +25,7 @@ import org.alljoyn.services.common.BusObjectDescription;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -57,6 +58,7 @@ public class DeviceList {
 		final private Map<String,String[]> object2Interfaces; 
 
 		public DeviceContext(String deviceId, String busName, String deviceName) {
+			Log.d("DeviceList", String.format("Adding a new device. id=%s, busName=%s, name=%s",  deviceId, busName, deviceName));
 			this.deviceId = deviceId;
 			this.busName = busName;
 			this.object2Interfaces = new HashMap<String,String[]>(5);

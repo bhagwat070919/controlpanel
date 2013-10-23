@@ -420,16 +420,15 @@ public class DeviceDetailFragment extends Fragment {
 		@Override
 		public void errorOccured(ControllableDevice device, final String reason)
 		{
+			final String text = "Error: '" + reason + "'";
+			Log.e(TAG, text);
 			if (this.device.getDeviceId().equalsIgnoreCase(device.getDeviceId())) {
 				final FragmentActivity activity = getActivity();
 				if (activity != null) {
 					activity.runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							String text = "Received an error notification: '"
-									+ reason + "'";
-							Toast.makeText(activity, text, Toast.LENGTH_LONG)
-									.show();
+							Toast.makeText(activity, text, Toast.LENGTH_LONG).show();
 						}
 					});
 				}

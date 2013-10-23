@@ -55,7 +55,7 @@ class ControlPanelServiceSampleUtil {
      * @return Qstatus
      */
     static QStatus prepareAboutService(ajn::BusAttachment*bus, PropertyStoreImpl*propertyStoreImpl,
-                                       ControlPanelBusListener* busListener, uint16_t port);
+                                       ajn::services::ControlPanelBusListener* busListener, uint16_t port);
 
     /**
      * static method aboutServiceAnnounce
@@ -69,7 +69,7 @@ class ControlPanelServiceSampleUtil {
      * @param busListener
      * @param port
      */
-    static void aboutServiceDestroy(ajn::BusAttachment* bus, ControlPanelBusListener* busListener);
+    static void aboutServiceDestroy(ajn::BusAttachment* bus, ajn::services::ControlPanelBusListener* busListener);
 
     /**
      * adds appropriate addMatch to Consumer application

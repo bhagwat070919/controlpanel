@@ -49,14 +49,30 @@ QStatus WidgetBusObject::addDefaultInterfaceVariables(InterfaceDescription* intf
 QStatus WidgetBusObject::SendPropertyChangedSignal()
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    ControlPanelBusListener* busListener = ControlPanelService::getInstance()->getBusListener();
+    QStatus status = ER_BUS_PROPERTY_VALUE_NOT_SET;
 
     if (!m_SignalPropertyChanged) {
         if (logger)
             logger->warn(TAG, "Can't send propertyChanged signal. Signal to set");
-        return ER_BUS_PROPERTY_VALUE_NOT_SET;
+        return status;
     }
 
-    return Signal(NULL, 0 /*TODO: sessionidea*/, *m_SignalPropertyChanged, NULL, 0);
+    if (!busListener) {
+        if (logger)
+            logger->warn(TAG, "Can't send valueChanged signal. SessionIds are unknown");
+        return status;
+    }
+
+    const std::vector<SessionId>& sessionIds = busListener->getSessionIds();
+    for (size_t indx = 0; indx < sessionIds.size(); indx++) {
+        status = Signal(NULL, sessionIds[indx], *m_SignalPropertyChanged, NULL, 0);
+        if (status != ER_OK) {
+            if (logger)
+                logger->warn(TAG, "Could not send PropertyChanged Signal for sessionId: " + sessionIds[indx]);
+        }
+    }
+    return status;
 }
 
 QStatus WidgetBusObject::Get(const char* ifcName, const char* propName, MsgArg& val)

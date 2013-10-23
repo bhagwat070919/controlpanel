@@ -26,6 +26,7 @@ import org.alljoyn.ioe.controlpanelservice.ui.ActionWidgetHintsType;
 import org.alljoyn.ioe.controlpanelservice.ui.AlertDialogWidget;
 import org.alljoyn.ioe.controlpanelservice.ui.AlertDialogWidget.DialogButton;
 import org.alljoyn.ioe.controlpanelservice.ui.ContainerWidget;
+import org.alljoyn.ioe.controlpanelservice.ui.ErrorWidget;
 import org.alljoyn.ioe.controlpanelservice.ui.LabelWidget;
 import org.alljoyn.ioe.controlpanelservice.ui.LayoutHintsType;
 import org.alljoyn.ioe.controlpanelservice.ui.PropertyWidget;
@@ -241,6 +242,10 @@ public class ControlPanelAdapter
 			returnView = createLabelView((LabelWidget) element);
 			break;
 		}//PROPERTY_WIDGET
+		case ERROR_WIDGET: {
+			returnView = createErrorView((ErrorWidget) element);
+			break;
+		}//ERROR_WIDGET
 		default:
 			break;
 		}//switch :: elementType
@@ -420,6 +425,27 @@ public class ControlPanelAdapter
 		uiElementToView.put(labelWidget.getObjectPath(), labelView);
 		return labelView;
 	}//createLabelView
+
+
+	// =====================================================================================================================
+
+	/**
+	 * Creates a TextView for a ErrorWidget
+	 * @param errorWidget the UIElement to be represented by this View 
+	 * @return a TextView displaying the label of the ErrorWidget
+	 */
+	public View createErrorView(final ErrorWidget errorWidget) {
+		String label = errorWidget.getLabel();
+		String errorMessage = errorWidget.getError();
+		
+		Log.w(TAG, "Creating Error Label: \"" + label + "\" Error: '" + errorMessage + "', Original Element Type: " + errorWidget.getOriginalUIElement());
+
+		TextView errorView =  new TextView(uiContext);
+		errorView.setText(label);
+
+		uiElementToView.put(errorWidget.getObjectPath(), errorView);
+		return errorView;
+	}//createErrorView
 
 
 	// =====================================================================================================================

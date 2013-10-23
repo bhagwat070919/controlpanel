@@ -18,7 +18,7 @@
 #define CONSTRAINTLIST_H_
 
 #include "alljoyn/BusAttachment.h"
-#include "alljoyn/controlpanel/Widget.h" //TODO figure out function ptrs
+#include "alljoyn/controlpanel/Widget.h"
 #include "alljoyn/controlpanel/PropertyType.h"
 #include <vector>
 

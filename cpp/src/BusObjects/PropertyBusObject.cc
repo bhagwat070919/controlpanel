@@ -67,6 +67,7 @@ PropertyBusObject::~PropertyBusObject()
 QStatus PropertyBusObject::SendValueChangedSignal()
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    ControlPanelBusListener* busListener = ControlPanelService::getInstance()->getBusListener();
 
     if (!m_SignalValueChanged) {
         if (logger)
@@ -74,11 +75,26 @@ QStatus PropertyBusObject::SendValueChangedSignal()
         return ER_BUS_PROPERTY_VALUE_NOT_SET;
     }
 
+    if (!busListener) {
+        if (logger)
+            logger->warn(TAG, "Can't send valueChanged signal. SessionIds are unknown");
+        return ER_BUS_PROPERTY_VALUE_NOT_SET;
+    }
+
     QStatus status;
     MsgArg value;
 
     CHECK_AND_RETURN(((Property*)m_Widget)->getPropertyValueForArg(value, languageIndx));
-    return Signal(NULL, 0 /*TODO: sessionid*/, *m_SignalPropertyChanged, &value, 1);
+
+    const std::vector<SessionId>& sessionIds = busListener->getSessionIds();
+    for (size_t indx = 0; indx < sessionIds.size(); indx++) {
+        status = Signal(NULL, sessionIds[indx], *m_SignalValueChanged, &value, 1);
+        if (status != ER_OK) {
+            if (logger)
+                logger->warn(TAG, "Could not send ValueChanged Signal for sessionId: " + sessionIds[indx]);
+        }
+    }
+    return status;
 }
 
 QStatus PropertyBusObject::Get(const char* ifcName, const char* propName, MsgArg& val)

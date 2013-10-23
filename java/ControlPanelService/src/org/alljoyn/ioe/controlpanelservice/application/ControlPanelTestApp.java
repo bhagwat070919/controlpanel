@@ -34,6 +34,7 @@ import org.alljoyn.ioe.controlpanelservice.ui.AlertDialogWidget.DialogButton;
 import org.alljoyn.ioe.controlpanelservice.ui.ContainerWidget;
 import org.alljoyn.ioe.controlpanelservice.ui.ControlPanelEventsListener;
 import org.alljoyn.ioe.controlpanelservice.ui.DeviceControlPanel;
+import org.alljoyn.ioe.controlpanelservice.ui.ErrorWidget;
 import org.alljoyn.ioe.controlpanelservice.ui.LabelWidget;
 import org.alljoyn.ioe.controlpanelservice.ui.LayoutHintsType;
 import org.alljoyn.ioe.controlpanelservice.ui.ListPropertyWidget;
@@ -151,7 +152,7 @@ public class ControlPanelTestApp extends DefaultDeviceRegistry implements Device
 
 	@Override
 	public void errorOccured(DeviceControlPanel panel, String reason) {
-		Log.e(TAG, "An error occurred in the DeviceControlPanel, name: '" + panel.getObjPath() + "' Panels name: '" + panel.getCollection().getName() + "'");
+		Log.e(TAG, "An error occurred in the DeviceControlPanel, name: '" + panel.getObjPath() + "' Panels name: '" + panel.getCollection().getName() + "', Reason: '" + reason + "'");
 	}
 
 	@Override
@@ -194,6 +195,9 @@ public class ControlPanelTestApp extends DefaultDeviceRegistry implements Device
 		    	 ListPropertyWidget  listWidget = (ListPropertyWidget)uielement;
 				 Log.i(TAG, "ListPropertyWidget metadata IsEnabled: '" + listWidget.isEnabled() + "'");
 		    	 break;		
+		     }
+		     case ERROR_WIDGET: {
+		    	 break;
 		     }
 		 }
 	}//metadataChanged
@@ -280,6 +284,10 @@ public class ControlPanelTestApp extends DefaultDeviceRegistry implements Device
 				case ALERT_DIALOG: {
 					handleAlertDialog((AlertDialogWidget) element, isFromList);
 					addToUiControls(UIElementType.ALERT_DIALOG, element, isFromList);
+					break;
+				}
+				case ERROR_WIDGET: {
+					handleErrorWidget((ErrorWidget) element);
 					break;
 				}
 			}//switch :: elementType
@@ -426,6 +434,15 @@ public class ControlPanelTestApp extends DefaultDeviceRegistry implements Device
 		
 		Log.i(TAG, "===== END OF LIST_PROPERTY profiler ===== ");		
 	}//handlePropertyList
+	
+	private void handleErrorWidget(ErrorWidget errorWidget) {
+		Log.w(TAG, "==== ERROR_WIDGET profiler ===== ");
+		
+		Log.w(TAG, "ErrorWidget: objPath: '" + errorWidget.getObjectPath() + "', failed to be created");
+		Log.w(TAG, "Default Error Label: '" + errorWidget.getLabel() + "' Error: '" + errorWidget.getError() + "', OriginalUIElement: '" + errorWidget.getOriginalUIElement() + "'");
+		
+		Log.w(TAG, "===== END OF ERROR_WIDGET profiler ===== ");		
+	}//handleErrorWidget
 	
 	//=================================================//
 	//			           TESTS					   //
@@ -679,6 +696,9 @@ public class ControlPanelTestApp extends DefaultDeviceRegistry implements Device
 							  Log.e(TAG, "Failed happened in calling remote object: '" + cpe.getMessage() + "'");
 						  }
 					  }//for :: elements
+					 break;
+				 }
+				 case ERROR_WIDGET: {
 					 break;
 				 }
 			}//switch :: elementType

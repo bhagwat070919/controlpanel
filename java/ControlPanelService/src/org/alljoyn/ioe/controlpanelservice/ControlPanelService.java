@@ -127,7 +127,7 @@ public class ControlPanelService  implements ConnManagerEventsListener {
 	 * @throws ControlPanelException cpe
 	 */
 	public ControllableDevice getControllableDevice(String sender) throws ControlPanelException {
-	    return new ControllableDevice(UUID.randomUUID().toString(), sender);
+	    return getControllableDevice(UUID.randomUUID().toString(), sender);
 	}//getControllableDevice
 	
 	/**
@@ -139,6 +139,11 @@ public class ControlPanelService  implements ConnManagerEventsListener {
 	 * @throws ControlPanelException cpe
 	 */
 	public ControllableDevice getControllableDevice(String deviceId, String sender) throws ControlPanelException {
+		
+		if ( sender == null || sender.length() == 0 ) {
+			throw new ControlPanelException("Received an illegal sender name, Sender: '" + sender + "'");
+		}
+		
 	    return new ControllableDevice(deviceId, sender);
 	}//getControllableDevice
 	

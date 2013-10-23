@@ -67,14 +67,30 @@ NotificationActionBusObject::~NotificationActionBusObject()
 QStatus NotificationActionBusObject::SendDismissSignal()
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    ControlPanelBusListener* busListener = ControlPanelService::getInstance()->getBusListener();
+    QStatus status = ER_BUS_PROPERTY_VALUE_NOT_SET;
 
     if (!m_SignalDismiss) {
         if (logger)
             logger->warn(TAG, "Can't send Dismiss signal. Signal to set");
-        return ER_BUS_PROPERTY_VALUE_NOT_SET;
+        return status;
     }
 
-    return Signal(NULL, 0 /*TODO: sessionid*/, *m_SignalDismiss, NULL, 0);
+    if (!busListener) {
+        if (logger)
+            logger->warn(TAG, "Can't send valueChanged signal. SessionIds are unknown");
+        return status;
+    }
+
+    const std::vector<SessionId>& sessionIds = busListener->getSessionIds();
+    for (size_t indx = 0; indx < sessionIds.size(); indx++) {
+        status = Signal(NULL, sessionIds[indx], *m_SignalDismiss, NULL, 0);
+        if (status != ER_OK) {
+            if (logger)
+                logger->warn(TAG, "Could not send PropertyChanged Signal for sessionId: " + sessionIds[indx]);
+        }
+    }
+    return status;
 }
 
 

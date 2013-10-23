@@ -54,7 +54,7 @@ public class ControlPanelApplication extends Application {
          */
 		@Override
 		public boolean requested(String mechanism, String peerName, int count, String userName, AuthListener.AuthRequest[] requests) {
-			 Log.d(TAG, "AuthListener requested() called, checking the Auth mechanisms...");
+			 Log.d(TAG, "AuthListener requested() called, checking the Auth mechanisms. Mechanism is: '" + mechanism + "'");
 			 
 			 if ( !getMechanisms().contains(mechanism) ) {
 				 Log.w(TAG, "Recieved an unsupported Auth mechanism: '" + mechanism + "'");

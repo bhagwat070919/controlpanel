@@ -151,6 +151,11 @@ BusAttachment* ControlPanelService::getBusAttachment()
     return m_Bus;
 }
 
+ControlPanelBusListener* ControlPanelService::getBusListener() const
+{
+    return m_BusListener;
+}
+
 GenericLogger* ControlPanelService::setLogger(GenericLogger* newLogger)
 {
     GenericLogger* prevLogger = getLogger();

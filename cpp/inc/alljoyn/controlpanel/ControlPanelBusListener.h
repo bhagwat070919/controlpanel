@@ -20,8 +20,13 @@
 #include "alljoyn/BusListener.h"
 #include "alljoyn/SessionPortListener.h"
 #include "alljoyn/controlpanel/GenericLogger.h"
+#include <vector>
 
-class ControlPanelBusListener : public ajn::BusListener, public ajn::SessionPortListener {
+namespace ajn{
+namespace services{
+
+class ControlPanelBusListener : public BusListener, public SessionPortListener,
+                                public SessionListener {
 
   public:
 
@@ -43,26 +48,64 @@ class ControlPanelBusListener : public ajn::BusListener, public ajn::SessionPort
      * @param opts - the session options
      * @return true/false
      */
-    bool AcceptSessionJoiner(ajn::SessionPort sessionPort, const char* joiner, const ajn::SessionOpts& opts);
+    bool AcceptSessionJoiner(SessionPort sessionPort, const char* joiner, const SessionOpts& opts);
+
+    /**
+     * SessionJoined
+     * @param sessionPort
+     * @param id
+     * @param joiner
+     */
+    void SessionJoined(SessionPort sessionPort, SessionId sessionId, const char* joiner);
+
+    /**
+     * SessionMemberAdded
+     * @param sessionId
+     * @param uniqueName
+     */
+    void SessionMemberAdded(SessionId sessionId, const char* uniqueName);
+
+    /**
+     * SessionMemberRemoved
+     * @param sessionId
+     * @param uniqueName
+     */
+    void SessionMemberRemoved(SessionId sessionId, const char* uniqueName);
+
+    /**
+     * SessionLost
+     * @param sessionId
+     * @param reason
+     */
+    void SessionLost(SessionId sessionId, SessionLostReason reason);
 
     /**
      * Set the Value of the SessionPort associated with this SessionPortListener
      * @param sessionPort
      */
-    void setSessionPort(ajn::SessionPort sessionPort);
+    void setSessionPort(SessionPort sessionPort);
 
     /**
      * Get the SessionPort of the listener
      * @return
      */
-    ajn::SessionPort getSessionPort();
+    SessionPort getSessionPort();
+
+    const std::vector<SessionId>& getSessionIds() const;
 
   private:
 
     /**
      * The port used as part of the join session request
      */
-    ajn::SessionPort m_SessionPort;
+    SessionPort m_SessionPort;
+
+    /**
+     * The sessionIds for the port
+     */
+    std::vector<SessionId> m_SessionIds;
 };
+}
+}
 
 #endif /* CONTROLPANELBUSLISTENER_H_ */

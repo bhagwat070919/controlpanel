@@ -263,7 +263,7 @@ public class ContainerWidget extends UIElement {
 	 * @see org.alljoyn.ioe.controlpanelservice.ui.UIElement#createChildWidgets()
 	 */
 	@Override
-	protected void createChildWidgets() throws ControlPanelException {
+	protected void createChildWidgets() {
 		Log.d(TAG, "Device: '" + device.getDeviceId() + "', iterate over the child elements");
 		
 		elements = new LinkedList<UIElement>();
@@ -273,23 +273,39 @@ public class ContainerWidget extends UIElement {
 		    List<String> interfaces = childNode.getInterfaces();
 			Log.d(TAG, "Device: '" + device.getDeviceId() + "' found child node objPath: '" + path + "', interfaces: '" + interfaces + "'");
 			
-			  
 	        for (String ifName : interfaces) {
-	            if ( !ifName.startsWith(ControlPanelService.INTERFACE_PREFIX  + ".") ) {
-	                 Log.v(TAG, "Found not a ControlPanel interface: '" + ifName + "'");
-	                 continue;
-	            }
-	             
-	            //Check the ControlPanel interface
-	            WidgetFactory widgFactory = WidgetFactory.getWidgetFactory(ifName);
-	            if ( widgFactory == null ) {
-	            	String msg = "Received an unknown ControlPanel interface: '" + ifName + "'";
-	            	Log.e(TAG, msg);
-	                throw new ControlPanelException(msg);
-	            }
-	            
-	            UIElement childElement = widgFactory.create(path, controlPanel, childNode.getChidren());
-	            elements.add(childElement);
+	        	try {
+		        	
+		            if ( !ifName.startsWith(ControlPanelService.INTERFACE_PREFIX  + ".") ) {
+		                 Log.v(TAG, "Found not a ControlPanel interface: '" + ifName + "'");
+		                 continue;
+		            }
+		             
+		            //Check the ControlPanel interface
+		            WidgetFactory widgFactory = WidgetFactory.getWidgetFactory(ifName);
+		            if ( widgFactory == null ) {
+		            	String msg = "Received an unknown ControlPanel interface: '" + ifName + "'";
+		            	Log.e(TAG, msg);
+		                throw new ControlPanelException(msg);
+		            }
+		            
+		            UIElement childElement = widgFactory.create(path, controlPanel, childNode.getChidren());
+		            elements.add(childElement);
+		            
+	            }//try
+	    		catch (Exception e) {
+	    			 Log.w(TAG, "An error occurred during creation the Object: '" + path + "', device: '" + device.getDeviceId() + "'");
+					 controlPanel.getEventsListener().errorOccured(controlPanel, e.getMessage());
+					 try {
+						ErrorWidget errorWidget = new ErrorWidget(UIElementType.ERROR_WIDGET, ifName, path, controlPanel, childNode.getChidren());
+						errorWidget.setError(e.getMessage());
+						elements.add(errorWidget);
+					} catch (Exception ex) {
+						//This should never happen, because ErrorWidget never throws an exception
+						Log.w(TAG, "A failure has occurred in creation the ErrorWidget");
+					}
+			    }
+	        	
 	        }//for :: interfaces
 		}//for :: children
 	}//createChildWidgets
