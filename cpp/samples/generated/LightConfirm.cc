@@ -15,10 +15,10 @@
  ******************************************************************************/
 
 #include "LightConfirm.h"
-#include "../provided/ControlPanelProvided.h"
+#include "ControlPanelProvided.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 
 LightConfirm::LightConfirm(qcc::String name) : Dialog(name)
 {
@@ -30,17 +30,29 @@ LightConfirm::~LightConfirm()
 
 }
 
-void LightConfirm::executeAction1CallBack()
+bool LightConfirm::executeAction1CallBack()
 {
-    //AJ_Printf("Execute Action1 was called\n");;
+    AJ_Printf("Execute Action1 was called\n");
+
+    //by default return success
+    return true;
 }
 
-void LightConfirm::executeAction2CallBack()
+bool LightConfirm::executeAction2CallBack()
 {
-    //AJ_Printf("Execute Action2 was called\n");;
+    AJ_Printf("Execute Action2 was called\n");
+
+    //by default return success
+    return true;
 }
 
-void LightConfirm::executeAction3CallBack()
+bool LightConfirm::executeAction3CallBack()
 {
-    //AJ_Printf("Execute Action3 was called\n");;
+    AJ_Printf("Execute Action3 was called\n");
+
+    //by default return success
+    return true;
 }
+
+} /* namespace services */
+} /* namespace ajn */

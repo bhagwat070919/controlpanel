@@ -30,9 +30,9 @@ class REGULAR_NAME_HERE : public ajn::services::Dialog {
     REGULAR_NAME_HERE(qcc::String name);
     virtual ~REGULAR_NAME_HERE();
 
-    void executeAction1CallBack();
-    void executeAction2CallBack();
-    void executeAction3CallBack();
+    bool executeAction1CallBack();
+    bool executeAction2CallBack();
+    bool executeAction3CallBack();
 };
 } //namespace services
 } //namespace ajn

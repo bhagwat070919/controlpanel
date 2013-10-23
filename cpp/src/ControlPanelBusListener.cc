@@ -18,8 +18,8 @@
 #include <iostream>
 #include <algorithm>
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 
 ControlPanelBusListener::ControlPanelBusListener() :
     BusListener(), SessionPortListener(), SessionListener(), m_SessionPort(0)
@@ -33,6 +33,21 @@ ControlPanelBusListener::~ControlPanelBusListener()
 void ControlPanelBusListener::setSessionPort(ajn::SessionPort sessionPort)
 {
     m_SessionPort = sessionPort;
+}
+
+SessionPort ControlPanelBusListener::getSessionPort()
+{
+    return m_SessionPort;
+}
+
+bool ControlPanelBusListener::AcceptSessionJoiner(ajn::SessionPort sessionPort, const char* joiner, const ajn::SessionOpts& opts)
+{
+    if (sessionPort != m_SessionPort) {
+        return false;
+    }
+
+    std::cout << "Accepting JoinSessionRequest" << std::endl;
+    return true;
 }
 
 void ControlPanelBusListener::SessionJoined(SessionPort sessionPort, SessionId sessionId, const char* joiner)
@@ -68,18 +83,5 @@ const std::vector<SessionId>& ControlPanelBusListener::getSessionIds() const
     return m_SessionIds;
 }
 
-SessionPort ControlPanelBusListener::getSessionPort()
-{
-    return m_SessionPort;
-}
-
-bool ControlPanelBusListener::AcceptSessionJoiner(ajn::SessionPort sessionPort, const char* joiner, const ajn::SessionOpts& opts)
-{
-    if (sessionPort != m_SessionPort) {
-        return false;
-    }
-
-    std::cout << "Accepting JoinSessionRequest" << std::endl;
-    return true;
-}
-
+} /* namespace services */
+} /* namespace ajn */

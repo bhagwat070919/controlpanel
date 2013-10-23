@@ -12,6 +12,9 @@
 #    See the license for the specific language governing permissions and
 #    limitations under the license.
 
+import sys
+import subprocess
+
 def as_list(s):
 	if isinstance(s, list): return s
 	return [s]
@@ -52,7 +55,7 @@ class Generator:
 
         self.initCode += """\n    {0} = ControlPanel::createControlPanel(LanguageSets::get("{1}"));\n""".format(name, languageSet)
         self.initCode += """    if (!{0})\n        return ER_FAIL;\n""".format(name)
-        self.initCode += """    controlPanelControllee->addControlPanel({0});\n""".format(name)
+        self.initCode += """    CHECK(controlPanelControllee->addControlPanel({0}));\n""".format(name)
 
         self.shutdown += """    if ({0}) {1}\n        delete ({0});\n        {0} = 0;\n    {2}\n""".format(name, "{", "}")
 
@@ -63,7 +66,7 @@ class Generator:
 
         self.initCode += """\n    {0} = NotificationAction::createNotificationAction(LanguageSets::get("{1}"));\n""".format(name, languageSet)
         self.initCode += """    if (!{0})\n        return ER_FAIL;\n""".format(name)
-        self.initCode += """    controlPanelControllee->addNotificationAction({0});\n""".format(name)
+        self.initCode += """    CHECK(controlPanelControllee->addNotificationAction({0}));\n""".format(name)
 
         self.shutdown += """    if ({0}) {1}\n        delete ({0});\n        {0} = 0;\n    {2}\n""".format(name, "{", "}")
 
@@ -125,4 +128,30 @@ class Generator:
         self.genSrcFile = self.genSrcFile.replace("//INITCODE_GO_HERE", self.initCode)
         self.genSrcFile = self.genSrcFile.replace("//SHUTDOWN_GO_HERE", self.shutdown)
 
+    def confirmGenerate(self) :
+        confirm = self.confirm()
+	if confirm :
+            subprocArgs = "rm -f {0}/*.cc {0}/*.h".format(self.path)
+            rc = subprocess.call(subprocArgs, shell=True)
+            if rc != 0 :
+                print "\nERROR - Could not delete the current generated files"
+                sys.exit(1)
+        else :
+            print "\nStopping the generating process"
+            sys.exit(0)   
+   
+    def confirm(self):
+        default = False
+        prompt = "\nGenerating this xml will cause previously generated files to be deleted. Do you wish to continue? (y/n) (Default is n): "
+        while True:
+            response = raw_input(prompt)
+            if not response:
+                return default
+            if response not in ['y', 'Y', 'n', 'N']:
+                print 'Please enter y or n.'
+                continue
+            if response.upper() == 'Y':
+                return True
+            if response.upper() == 'N':
+                return False
 

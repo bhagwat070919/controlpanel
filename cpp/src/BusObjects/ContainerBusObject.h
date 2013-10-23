@@ -17,15 +17,31 @@
 #ifndef CONTAINERBUSOBJECT_H_
 #define CONTAINERBUSOBJECT_H_
 
-#include "alljoyn/controlpanel/WidgetBusObject.h"
+#include "WidgetBusObject.h"
 
 namespace ajn {
 namespace services {
 
+/**
+ * ContainerBusObject - BusObject for Containers
+ */
 class ContainerBusObject : public WidgetBusObject {
   public:
-    ContainerBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
+
+    /**
+     * Constructor for ContainerBusObject class
+     * @param bus - the bus to create the interface
+     * @param objectPath - objectPath of BusObject
+     * @param langIndx - the languageIndex of the BusObject
+     * @param status - success/failure
+     * @param widget - the widget associated with the BusObject
+     */
+    ContainerBusObject(ajn::BusAttachment* bus, qcc::String const& objectPath,
                        uint16_t langIndx, QStatus& status, Widget* widget);
+
+    /**
+     * Destructor for ContainerBusObject class
+     */
     virtual ~ContainerBusObject();
 };
 

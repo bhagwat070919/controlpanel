@@ -17,25 +17,62 @@
 #ifndef PROPERTYBUSOBJECT_H_
 #define PROPERTYBUSOBJECT_H_
 
-#include "alljoyn/controlpanel/WidgetBusObject.h"
+#include "WidgetBusObject.h"
 
 namespace ajn {
 namespace services {
 
+/**
+ * PropertyBusObject - BusObject for Property
+ */
 class PropertyBusObject : public WidgetBusObject {
   public:
-    PropertyBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
+
+    /**
+     * Constructor for PropertyBusObject class
+     * @param bus - the bus to create the interface
+     * @param objectPath - objectPath of BusObject
+     * @param langIndx - the languageIndex of the BusObject
+     * @param status - success/failure
+     * @param widget - the widget associated with the BusObject
+     */
+    PropertyBusObject(ajn::BusAttachment* bus, qcc::String const& objectPath,
                       uint16_t langIndx, QStatus& status, Widget* widget);
+
+    /**
+     * Destructor for the BusObject
+     */
     virtual ~PropertyBusObject();
 
-    QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
+    /**
+     * Callback for Alljoyn when GetProperty is called on this BusObject
+     * @param interfaceName - the name of the Interface
+     * @param propName - the name of the Property
+     * @param val - the MsgArg to fill
+     * @return status - success/failure
+     */
+    QStatus Get(const char* interfaceName, const char* propName, MsgArg& val);
 
-    QStatus Set(const char* ifcName, const char* propName, MsgArg& val);
+    /**
+     * Callback for Alljoyn when SetProperty is called on this BusObject
+     * @param interfaceName - the name of the Interface
+     * @param propName - the name of the Property
+     * @param val - the MsgArg that contains the new Value
+     * @return status - success/failure
+     */
+    QStatus Set(const char* interfaceName, const char* propName, MsgArg& val);
 
+    /**
+     * Send a signal when the property's value has changed
+     * @return status - success/failure
+     */
     QStatus SendValueChangedSignal();
 
   private:
 
+    /**
+     * Store member to send Value Changed signal
+     */
     const ajn::InterfaceDescription::Member* m_SignalValueChanged;
 };
 

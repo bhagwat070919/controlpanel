@@ -23,28 +23,77 @@
 namespace ajn {
 namespace services {
 
+/**
+ * Label class used to display a Label
+ */
 class Label : public Widget {
   public:
-    Label(qcc::String name);
+
+    /**
+     * Constructor for Label class
+     * @param name - name of Widget
+     */
+    Label(qcc::String const& name);
+
+    /**
+     * Destructor for Label class
+     */
     virtual ~Label();
 
+    /**
+     * creates and returns the appropriate BusObject for this Widget
+     * @param bus - the bus used to create the widget
+     * @param objectPath - the objectPath of the widget
+     * @param langIndx - the language Indx
+     * @param status - the status indicating success or failure
+     * @return a newly created WidgetBusObject
+     */
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
                                            uint16_t langIndx, QStatus& status);
 
-    virtual GetStringFptr getGetLabel() const;
+    /**
+     * Get the Labels vector of the widget
+     * @return - label
+     */
+    const std::vector<qcc::String>& getLabel() const;
 
-    virtual void setGetLabel(GetStringFptr getLabel);
+    /**
+     * Set the labels vector of the widget
+     * @param label - vector of labels
+     */
+    void setLabel(const std::vector<qcc::String>& label);
 
-    virtual const std::vector<qcc::String>& getLabel() const;
+    /**
+     * Get the GetLabel function pointer
+     * @return GetLabel function pointer
+     */
+    GetStringFptr getGetLabel() const;
 
-    virtual void setLabel(const std::vector<qcc::String>& label);
+    /**
+     * Set the GetLabel function pointer
+     * @param getLabel - getLabel function pointer
+     */
+    void setGetLabel(GetStringFptr getLabel);
 
-    QStatus getLabelForArg(MsgArg& val, int16_t languageIndx);
+    /**
+     * Fill MsgArg passed in with the Label
+     * @param val - msgArg to fill
+     * @param languageIndx - language of the label
+     * @return status - success/failure
+     */
+    QStatus fillLabelArg(MsgArg& val, uint16_t languageIndx);
 
   private:
 
-    std::vector<qcc::String> m_LabelForLabel;
-    GetStringFptr m_GetLabelForLabel;
+    /**
+     * Vector of Labels of Label Widget
+     */
+    std::vector<qcc::String> m_LabelWidgetLabel;
+
+    /**
+     * GetLabel functionPointer of Label Widget
+     */
+    GetStringFptr m_LabelWidgetGetLabel;
 };
 } //namespace services
 } //namespace ajn

@@ -17,21 +17,48 @@
 #ifndef DIALOGBUSOBJECT_H_
 #define DIALOGBUSOBJECT_H_
 
-#include "alljoyn/controlpanel/WidgetBusObject.h"
+#include "WidgetBusObject.h"
 
 namespace ajn {
 namespace services {
 
+/**
+ * DialogBusObject - BusObject for Dialogs
+ */
 class DialogBusObject : public WidgetBusObject {
   public:
-    DialogBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
+
+    /**
+     * Constructor for DialogBusObject class
+     * @param bus - the bus to create the interface
+     * @param objectPath - objectPath of BusObject
+     * @param langIndx - the languageIndex of the BusObject
+     * @param status - success/failure
+     * @param widget - the widget associated with the BusObject
+     */
+    DialogBusObject(ajn::BusAttachment* bus, qcc::String const& objectPath,
                     uint16_t langIndx, QStatus& status, Widget* widget);
 
+    /**
+     * Destructor for DialogBusObject
+     */
     virtual ~DialogBusObject();
 
-    void DialogExecute(const ajn::InterfaceDescription::Member* member, ajn::Message& msg);
+    /**
+     * Callback for Alljoyn when GetProperty is called on this BusObject
+     * @param interfaceName - the name of the Interface
+     * @param propName - the name of the Property
+     * @param val - the MsgArg to fill
+     * @return status - success/failure
+     */
+    QStatus Get(const char* interfaceName, const char* propName, MsgArg& val);
 
-    QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
+    /**
+     * Callback when Execute is called
+     * @param member - the member (method) of the interface that was executed
+     * @param msg - the Message of the method
+     */
+    void DialogExecute(const ajn::InterfaceDescription::Member* member, ajn::Message& msg);
 };
 
 } /* namespace services */

@@ -18,8 +18,8 @@
 #include "alljoyn/controlpanel/ControlPanelService.h"
 #include "../ControlPanelConstants.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 using namespace cpsConsts;
 
 #define TAG TAG_CONSTRAINTRANGE
@@ -33,90 +33,6 @@ ConstraintRange::ConstraintRange() : m_PropertyType(UNDEFINED)
 
 ConstraintRange::~ConstraintRange()
 {
-}
-
-QStatus ConstraintRange::getConstraintForArg(MsgArg& val, int16_t languageIndx, PropertyType propertyType)
-{
-    if (m_PropertyType != propertyType)
-        return ER_BUS_SIGNATURE_MISMATCH;
-
-    QStatus status;
-
-    MsgArg* minValue = new MsgArg();
-    MsgArg* maxValue = new MsgArg();
-    MsgArg* incrementValue = new MsgArg();
-
-    switch (m_PropertyType) {
-    case UINT16_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT16.c_str(), m_MinValue.uint16Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT16.c_str(), m_MaxValue.uint16Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT16.c_str(), m_IncrementValue.uint16Value));
-        break;
-
-    case INT16_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT16.c_str(), m_MinValue.int16Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT16.c_str(), m_MaxValue.int16Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT16.c_str(), m_IncrementValue.int16Value));
-        break;
-
-    case UINT32_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT32.c_str(), m_MinValue.uint32Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT32.c_str(), m_MaxValue.uint32Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT32.c_str(), m_IncrementValue.uint32Value));
-        break;
-
-    case INT32_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT32.c_str(), m_MinValue.int32Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT32.c_str(), m_MaxValue.int32Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT32.c_str(), m_IncrementValue.int32Value));
-        break;
-
-    case UINT64_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT64.c_str(), m_MinValue.uint64Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT64.c_str(), m_MaxValue.uint64Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT64.c_str(), m_IncrementValue.uint64Value));
-        break;
-
-    case INT64_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT64.c_str(), m_MinValue.int64Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT64.c_str(), m_MaxValue.int64Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT64.c_str(), m_IncrementValue.int64Value));
-        break;
-
-    case DOUBLE_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_DOUBLE.c_str(), m_MinValue.doubleValue));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_DOUBLE.c_str(), m_MaxValue.doubleValue));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_DOUBLE.c_str(), m_IncrementValue.doubleValue));
-        break;
-
-    default:
-        status = ER_BUS_BAD_SIGNATURE;
-        break;
-    }
-
-    if (status != ER_OK) {
-        GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-        if (logger)
-            logger->warn(TAG, "Could not marshal Constraint Range");
-        delete minValue;
-        delete maxValue;
-        delete incrementValue;
-        return status;
-    }
-
-    status = val.Set(AJPARAM_STRUCT_VAR_VAR_VAR.c_str(), minValue, maxValue, incrementValue);
-
-    if (status != ER_OK) {
-        GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-        if (logger)
-            logger->warn(TAG, "Could not marshal Constraint Range");
-        delete minValue;
-        delete maxValue;
-        delete incrementValue;
-        return status;
-    }
-
-    return status;
 }
 
 const ConstraintRangeVal& ConstraintRange::getIncrementValue() const
@@ -334,3 +250,90 @@ QStatus ConstraintRange::setConstraintIncrement(double incrementValue)
     m_IncrementValue.doubleValue = incrementValue;
     return ER_OK;
 }
+
+QStatus ConstraintRange::fillConstraintArg(MsgArg& val, uint16_t languageIndx, PropertyType propertyType)
+{
+    if (m_PropertyType != propertyType)
+        return ER_BUS_SIGNATURE_MISMATCH;
+
+    QStatus status;
+
+    MsgArg* minValue = new MsgArg();
+    MsgArg* maxValue = new MsgArg();
+    MsgArg* incrementValue = new MsgArg();
+
+    switch (m_PropertyType) {
+    case UINT16_PROPERTY:
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT16.c_str(), m_MinValue.uint16Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT16.c_str(), m_MaxValue.uint16Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT16.c_str(), m_IncrementValue.uint16Value));
+        break;
+
+    case INT16_PROPERTY:
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT16.c_str(), m_MinValue.int16Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT16.c_str(), m_MaxValue.int16Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT16.c_str(), m_IncrementValue.int16Value));
+        break;
+
+    case UINT32_PROPERTY:
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT32.c_str(), m_MinValue.uint32Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT32.c_str(), m_MaxValue.uint32Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT32.c_str(), m_IncrementValue.uint32Value));
+        break;
+
+    case INT32_PROPERTY:
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT32.c_str(), m_MinValue.int32Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT32.c_str(), m_MaxValue.int32Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT32.c_str(), m_IncrementValue.int32Value));
+        break;
+
+    case UINT64_PROPERTY:
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT64.c_str(), m_MinValue.uint64Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT64.c_str(), m_MaxValue.uint64Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT64.c_str(), m_IncrementValue.uint64Value));
+        break;
+
+    case INT64_PROPERTY:
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT64.c_str(), m_MinValue.int64Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT64.c_str(), m_MaxValue.int64Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT64.c_str(), m_IncrementValue.int64Value));
+        break;
+
+    case DOUBLE_PROPERTY:
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_DOUBLE.c_str(), m_MinValue.doubleValue));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_DOUBLE.c_str(), m_MaxValue.doubleValue));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_DOUBLE.c_str(), m_IncrementValue.doubleValue));
+        break;
+
+    default:
+        status = ER_BUS_BAD_SIGNATURE;
+        break;
+    }
+
+    if (status != ER_OK) {
+        GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+        if (logger)
+            logger->warn(TAG, "Could not marshal Constraint Range");
+        delete minValue;
+        delete maxValue;
+        delete incrementValue;
+        return status;
+    }
+
+    status = val.Set(AJPARAM_STRUCT_VAR_VAR_VAR.c_str(), minValue, maxValue, incrementValue);
+
+    if (status != ER_OK) {
+        GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+        if (logger)
+            logger->warn(TAG, "Could not marshal Constraint Range");
+        delete minValue;
+        delete maxValue;
+        delete incrementValue;
+        return status;
+    }
+
+    return status;
+}
+
+} /* namespace services */
+} /* namespace ajn */

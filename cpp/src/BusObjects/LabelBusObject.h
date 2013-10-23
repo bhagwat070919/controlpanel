@@ -17,18 +17,41 @@
 #ifndef LABELBUSOBJECT_H_
 #define LABELBUSOBJECT_H_
 
-#include "alljoyn/controlpanel/WidgetBusObject.h"
+#include "WidgetBusObject.h"
 
 namespace ajn {
 namespace services {
 
+/**
+ * LabelBusObject - BusObject for Labels
+ */
 class LabelBusObject : public WidgetBusObject {
   public:
-    LabelBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
+
+    /**
+     * Constructor for LabelBusObject class
+     * @param bus - the bus to create the interface
+     * @param objectPath - objectPath of BusObject
+     * @param langIndx - the languageIndex of the BusObject
+     * @param status - success/failure
+     * @param widget - the widget associated with the BusObject
+     */
+    LabelBusObject(ajn::BusAttachment* bus, qcc::String const& objectPath,
                    uint16_t langIndx, QStatus& status, Widget* widget);
+
+    /**
+     * Destructor for the BusObject
+     */
     virtual ~LabelBusObject();
 
-    QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
+    /**
+     * Callback for Alljoyn when GetProperty is called on this BusObject
+     * @param interfaceName - the name of the Interface
+     * @param propName - the name of the Property
+     * @param val - the MsgArg to fill
+     * @return status - success/failure
+     */
+    QStatus Get(const char* interfaceName, const char* propName, MsgArg& val);
 };
 
 } /* namespace services */

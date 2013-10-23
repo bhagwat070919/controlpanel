@@ -30,13 +30,37 @@ namespace services {
  * that can make up a constraint
  */
 typedef union {
+    /**
+     * Value for uint16_t
+     */
     uint16_t uint16Value;
+    /**
+     * Value for int16_t
+     */
     int16_t int16Value;
+    /**
+     * Value for uint32_t
+     */
     uint32_t uint32Value;
+    /**
+     * Value for int32_t
+     */
     int32_t int32Value;
+    /**
+     * Value for uint64_t
+     */
     uint64_t uint64Value;
+    /**
+     * Value for int64_t
+     */
     int64_t int64Value;
+    /**
+     * Value for double
+     */
     double doubleValue;
+    /**
+     * Value for const char*
+     */
     const char* charValue;
 } ConstraintValue;
 
@@ -150,7 +174,7 @@ class ConstraintList {
      * @param propertyType - the property Type expected
      * @return status - success/failure
      */
-    QStatus fillConstraintArg(MsgArg& val, int16_t languageIndx, PropertyType propertyType);
+    QStatus fillConstraintArg(MsgArg& val, uint16_t languageIndx, PropertyType propertyType);
 
   private:
 

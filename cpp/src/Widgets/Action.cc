@@ -18,11 +18,11 @@
 #include "../BusObjects/ActionBusObject.h"
 #include "../ControlPanelConstants.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 using namespace cpsConsts;
 
-Action::Action(qcc::String name) : Widget(name, TAG_ACTION_WIDGET)
+Action::Action(qcc::String const& name) : Widget(name, TAG_ACTION_WIDGET)
 {
 }
 
@@ -35,3 +35,6 @@ WidgetBusObject* Action::createWidgetBusObject(BusAttachment* bus, qcc::String c
 {
     return new ActionBusObject(bus, objectPath, langIndx, status, this);
 }
+
+} /* namespace services */
+} /* namespace ajn */

@@ -24,7 +24,7 @@ namespace ajn {
 namespace services {
 
 /**
- * Action Class. Used to display a Button.
+ * ActionWithDialog Class. Used to display a Button.
  * Upon pressing the button a Dialog is displayed on the Controller side
  */
 class ActionWithDialog : public Widget {
@@ -34,7 +34,7 @@ class ActionWithDialog : public Widget {
      * Constructor for Action with Dialog class
      * @param name - name of Widget
      */
-    ActionWithDialog(qcc::String name);
+    ActionWithDialog(qcc::String const& name);
 
     /**
      * Destructor for Action with Dialog Class

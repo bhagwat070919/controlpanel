@@ -165,3 +165,44 @@ void setStringVar(const char* newStringVar)
     strncpy(stringVar, newStringVar, 99);
     stringVar[99] = '\0';
 }
+
+/* For Oven.XML */
+
+static int temperature = 100;
+static int program = 0;
+static const char* programString = "Program";
+
+void startOven()
+{
+    AJ_Printf("**************** Starting the Oven ****************\n");
+}
+
+void stopOven()
+{
+    AJ_Printf("**************** Stopping the Oven ****************\n");
+}
+
+void*getTemperature()
+{
+    return &temperature;
+}
+
+void setTemperature(uint16_t t)
+{
+    temperature = t;
+}
+
+void*getProgram()
+{
+    return &program;
+}
+
+void setProgram(uint16_t p)
+{
+    program = p;
+}
+
+const char* getProgramString(uint16_t language)
+{
+    return programString;
+}

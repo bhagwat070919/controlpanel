@@ -22,8 +22,10 @@ namespace ajn {
 namespace services {
 using namespace cpsConsts;
 
+#define TAG TAG_CONTROLPANELCONTROLLEE
+
 ControlPanelControllee::ControlPanelControllee(qcc::String const& unitName) :
-    TAG(TAG_CONTROLPANELCONTROLLEE), m_UnitName(unitName), m_HttpControl(0)
+    m_UnitName(unitName), m_HttpControl(0)
 {
 }
 
@@ -32,15 +34,47 @@ ControlPanelControllee::~ControlPanelControllee()
 
 }
 
-
-void ControlPanelControllee::addControlPanel(ControlPanel* controlPanel)
+const qcc::String& ControlPanelControllee::getUnitName() const
 {
-    m_ControlPanels.push_back(controlPanel);
+    return m_UnitName;
 }
 
-void ControlPanelControllee::addNotificationAction(NotificationAction* notificationAction)
+QStatus ControlPanelControllee::addControlPanel(ControlPanel* controlPanel)
 {
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+
+    if (!controlPanel) {
+        if (logger)
+            logger->warn(TAG, "Could not add a NULL controlPanel");
+        return ER_BAD_ARG_1;
+    }
+
+    m_ControlPanels.push_back(controlPanel);
+    return ER_OK;
+}
+
+const std::vector<ControlPanel*>& ControlPanelControllee::getControlPanels() const
+{
+    return m_ControlPanels;
+}
+
+QStatus ControlPanelControllee::addNotificationAction(NotificationAction* notificationAction)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+
+    if (!notificationAction) {
+        if (logger)
+            logger->warn(TAG, "Could not add a NULL notificationAction");
+        return ER_BAD_ARG_1;
+    }
+
     m_NotificationActions.push_back(notificationAction);
+    return ER_OK;
+}
+
+const std::vector<NotificationAction*>& ControlPanelControllee::getNotificationActions() const
+{
+    return m_NotificationActions;
 }
 
 QStatus ControlPanelControllee::setHttpControl(HttpControl* httpControl)
@@ -61,6 +95,11 @@ QStatus ControlPanelControllee::setHttpControl(HttpControl* httpControl)
 
     m_HttpControl = httpControl;
     return ER_OK;
+}
+
+const HttpControl* ControlPanelControllee::getHttpControl() const
+{
+    return m_HttpControl;
 }
 
 QStatus ControlPanelControllee::registerObjects(BusAttachment* bus)
@@ -130,5 +169,6 @@ QStatus ControlPanelControllee::unregisterObjects(BusAttachment* bus)
     }
     return returnStatus;
 }
+
 } /* namespace services */
 } /* namespace ajn */

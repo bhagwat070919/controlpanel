@@ -24,16 +24,47 @@
 namespace ajn {
 namespace services {
 
+/**
+ * NotificationActionBusObject class. BusObject for a NotificationAction
+ */
 class NotificationActionBusObject : public BusObject {
   public:
-    NotificationActionBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath, QStatus& status);
 
+    /**
+     * Constructor for NotificationActionBusObject
+     * @param bus - bus used to create the interface
+     * @param objectPath - objectPath of BusObject
+     * @param status - success/failure
+     */
+    NotificationActionBusObject(ajn::BusAttachment* bus, qcc::String const& objectPath, QStatus& status);
+
+    /**
+     * Destructor of NotificationActionBusObject class
+     */
     virtual ~NotificationActionBusObject();
 
-    QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
+    /**
+     * Callback for Alljoyn when GetProperty is called on this BusObject
+     * @param interfaceName - the name of the Interface
+     * @param propName - the name of the Property
+     * @param val - the MsgArg to fill
+     * @return status - success/failure
+     */
+    QStatus Get(const char* interfaceName, const char* propName, MsgArg& val);
 
+    /**
+     * Callback for Alljoyn when SetProperty is called on this BusObject
+     * @param interfaceName - the name of the Interface
+     * @param propName - the name of the Property
+     * @param val - the MsgArg that contains the new Value
+     * @return status - success/failure
+     */
     QStatus Set(const char* ifcName, const char* propName, MsgArg& val);
 
+    /**
+     * Send a Dismiss Signal for This Notification Action
+     * @return
+     */
     QStatus SendDismissSignal();
 
   private:
@@ -42,8 +73,6 @@ class NotificationActionBusObject : public BusObject {
      * The pointer used to send signal/register Signal Handler
      */
     const ajn::InterfaceDescription::Member* m_SignalDismiss;
-
-    qcc::String const& TAG;
 
 };
 

@@ -17,8 +17,8 @@
 #include "REGULAR_NAME_HERE.h"
 ADDITIONAL_INCLUDES_HERE
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 
 REGULAR_NAME_HERE::REGULAR_NAME_HERE(qcc::String name, PropertyType propertyType) :
     Property(name, propertyType)
@@ -36,3 +36,6 @@ QStatus REGULAR_NAME_HERE::setValue(VALUE_TYPE_HERE value)
     CODE_OF_SET_VALUE_HERE;
     return ER_OK;
 }
+
+} /* namespace services */
+} /* namespace ajn */

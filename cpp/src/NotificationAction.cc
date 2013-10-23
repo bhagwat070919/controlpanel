@@ -24,7 +24,7 @@ namespace ajn {
 namespace services {
 using namespace cpsConsts;
 
-qcc::String const& NotificationAction::TAG = TAG_NOTIFICATIONACTION;
+#define TAG TAG_NOTIFICATIONACTION
 
 NotificationAction* NotificationAction::createNotificationAction(LanguageSet* languageSet)
 {
@@ -85,6 +85,7 @@ QStatus NotificationAction::registerObjects(BusAttachment* bus, qcc::String cons
             logger->warn(TAG, "Could not create NotificationActionBusObject");
         return status;
     }
+
     status = bus->RegisterBusObject(*m_NotificationActionBusObject);
     if (status != ER_OK) {
         if (logger)
@@ -125,14 +126,20 @@ QStatus NotificationAction::unregisterObjects(BusAttachment* bus)
     }
 
     if (m_RootWidget) {
+        m_NotificationActionBusObject = 0; // Gets unregistered in rootWidget
         status = m_RootWidget->unregisterObjects(bus);
         if (status != ER_OK) {
             if (logger)
-                logger->warn(TAG, "Could not unregister RootContainer.");
+                logger->warn(TAG, "Could not unregister RootWidget.");
+            return status;
         }
+    } else if (m_NotificationActionBusObject) {   // no rootWidget so need to unregister here
+        bus->UnregisterBusObject(*m_NotificationActionBusObject);
+        delete m_NotificationActionBusObject;
+        m_NotificationActionBusObject = 0;
     }
-    m_NotificationActionBusObject = 0; //TODO: who's responsible for unregistering. NA or RootWidget?
-    return ER_OK;
+
+    return status;
 }
 
 } /* namespace services */

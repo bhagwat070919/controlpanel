@@ -22,18 +22,50 @@
 namespace ajn {
 namespace services {
 
+/**
+ * RootWidget class. Used as base for widgets that function as a
+ * rootContainer or rootDialog
+ */
 class RootWidget : public Widget {
   public:
 
-    RootWidget(qcc::String name, qcc::String tag);
+    /**
+     * Constructor for RootWidget
+     * @param name - name of Widget
+     * @param tag - Tag for logging
+     */
+    RootWidget(qcc::String const& name, qcc::String const& tag);
+
+    /**
+     * Destructor of RootWidget
+     */
     virtual ~RootWidget();
 
+    /**
+     * Send a Signal to Dismiss the widget
+     * @return stats - success/failure
+     */
     QStatus SendDismissSignal();
 
+    /**
+     * Set the BusObject if RootWidget is a NotificationAction
+     * @param notificationActionBusObject - the busObject to store
+     * @return status - success/failure
+     */
     QStatus setNotificationActionBusObject(BusObject* notificationActionBusObject);
+
+    /**
+     * Unregister the BusObjects
+     * @param bus - bus used to unregister
+     * @return status - success/failure
+     */
+    virtual QStatus unregisterObjects(BusAttachment* bus);
 
   protected:
 
+    /**
+     * The BusObject if this Widget is a NotificationAction
+     */
     BusObject* m_NotificationActionBusObject;
 };
 } //namespace services

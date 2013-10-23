@@ -12,12 +12,13 @@
 #    See the license for the specific language governing permissions and
 #    limitations under the license.
 
-Import('env', 'cobjs', 'genobjs')
+Import('env', 'cobjs', 'genobjs', 'providedobjs')
 
 srcs = env.Glob('*.cc')
 objs = env.Object(srcs)
 objs.extend(cobjs)
 objs.extend(genobjs)
+objs.extend(providedobjs)
 
 prog = env.Program('ControlPanelSample', objs)
 

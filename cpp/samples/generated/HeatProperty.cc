@@ -15,10 +15,10 @@
  ******************************************************************************/
 
 #include "HeatProperty.h"
-#include "../provided/ControlPanelProvided.h"
+#include "ControlPanelProvided.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 
 HeatProperty::HeatProperty(qcc::String name, PropertyType propertyType) :
     Property(name, propertyType)
@@ -36,3 +36,6 @@ QStatus HeatProperty::setValue(uint16_t value)
     setuint16Var(value);
     return ER_OK;
 }
+
+} /* namespace services */
+} /* namespace ajn */

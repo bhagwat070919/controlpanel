@@ -18,10 +18,10 @@
 #include "alljoyn/controlpanel/ControlPanelService.h"
 #include "../BusObjects/NotificationActionBusObject.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 
-RootWidget::RootWidget(qcc::String name, qcc::String tag) : Widget(name, tag),
+RootWidget::RootWidget(qcc::String const& name, qcc::String const& tag) : Widget(name, tag),
     m_NotificationActionBusObject(0)
 {
 }
@@ -57,3 +57,23 @@ QStatus RootWidget::setNotificationActionBusObject(BusObject* notificationAction
     m_NotificationActionBusObject = notificationActionBusObject;
     return ER_OK;
 }
+
+QStatus RootWidget::unregisterObjects(BusAttachment* bus)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    QStatus status = Widget::unregisterObjects(bus);
+    if (status != ER_OK) {
+        if (logger)
+            logger->warn(TAG, "Could not unregister BusObjects");
+    }
+
+    if (m_NotificationActionBusObject) {
+        bus->UnregisterBusObject(*m_NotificationActionBusObject);
+        delete m_NotificationActionBusObject;
+        m_NotificationActionBusObject = 0;
+    }
+    return status;
+}
+
+} /* namespace services */
+} /* namespace ajn */

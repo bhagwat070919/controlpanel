@@ -54,7 +54,7 @@ class HttpControl:
         self.generated.identify += self.httpIdentifyString.format(name)
 
         self.generated.objectPathsDecl += "extern const char {0}[];\n".format(objectPathVar)
-        self.generated.objectPathsDef += "const char {0}[] = \"{1}\";\\\n".format(objectPathVar, self.generated.ObjectPathPrefix + "HTTPControl")
+        self.generated.objectPathsDef += "const char {0}[] = \"{1}\";\n".format(objectPathVar, self.generated.ObjectPathPrefix + "HTTPControl")
 
         self.generated.staticVars += "static HttpControl {0};\n".format(name)
         self.generated.initFunction += "\tinitializeHttpControl(&{0});\n".format(name)

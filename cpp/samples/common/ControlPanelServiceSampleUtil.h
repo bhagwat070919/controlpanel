@@ -31,10 +31,11 @@ class ControlPanelServiceSampleUtil {
 
     /**
      * static method that prepares the BusAttachment
-     * @param logger
+     * @param logger - logger to log failures
+     * @param authListener - authListener if want to run secured
      * @return the busattachment created. NULL if failed
      */
-    static ajn::BusAttachment* prepareBusAttachment(ajn::services::GenericLogger* logger = 0);
+    static ajn::BusAttachment* prepareBusAttachment(ajn::services::GenericLogger* logger = 0, ajn::AuthListener* authListener = 0);
 
     /**
      * static method preparePropertyStore
@@ -99,7 +100,7 @@ class ControlPanelServiceSampleUtil {
      * EnableSecurity
      * @return
      */
-    static QStatus EnableSecurity(ajn::BusAttachment* bus);
+    static QStatus EnableSecurity(ajn::BusAttachment* bus, ajn::AuthListener* authListener);
 };
 
 #endif /* CONTROLPANELSERVICESAMPLEUTIL_H_ */

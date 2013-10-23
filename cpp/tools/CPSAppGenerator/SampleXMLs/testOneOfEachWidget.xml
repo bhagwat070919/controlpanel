@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <controlPanelDevice xmlns="http://www.alljoyn.org/controlpanel/gen">
     <name>MyDevice</name>
-    <headerCode>#include "../provided/ControlPanelProvided.h"</headerCode>
+    <headerCode>#include "ControlPanelProvided.h"</headerCode>
     <languageSet name="myLanguages">
         <language>en</language>
         <language>de-AT</language>        
@@ -82,7 +82,7 @@
                     <action>
                         <name>ovenAction</name>
                         <onAction>
-                            <executeCode>//AJ_Printf("Starting the Oven. Execute was called\n");</executeCode>
+                            <executeCode>AJ_Printf("Starting the Oven. Execute was called\n");</executeCode>
                         </onAction>
                         <secured>false</secured>
                         <enabled>true</enabled>
@@ -119,21 +119,21 @@
                                         <value type="literal" language="en">Yes</value>
                                         <value type="literal" language="de-AT">Ja</value>
                                     </label>
-                                    <executeCode>//AJ_Printf("Execute Action1 was called\n");</executeCode>
+                                    <executeCode>AJ_Printf("Execute Action1 was called\n");</executeCode>
                                 </button>
                                 <button>
                                     <label>
                                         <value type="literal" language="en">No</value>
                                         <value type="literal" language="de-AT">Nein</value>
                                     </label>
-                                    <executeCode>//AJ_Printf("Execute Action2 was called\n");</executeCode>
+                                    <executeCode>AJ_Printf("Execute Action2 was called\n");</executeCode>
                                 </button>
                                 <button>
                                     <label>
                                         <value type="literal" language="en">Cancel</value>
                                         <value type="literal" language="de-AT">Abrechen</value>
                                     </label>
-                                    <executeCode>//AJ_Printf("Execute Action3 was called\n");</executeCode>
+                                    <executeCode>AJ_Printf("Execute Action3 was called\n");</executeCode>
                                 </button>
                             </dialog>
                         </onAction>
@@ -171,9 +171,7 @@
                     <value type="literal" language="en">Yes</value>
                     <value type="literal" language="de-AT">Ja</value>
                 </label>
-                <executeCode>//AJ_Printf("Execute Action1 was called\n");
-                    addDismissSignal(context, NOTIFICATION_ACTION_AREYOUSURE_SIGNAL_DISMISS);
-                </executeCode>
+                <executeCode>AJ_Printf("Execute Action1 was called\n");</executeCode>
             </button>
         </dialog>
     </notificationActions>

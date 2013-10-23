@@ -22,6 +22,7 @@
 #include "alljoyn/controlpanel/ControlPanelControllee.h"
 #include "alljoyn/controlpanel/GenericLogger.h"
 #include "PropertyStoreImpl.h"
+#include "PinKeyXListener.h"
 #include "ControlPanelServiceSampleUtil.h"
 #include "ControlPanelGenerated.h"
 
@@ -36,6 +37,7 @@ ControlPanelBusListener* controlpanelBusListener = 0;
 BusAttachment* bus = 0;
 ControlPanelService* controlPanelService = 0;
 ControlPanelControllee* controlPanelControllee = 0;
+PinKeyXListener* pinKeyXListener = 0;
 
 void exitApp(int32_t signum)
 {
@@ -53,6 +55,8 @@ void exitApp(int32_t signum)
         delete (propertyStoreImpl);
     if (controlPanelService)
         delete controlPanelService;
+    if (pinKeyXListener)
+        delete pinKeyXListener;
     if (bus)
         delete bus;
 
@@ -77,7 +81,9 @@ int32_t main()
     controlPanelService = ControlPanelService::getInstance();
     controlPanelService->setLogLevel(Log::LogLevel::LEVEL_DEBUG);
 
-    bus = ControlPanelServiceSampleUtil::prepareBusAttachment(controlPanelService->getLogger());
+    pinKeyXListener = new PinKeyXListener();
+
+    bus = ControlPanelServiceSampleUtil::prepareBusAttachment(controlPanelService->getLogger(), pinKeyXListener);
     if (bus == NULL) {
         std::cout << "Could not initialize BusAttachment." << std::endl;
         exitApp(1);

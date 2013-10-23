@@ -17,14 +17,16 @@
 #include <algorithm>
 #include <sstream>
 
-#include <alljoyn/PasswordManager.h>
 #include "alljoyn/controlpanel/ControlPanelService.h"
 #include "ControlPanelConstants.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
+
 using namespace qcc;
 using namespace cpsConsts;
+
+#define TAG TAG_CONTROLPANELSERVICE
 
 ControlPanelService* ControlPanelService::s_Instance(0);
 uint16_t const ControlPanelService::CONTROLPANEL_SERVICE_VERSION = 1;
@@ -38,8 +40,7 @@ ControlPanelService* ControlPanelService::getInstance()
 }
 
 ControlPanelService::ControlPanelService() :
-    m_Bus(0), m_BusListener(0), m_ControlPanelControllee(0),
-    logger(0), TAG(TAG_CONTROLPANELSERVICE)
+    m_Bus(0), m_BusListener(0), m_ControlPanelControllee(0), logger(0)
 {
     setLogger(&cpsLogger);
 }
@@ -54,6 +55,7 @@ ControlPanelService::~ControlPanelService()
         delete m_BusListener;
         m_BusListener = 0;
     }
+
     if (this == s_Instance)
         s_Instance = 0;
 }
@@ -121,11 +123,10 @@ QStatus ControlPanelService::initControllee(BusAttachment* bus, ControlPanelCont
     m_BusListener->setSessionPort(CONTROLPANELSERVICE_PORT);
     m_Bus->RegisterBusListener(*m_BusListener);
 
-    TransportMask transportMask = TRANSPORT_ANY;
-    SessionPort sp = CONTROLPANELSERVICE_PORT;
-    SessionOpts opts(SessionOpts::TRAFFIC_MESSAGES, false, SessionOpts::PROXIMITY_ANY, transportMask);
+    SessionPort servicePort = CONTROLPANELSERVICE_PORT;
+    SessionOpts sessionOpts(SessionOpts::TRAFFIC_MESSAGES, true, SessionOpts::PROXIMITY_ANY, TRANSPORT_ANY);
 
-    return m_Bus->BindSessionPort(sp, opts, *m_BusListener);
+    return m_Bus->BindSessionPort(servicePort, sessionOpts, *m_BusListener);
 }
 
 QStatus ControlPanelService::shutdownControllee()
@@ -144,13 +145,6 @@ QStatus ControlPanelService::shutdownControllee()
         return ER_BUS_BUS_NOT_STARTED;
     }
 
-    QStatus status = m_ControlPanelControllee->unregisterObjects(m_Bus);
-    if (status != ER_OK) {
-        if (logger)
-            logger->warn(TAG, "Could not unregister the BusObjects");
-        returnStatus = status;
-    }
-
     if (m_BusListener) {
         m_Bus->UnregisterBusListener(*m_BusListener);
         delete m_BusListener;
@@ -160,26 +154,22 @@ QStatus ControlPanelService::shutdownControllee()
     TransportMask transportMask = TRANSPORT_ANY;
     SessionPort sp = CONTROLPANELSERVICE_PORT;
     SessionOpts opts(SessionOpts::TRAFFIC_MESSAGES, false, SessionOpts::PROXIMITY_ANY, transportMask);
-    status = m_Bus->UnbindSessionPort(sp);
+    QStatus status = m_Bus->UnbindSessionPort(sp);
     if (status != ER_OK) {
         if (logger)
             logger->warn(TAG, "Could not unbind the SessionPort");
         returnStatus = status;
     }
 
+    status = m_ControlPanelControllee->unregisterObjects(m_Bus);
+    if (status != ER_OK) {
+        if (logger)
+            logger->warn(TAG, "Could not unregister the BusObjects");
+        returnStatus = status;
+    }
+
     m_ControlPanelControllee = 0;
     return returnStatus;
-}
-
-BusAttachment* ControlPanelService::getBusAttachment()
-{
-    if (logger) logger->debug(TAG, "In Get BusAttachment");
-    return m_Bus;
-}
-
-ControlPanelBusListener* ControlPanelService::getBusListener() const
-{
-    return m_BusListener;
 }
 
 GenericLogger* ControlPanelService::setLogger(GenericLogger* newLogger)
@@ -210,3 +200,16 @@ Log::LogLevel ControlPanelService::getLogLevel()
     return logger ? logger->getLogLevel() : Log::LogLevel::LEVEL_INFO; //NSLogger::getDefaultLogLevel();
 }
 
+
+BusAttachment* ControlPanelService::getBusAttachment()
+{
+    return m_Bus;
+}
+
+ControlPanelBusListener* ControlPanelService::getBusListener() const
+{
+    return m_BusListener;
+}
+
+} /* namespace services */
+} /* namespace ajn */

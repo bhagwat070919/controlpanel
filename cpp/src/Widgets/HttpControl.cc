@@ -20,17 +20,26 @@
 #include "../BusObjects/HttpControlBusObject.h"
 #include "alljoyn/about/AboutServiceApi.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 using namespace cpsConsts;
 
-HttpControl::HttpControl(qcc::String url) : m_Url(url),
-    m_HttpControlBusObject(0), TAG(TAG_HTTPCONTROL)
+#define TAG TAG_HTTPCONTROL
+
+HttpControl::HttpControl(qcc::String const& url) : m_Url(url),
+    m_HttpControlBusObject(0)
 {
 }
 
 HttpControl::~HttpControl()
 {
+}
+
+const uint16_t HttpControl::getInterfaceVersion() const
+{
+    if (!m_HttpControlBusObject)
+        return 1;
+    return ((HttpControlBusObject*)m_HttpControlBusObject)->getInterfaceVersion();
 }
 
 QStatus HttpControl::registerObjects(BusAttachment* bus, qcc::String const& unitName)
@@ -59,11 +68,11 @@ QStatus HttpControl::registerObjects(BusAttachment* bus, qcc::String const& unit
     if (!aboutService) {
         if (logger)
             logger->warn(TAG, "Could not retrieve AboutService. It has not been initialized");
-        return ER_BUS_TRANSPORT_NOT_STARTED;
+        return ER_FAIL;
     }
 
     QStatus status = ER_OK;
-    qcc::String objectPath = AJ_OBJECTPATH_PREFIX + unitName + "/" + "HTTPControl"; //todo constant
+    qcc::String objectPath = AJ_OBJECTPATH_PREFIX + unitName + AJ_HTTP_OBJECTPATH_SUFFIX;
     m_HttpControlBusObject = new HttpControlBusObject(bus, objectPath.c_str(), status, this);
     if (status != ER_OK) {
         if (logger)
@@ -106,7 +115,10 @@ QStatus HttpControl::unregisterObjects(BusAttachment* bus)
     return ER_OK;
 }
 
-QStatus HttpControl::getUrlForArg(MsgArg& val)
+QStatus HttpControl::fillUrlArg(MsgArg& val)
 {
     return val.Set(AJPARAM_STR.c_str(), m_Url.c_str());
 }
+
+} /* namespace services */
+} /* namespace ajn */

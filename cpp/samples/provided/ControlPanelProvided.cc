@@ -15,15 +15,202 @@
  ******************************************************************************/
 
 #include "ControlPanelProvided.h"
+#include <qcc/String.h>
 
-static uint16_t uint16Value = 0;
+static bool boolVar = false;
+
+static uint16_t uint16Var = 0;
+static int16_t int16Var = 0;
+
+static uint32_t uint32Var = 0;
+static int32_t int32Var = 0;
+
+static uint64_t uint64Var = 0;
+static int64_t int64Var = 0;
+
+static double doubleVar = 0;
+
+static qcc::String StringVar = "Initial String";
+
+static qcc::String sampleString = "This is a test";
+static qcc::String sampleUrlString = "www.ControlPanelTest.com";
+
+static ajn::services::CPSDate date(13, 6, 2006);
+static ajn::services::CPSTime time(18, 30, 25);
+
+bool getboolVar()
+{
+    return boolVar;
+}
+
+void setboolVar(bool value)
+{
+    boolVar = value;
+}
+
+double getdoubleVar()
+{
+    return doubleVar;
+}
+
+void setdoubleVar(double value)
+{
+    doubleVar = value;
+}
+
+const char* getStringVar()
+{
+    return StringVar.c_str();
+}
+
+void setStringVar(const char* value)
+{
+    StringVar = value;
+}
 
 uint16_t getuint16Var()
 {
-    return uint16Value;
+    return uint16Var;
 }
 
 void setuint16Var(uint16_t value)
 {
-    uint16Value = value;
+    uint16Var = value;
 }
+
+int16_t getint16Var()
+{
+    return int16Var;
+}
+
+void setint16Var(int16_t value)
+{
+    int16Var = value;
+}
+
+uint32_t getuint32Var()
+{
+    return uint32Var;
+}
+
+void setuint32Var(uint32_t value)
+{
+    uint32Var = value;
+}
+
+int32_t getint32Var()
+{
+    return int32Var;
+}
+
+void setint32Var(int32_t value)
+{
+    int32Var = value;
+}
+
+uint64_t getuint64Var()
+{
+    return uint64Var;
+}
+
+void setuint64Var(uint64_t value)
+{
+    uint64Var = value;
+}
+
+int64_t getint64Var()
+{
+    return int64Var;
+}
+
+void setint64Var(int64_t value)
+{
+    int64Var = value;
+}
+
+bool getEnabledFunc()
+{
+    return true;
+}
+
+bool getWriteableFunc()
+{
+    return true;
+}
+
+const char* getTestString(uint16_t language)
+{
+    return sampleString.c_str();
+}
+
+const char* getUrlString()
+{
+    return sampleUrlString.c_str();
+}
+
+const ajn::services::CPSDate& getDateProperty()
+{
+    return date;
+}
+
+void setDateProperty(const ajn::services::CPSDate& datePropertyValue)
+{
+    date.setDay(datePropertyValue.getDay());
+    date.setMonth(datePropertyValue.getMonth());
+    date.setYear(datePropertyValue.getYear());
+}
+
+const ajn::services::CPSTime& getTimeProperty()
+{
+    return time;
+}
+
+void setTimeProperty(const ajn::services::CPSTime& timePropertyValue)
+{
+    time.setHour(timePropertyValue.getHour());
+    time.setMinute(timePropertyValue.getMinute());
+    time.setSecond(timePropertyValue.getSecond());
+}
+
+/**
+ * Functions for Oven.xml
+ */
+static uint16_t temperatureVar = 0;
+static uint16_t programVar = 0;
+static qcc::String programString = "Program: ";
+
+void startOven()
+{
+    printf("********* Starting the Oven *********\n");
+}
+
+void stopOven()
+{
+    printf("********* Stopping the Oven *********\n");
+}
+
+uint16_t getTemperature()
+{
+    return temperatureVar;
+}
+
+void setTemperature(uint16_t temperature)
+{
+    temperatureVar = temperature;
+}
+
+uint16_t getProgram()
+{
+    return programVar;
+}
+
+void setProgram(uint16_t program)
+{
+    programVar = program;
+}
+
+const char* getProgramString(uint16_t language)
+{
+    return programString.c_str();
+}
+

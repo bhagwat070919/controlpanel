@@ -28,7 +28,7 @@ class Widget:
         self.name = element.name
         self.languageSetName = languageSetName
         self.languageSet = self.generated.languageSets[languageSetName]
-        self.parentAddFunc = "addChildElement"
+        self.parentAddFunc = "addChildWidget"
         self.additionalParams = ""
 
 
@@ -104,7 +104,10 @@ class Widget:
             return;
         root = getattr(element, fieldName) 
         if root._has("code") : 
-            self.generated.initCode += "    {0}->{1}({2});\n".format(self.name, codeVariableName, root.code)
+            if len(elementName) :
+                self.generated.initCode += "    {0}.{1}({2});\n".format(elementName, codeVariableName, root.code)
+            else :
+                self.generated.initCode += "    {0}->{1}({2});\n".format(self.name, codeVariableName, root.code)
             return
         if root._has("value"):
             values = as_list(root.value)

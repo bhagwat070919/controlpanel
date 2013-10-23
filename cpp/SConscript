@@ -24,6 +24,5 @@ cpsenv.Install('$CPS_DISTDIR/lib', cpsenv.SConscript('$OBJDIR/SConscript', expor
 cpsenv.Install('$CPS_DISTDIR/bin', cpsenv.SConscript('$OBJDIR/samples/SConscript', exports = ['cpsenv']))
 
 # Build docs
-#installDocs = cpsenv.SConscript('docs/SConscript')
-#cpsenv.Depends(installDocs, cpsenv.Glob('$CONTROLPANEL_DISTDIR/inc/alljoyn/controlpanel/*.h'));
-
+installDocs = cpsenv.SConscript('docs/SConscript', exports = ['cpsenv'])
+cpsenv.Depends(installDocs, cpsenv.Glob('$CPS_DISTDIR/inc/alljoyn/controlpanel/*.h'));

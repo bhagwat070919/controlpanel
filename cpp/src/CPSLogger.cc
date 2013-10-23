@@ -18,12 +18,12 @@
 #include "alljoyn/controlpanel/ControlPanelService.h"
 #include <qcc/Log.h>
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 using namespace qcc;
 
 #define CALLBACKTAG "AllJoynInternal"
-#define QCC_MODULE "NotificationService"
+#define QCC_MODULE "ControlPanelService"
 
 Log::LogLevel CPSLogger::m_defaultLogLevel = Log::LEVEL_ERROR;
 GenericLogger* CPSLogger::m_initialLogger = NULL;
@@ -151,3 +151,5 @@ void CPSLogger::RegisterCallBack(GenericLogger* newLogger)
     }
 }
 
+} /* namespace services */
+} /* namespace ajn */

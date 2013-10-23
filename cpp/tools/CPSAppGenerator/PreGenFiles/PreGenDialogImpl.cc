@@ -17,8 +17,8 @@
 #include "REGULAR_NAME_HERE.h"
 ADDITIONAL_INCLUDES_HERE
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 
 REGULAR_NAME_HERE::REGULAR_NAME_HERE(qcc::String name) : Dialog(name)
 {
@@ -30,17 +30,29 @@ REGULAR_NAME_HERE::~REGULAR_NAME_HERE()
 
 }
 
-void REGULAR_NAME_HERE::executeAction1CallBack()
+bool REGULAR_NAME_HERE::executeAction1CallBack()
 {
-    CODE_OF_EXECUTE_ACTION1_HERE;
+    CODE_OF_EXECUTE_ACTION1_HERE
+
+    //by default return success
+    return true;
 }
 
-void REGULAR_NAME_HERE::executeAction2CallBack()
+bool REGULAR_NAME_HERE::executeAction2CallBack()
 {
-    CODE_OF_EXECUTE_ACTION2_HERE;
+    CODE_OF_EXECUTE_ACTION2_HERE
+
+    //by default return success
+    return true;
 }
 
-void REGULAR_NAME_HERE::executeAction3CallBack()
+bool REGULAR_NAME_HERE::executeAction3CallBack()
 {
-    CODE_OF_EXECUTE_ACTION3_HERE;
+    CODE_OF_EXECUTE_ACTION3_HERE
+
+    //by default return success
+    return true;
 }
+
+} /* namespace services */
+} /* namespace ajn */

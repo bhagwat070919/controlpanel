@@ -17,31 +17,67 @@
 #ifndef HTTPCONTROL_H_
 #define HTTPCONTROL_H_
 
-#include "alljoyn/BusAttachment.h"
 #include "alljoyn/BusObject.h"
-#include "qcc/String.h"
 
 namespace ajn {
 namespace services {
 
+/**
+ * HttpControl class. Allows definition of a url
+ */
 class HttpControl {
   public:
-    HttpControl(qcc::String url);
+
+    /**
+     * Constructor for HttpControl
+     * @param url - url of HttpControl
+     */
+    HttpControl(qcc::String const& url);
+
+    /**
+     * Destructor of HttpControl
+     */
     virtual ~HttpControl();
 
+    /**
+     * Get the Interface Version of the HttpControl
+     * @return interface Version
+     */
+    const uint16_t getInterfaceVersion() const;
+
+    /**
+     * Register the HttpControl BusObject
+     * @param bus - bus used for registering the object
+     * @param unitName - name of unit
+     * @return status - success/failure
+     */
     QStatus registerObjects(BusAttachment* bus, qcc::String const& unitName);
 
+    /**
+     * Unregister the HttpControl BusObject
+     * @param bus - bus used to unregister the object
+     * @return status - success/failure
+     */
     QStatus unregisterObjects(BusAttachment* bus);
 
-    QStatus getUrlForArg(MsgArg& val);
+    /**
+     * Fill MsgArg passed in with Url
+     * @param val - msgArg to fill
+     * @return status - success/failure
+     */
+    QStatus fillUrlArg(MsgArg& val);
 
   private:
 
+    /**
+     * Url of HttpControl
+     */
     qcc::String m_Url;
 
+    /**
+     * BusObject of HttpControl
+     */
     BusObject* m_HttpControlBusObject;
-
-    qcc::String const& TAG;
 };
 } //namespace services
 } //namespace ajn

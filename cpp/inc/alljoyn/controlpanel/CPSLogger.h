@@ -32,12 +32,12 @@ class CPSLogger : public GenericLogger {
   public:
 
     /**
-     * Constructor for Notification Service Logger
+     * Constructor for ControlPanel Service Logger
      */
     CPSLogger();
 
     /**
-     * Destructor for Notification Service Logger
+     * Destructor for ControlPanel Service Logger
      */
     virtual ~CPSLogger();
 
@@ -46,7 +46,7 @@ class CPSLogger : public GenericLogger {
      * @param newLogLevel enum value
      * @return logLevel enum value that was in effect prior to this change
      */
-    Log::LogLevel setLogLevel(Log::LogLevel logLevel);
+    Log::LogLevel setLogLevel(Log::LogLevel newLogLevel);
 
     /**
      * Get log level filter value currently in effect
@@ -108,9 +108,9 @@ class CPSLogger : public GenericLogger {
 
     /**
      * Registers the callback function to be used for the passed-in
-     * logger object. For the built-in Notification Service logger,
+     * logger object. For the built-in ControlPanel Service logger,
      * the AllJoyn built-in callback function is registered. For a
-     * user-supplied logger, the Notification Services's logger callback
+     * user-supplied logger, the ControlPanel Services's logger callback
      * function, GenericLoggerCallBack, is registered.
      * @param logger GenericLogger object currently in use
      */

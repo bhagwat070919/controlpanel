@@ -23,18 +23,41 @@
 namespace ajn {
 namespace services {
 
+/**
+ * Class to store the LanguageSets defined
+ */
 class LanguageSets {
   public:
+
+    /**
+     * Constructor for LanguageSets
+     */
     LanguageSets();
 
+    /**
+     * Destructor for LanguageSets
+     */
     virtual ~LanguageSets();
 
+    /**
+     * Add a LanguageSet
+     * @param languageSetName - name of LanguageSet
+     * @param languageSet - languageSet
+     */
     static void add(qcc::String const& languageSetName, LanguageSet const& languageSet);
 
+    /**
+     * Get a LanguageSet
+     * @param languageSetName - the name of the languageSet to get
+     * @return the languageSet requested or NULL if it does not exist
+     */
     static LanguageSet* get(qcc::String const& languageSetName);
 
   private:
 
+    /**
+     * The LanguageSets map storing the LanguageSets defined
+     */
     static std::map<qcc::String, LanguageSet> languageSets;
 };
 

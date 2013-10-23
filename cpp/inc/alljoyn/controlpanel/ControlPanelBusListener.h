@@ -25,6 +25,9 @@
 namespace ajn {
 namespace services {
 
+/**
+ * Class that implements BusListener, SessionPortListener and SessionListener
+ */
 class ControlPanelBusListener : public BusListener, public SessionPortListener,
     public SessionListener {
 
@@ -32,7 +35,6 @@ class ControlPanelBusListener : public BusListener, public SessionPortListener,
 
     /**
      * Constructor of ControlPanelBusListener
-     * @param sessionPort
      */
     ControlPanelBusListener();
 
@@ -40,6 +42,18 @@ class ControlPanelBusListener : public BusListener, public SessionPortListener,
      * Destructor of ControlPanelBusListener
      */
     ~ControlPanelBusListener();
+
+    /**
+     * Set the Value of the SessionPort associated with this SessionPortListener
+     * @param sessionPort
+     */
+    void setSessionPort(SessionPort sessionPort);
+
+    /**
+     * Get the SessionPort of the listener
+     * @return
+     */
+    SessionPort getSessionPort();
 
     /**
      * AcceptSessionJoiner - Receive request to join session and decide whether to accept it or not
@@ -53,7 +67,7 @@ class ControlPanelBusListener : public BusListener, public SessionPortListener,
     /**
      * SessionJoined
      * @param sessionPort
-     * @param id
+     * @param sessionId
      * @param joiner
      */
     void SessionJoined(SessionPort sessionPort, SessionId sessionId, const char* joiner);
@@ -80,17 +94,9 @@ class ControlPanelBusListener : public BusListener, public SessionPortListener,
     void SessionLost(SessionId sessionId, SessionLostReason reason);
 
     /**
-     * Set the Value of the SessionPort associated with this SessionPortListener
-     * @param sessionPort
+     * Get the SessionIds associated with this Listener
+     * @return vector of sessionIds
      */
-    void setSessionPort(SessionPort sessionPort);
-
-    /**
-     * Get the SessionPort of the listener
-     * @return
-     */
-    SessionPort getSessionPort();
-
     const std::vector<SessionId>& getSessionIds() const;
 
   private:

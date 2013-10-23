@@ -24,9 +24,10 @@ namespace services {
 using namespace cpsConsts;
 
 #define CONTROLPANEL_INTERFACE_VERSION 1
+#define TAG TAG_CONTROLPANELBUSOBJECT
 
-ControlPanelBusObject::ControlPanelBusObject(BusAttachment* bus, String const& servicePath,
-                                             QStatus& status) : BusObject(servicePath.c_str()), TAG(TAG_CONTROLPANELBUSOBJECT)
+ControlPanelBusObject::ControlPanelBusObject(BusAttachment* bus, String const& objectPath,
+                                             QStatus& status) : BusObject(objectPath.c_str())
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     status = ER_OK;
@@ -56,10 +57,11 @@ ControlPanelBusObject::ControlPanelBusObject(BusAttachment* bus, String const& s
         logger->debug(TAG, "Created ControlPanelBusObject successfully");
 }
 
-ControlPanelBusObject::~ControlPanelBusObject() {
+ControlPanelBusObject::~ControlPanelBusObject()
+{
 }
 
-QStatus ControlPanelBusObject::Get(const char* ifcName, const char* propName, MsgArg& val)
+QStatus ControlPanelBusObject::Get(const char* interfaceName, const char* propName, MsgArg& val)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (logger)
@@ -71,7 +73,7 @@ QStatus ControlPanelBusObject::Get(const char* ifcName, const char* propName, Ms
     return ER_BUS_NO_SUCH_PROPERTY;
 }
 
-QStatus ControlPanelBusObject::Set(const char* ifcName, const char* propName, MsgArg& val)
+QStatus ControlPanelBusObject::Set(const char* interfaceName, const char* propName, MsgArg& val)
 {
     return ER_ALLJOYN_ACCESS_PERMISSION_ERROR;
 }

@@ -135,12 +135,12 @@ class Property (common.Widget):
         elif propertyType == "booleanProperty" :
             self.varType = "bool"
             self.propType = "BOOL_PROPERTY"
-#        elif propertyType == "dateProperty" :
-#            self.varType = "DatePropertyValue"
-#            self.propType = "DATE_VALUE_PROPERTY"
-#        elif propertyType == "timeProperty" :
-#            self.varType = "TimePropertyValue"
-#            self.propType = "TIME_VALUE_PROPERTY"
+        elif propertyType == "dateProperty" :
+            self.varType = "const CPSDate&"
+            self.propType = "DATE_PROPERTY"
+        elif propertyType == "timeProperty" :
+            self.varType = "const CPSTime&"
+            self.propType = "TIME_PROPERTY"
         elif propertyType == "scalarProperty" :
             dbusType = self.element.attr["dbusType"]
        	    if dbusType == "INT16":

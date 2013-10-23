@@ -33,7 +33,7 @@ class Action : public Widget {
      * Constructor for Action class
      * @param name - name of Widget
      */
-    Action(qcc::String name);
+    Action(qcc::String const& name);
 
     /**
      * Destructor for Action Class
@@ -54,8 +54,9 @@ class Action : public Widget {
     /**
      * Callback for when Action is executed.
      * Pure virtual function that needs to be implemented.
+     * @return success/failure
      */
-    virtual void executeCallBack() = 0;
+    virtual bool executeCallBack() = 0;
 };
 } //namespace services
 } //namespace ajn

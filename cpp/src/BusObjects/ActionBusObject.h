@@ -17,18 +17,38 @@
 #ifndef ACTIONBUSOBJECT_H_
 #define ACTIONBUSOBJECT_H_
 
-#include "alljoyn/controlpanel/WidgetBusObject.h"
+#include "WidgetBusObject.h"
 
 namespace ajn {
 namespace services {
 
+/**
+ * ActionBusObject - BusObject for Actions
+ */
 class ActionBusObject : public WidgetBusObject {
   public:
-    ActionBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
+
+    /**
+     * Constructor for ActionBusObject class
+     * @param bus - the bus to create the interface
+     * @param objectPath - objectPath of BusObject
+     * @param langIndx - the languageIndex of the BusObject
+     * @param status - success/failure
+     * @param widget - the widget associated with the BusObject
+     */
+    ActionBusObject(ajn::BusAttachment* bus, qcc::String const& objectPath,
                     uint16_t langIndx, QStatus& status, Widget* widget);
 
+    /**
+     * Destructor for the BusObject
+     */
     virtual ~ActionBusObject();
 
+    /**
+     * Callback when Execute is called
+     * @param member - the member (method) of the interface that was executed
+     * @param msg - the Message of the method
+     */
     void ActionExecute(const ajn::InterfaceDescription::Member* member, ajn::Message& msg);
 };
 

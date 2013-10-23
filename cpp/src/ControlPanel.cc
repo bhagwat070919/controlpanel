@@ -25,7 +25,7 @@ namespace ajn {
 namespace services {
 using namespace cpsConsts;
 
-qcc::String const& ControlPanel::TAG = TAG_CONTROLPANEL;
+#define TAG TAG_CONTROLPANEL
 
 ControlPanel* ControlPanel::createControlPanel(LanguageSet* languageSet)
 {
@@ -39,7 +39,8 @@ ControlPanel* ControlPanel::createControlPanel(LanguageSet* languageSet)
 }
 
 ControlPanel::ControlPanel(LanguageSet const& languageSet) :
-    m_LanguageSet(languageSet), m_RootContainer(0), m_ControlPanelBusObject(0)
+    m_LanguageSet(languageSet), m_RootWidget(0),
+    m_ControlPanelBusObject(0)
 {
 
 }
@@ -47,24 +48,29 @@ ControlPanel::ControlPanel(LanguageSet const& languageSet) :
 ControlPanel::~ControlPanel() {
 }
 
-QStatus ControlPanel::setRootWidget(Container* rootContainer)
+QStatus ControlPanel::setRootWidget(Container* rootWidget)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
 
-    if (!rootContainer) {
+    if (!rootWidget) {
         if (logger)
-            logger->warn(TAG, "Could not add a NULL rootContainer");
+            logger->warn(TAG, "Could not add a NULL rootWidget");
         return ER_BAD_ARG_1;
     }
 
-    if (m_RootContainer) {
+    if (m_RootWidget) {
         if (logger)
-            logger->warn(TAG, "Could not set RootContainer. Rootcontainer already set");
+            logger->warn(TAG, "Could not set the RootWidget. RootWidget already set");
         return ER_BUS_PROPERTY_ALREADY_EXISTS;
     }
 
-    m_RootContainer = rootContainer;
+    m_RootWidget = rootWidget;
     return ER_OK;
+}
+
+const Container* ControlPanel::getRootWidget() const
+{
+    return m_RootWidget;
 }
 
 QStatus ControlPanel::registerObjects(BusAttachment* bus, qcc::String const& unitName)
@@ -97,7 +103,7 @@ QStatus ControlPanel::registerObjects(BusAttachment* bus, qcc::String const& uni
     }
 
     QStatus status = ER_OK;
-    qcc::String objectPath = AJ_OBJECTPATH_PREFIX + unitName + "/" + m_RootContainer->getWidgetName();
+    qcc::String objectPath = AJ_OBJECTPATH_PREFIX + unitName + "/" + m_RootWidget->getWidgetName();
     m_ControlPanelBusObject = new ControlPanelBusObject(bus, objectPath.c_str(), status);
     if (status != ER_OK) {
         if (logger)
@@ -115,7 +121,7 @@ QStatus ControlPanel::registerObjects(BusAttachment* bus, qcc::String const& uni
     interfaces.push_back(AJ_CONTROLPANEL_INTERFACE);
     aboutService->AddObjectDescription(objectPath, interfaces);
 
-    status = m_RootContainer->registerObjects(bus, m_LanguageSet, objectPath + "/", "", true);
+    status = m_RootWidget->registerObjects(bus, m_LanguageSet, objectPath + "/", "", true);
     return status;
 }
 
@@ -123,7 +129,7 @@ QStatus ControlPanel::unregisterObjects(BusAttachment* bus)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     QStatus status = ER_OK;
-    if (!m_ControlPanelBusObject && !m_RootContainer) {
+    if (!m_ControlPanelBusObject && !m_RootWidget) {
         if (logger)
             logger->info(TAG, "Can not unregister. BusObjects do not exist");
         return status; //this does not need to fail
@@ -142,14 +148,19 @@ QStatus ControlPanel::unregisterObjects(BusAttachment* bus)
         m_ControlPanelBusObject = 0;
     }
 
-    if (m_RootContainer) {
-        QStatus status = m_RootContainer->unregisterObjects(bus);
+    if (m_RootWidget) {
+        QStatus status = m_RootWidget->unregisterObjects(bus);
         if (status != ER_OK) {
             if (logger)
                 logger->warn(TAG, "Could not unregister RootContainer.");
         }
     }
     return status;
+}
+
+const LanguageSet && ControlPanel::getLanguageSet() const
+{
+    return m_LanguageSet;
 }
 
 } /* namespace services */

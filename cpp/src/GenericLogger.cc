@@ -16,8 +16,8 @@
 
 #include "alljoyn/controlpanel/GenericLogger.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 
 void GenericLogger::debug(qcc::String const& Tag, qcc::String const& logText)
 {
@@ -44,3 +44,5 @@ void GenericLogger::fatal(qcc::String const& Tag, qcc::String const& logText)
     return fatal(Tag.c_str(), logText.c_str());
 }
 
+} /* namespace services */
+} /* namespace ajn */

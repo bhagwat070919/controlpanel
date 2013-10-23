@@ -28,16 +28,6 @@ LanguageSet::~LanguageSet()
 {
 }
 
-void LanguageSet::addLanguage(qcc::String const& language)
-{
-    m_Languages.push_back(language);
-}
-
-const std::vector<qcc::String>& LanguageSet::getLanguages() const
-{
-    return m_Languages;
-}
-
 const qcc::String& LanguageSet::getLanguageSetName() const
 {
     return m_LanguageSetName;
@@ -48,5 +38,14 @@ const size_t LanguageSet::getNumLanguages() const
     return m_Languages.size();
 }
 
+void LanguageSet::addLanguage(qcc::String const& language)
+{
+    m_Languages.push_back(language);
+}
+
+const std::vector<qcc::String>& LanguageSet::getLanguages() const
+{
+    return m_Languages;
+}
 } /* namespace services */
 } /* namespace ajn */

@@ -19,16 +19,21 @@
 #include "alljoyn/controlpanel/ControlPanelService.h"
 #include "alljoyn/controlpanel/Label.h"
 
-using namespace qcc;
 namespace ajn {
 namespace services {
+using namespace qcc;
 using namespace cpsConsts;
 
-LabelBusObject::LabelBusObject(BusAttachment* bus, String const& servicePath, uint16_t langIndx,
-                               QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_LABEL_BUSOBJECT, widget)
+LabelBusObject::LabelBusObject(BusAttachment* bus, String const& objectPath, uint16_t langIndx,
+                               QStatus& status, Widget* widget) : WidgetBusObject(objectPath, langIndx,
+                                                                                  TAG_LABEL_BUSOBJECT, status, widget)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-    status = ER_OK;
+    if (status != ER_OK) {
+        if (logger)
+            logger->debug(TAG, "Could not create the BusObject");
+        return;
+    }
 
     InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(AJ_LABEL_INTERFACE.c_str());
     if (!intf) {
@@ -61,17 +66,17 @@ LabelBusObject::LabelBusObject(BusAttachment* bus, String const& servicePath, ui
 LabelBusObject::~LabelBusObject() {
 }
 
-QStatus LabelBusObject::Get(const char* ifcName, const char* propName, MsgArg& val)
+QStatus LabelBusObject::Get(const char* interfaceName, const char* propName, MsgArg& val)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (logger)
         logger->debug(TAG, "Get property was called - in LabelBusObject class:\n");
 
     if (0 == strcmp(AJ_PROPERTY_LABEL.c_str(), propName)) {
-        return ((Label*)m_Widget)->getLabelForArg(val, languageIndx);
+        return ((Label*)m_Widget)->fillLabelArg(val, languageIndx);
     }
 
-    return WidgetBusObject::Get(ifcName, propName, val);
+    return WidgetBusObject::Get(interfaceName, propName, val);
 }
 } /* namespace services */
 } /* namespace ajn */

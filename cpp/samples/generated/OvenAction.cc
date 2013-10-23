@@ -15,10 +15,10 @@
  ******************************************************************************/
 
 #include "OvenAction.h"
-#include "../provided/ControlPanelProvided.h"
+#include "ControlPanelProvided.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 
 OvenAction::OvenAction(qcc::String name) : Action(name)
 {
@@ -30,7 +30,13 @@ OvenAction::~OvenAction()
 
 }
 
-void OvenAction::executeCallBack()
+bool OvenAction::executeCallBack()
 {
-    //AJ_Printf("Starting the Oven. Execute was called\n");
+    AJ_Printf("Starting the Oven. Execute was called\n");
+
+    //by default return success
+    return true;
 }
+
+} /* namespace services */
+} /* namespace ajn */

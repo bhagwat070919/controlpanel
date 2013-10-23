@@ -19,16 +19,22 @@
 #include "alljoyn/controlpanel/ControlPanelService.h"
 #include "alljoyn/controlpanel/Property.h"
 
-using namespace qcc;
 namespace ajn {
 namespace services {
+using namespace qcc;
 using namespace cpsConsts;
 
-PropertyBusObject::PropertyBusObject(BusAttachment* bus, String const& servicePath, uint16_t langIndx,
-                                     QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_PROPERTY_BUSOBJECT, widget)
+PropertyBusObject::PropertyBusObject(BusAttachment* bus, String const& objectPath, uint16_t langIndx,
+                                     QStatus& status, Widget* widget) :
+    WidgetBusObject(objectPath, langIndx, TAG_PROPERTY_BUSOBJECT,
+                    status, widget), m_SignalValueChanged(0)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-    status = ER_OK;
+    if (status != ER_OK) {
+        if (logger)
+            logger->debug(TAG, "Could not create the BusObject");
+        return;
+    }
 
     InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(AJ_PROPERTY_INTERFACE.c_str());
     if (!intf) {
@@ -64,6 +70,31 @@ PropertyBusObject::~PropertyBusObject()
 {
 }
 
+QStatus PropertyBusObject::Get(const char* interfaceName, const char* propName, MsgArg& val)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    if (logger)
+        logger->debug(TAG, "Get property was called - in PropertyBusObject class:\n");
+
+    if (0 == strcmp(AJ_PROPERTY_VALUE.c_str(), propName)) {
+        return ((Property*)m_Widget)->fillPropertyValueArg(val, languageIndx);
+    }
+
+    return WidgetBusObject::Get(interfaceName, propName, val);
+}
+
+QStatus PropertyBusObject::Set(const char* interfaceName, const char* propName, MsgArg& val)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    if (logger)
+        logger->debug(TAG, "Set property was called - in PropertyBusObject class:\n");
+
+    if (0 != strcmp(AJ_PROPERTY_VALUE.c_str(), propName))
+        return ER_BUS_PROPERTY_ACCESS_DENIED;
+
+    return ((Property*)m_Widget)->setPropertyValue(val, languageIndx);
+}
+
 QStatus PropertyBusObject::SendValueChangedSignal()
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
@@ -84,7 +115,7 @@ QStatus PropertyBusObject::SendValueChangedSignal()
     QStatus status;
     MsgArg value;
 
-    CHECK_AND_RETURN(((Property*)m_Widget)->getPropertyValueForArg(value, languageIndx));
+    CHECK_AND_RETURN(((Property*)m_Widget)->fillPropertyValueArg(value, languageIndx));
 
     const std::vector<SessionId>& sessionIds = busListener->getSessionIds();
     for (size_t indx = 0; indx < sessionIds.size(); indx++) {
@@ -97,34 +128,6 @@ QStatus PropertyBusObject::SendValueChangedSignal()
     return status;
 }
 
-QStatus PropertyBusObject::Get(const char* ifcName, const char* propName, MsgArg& val)
-{
-    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-    if (logger)
-        logger->debug(TAG, "Get property was called - in PropertyBusObject class:\n");
-
-    if (0 == strcmp(AJ_PROPERTY_VALUE.c_str(), propName)) {
-        return ((Property*)m_Widget)->getPropertyValueForArg(val, languageIndx);
-    }
-
-    return WidgetBusObject::Get(ifcName, propName, val);
-}
-
-QStatus PropertyBusObject::Set(const char* ifcName, const char* propName, MsgArg& val)
-{
-    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-    if (logger)
-        logger->debug(TAG, "Set property was called - in PropertyBusObject class:\n");
-
-    if (0 != strcmp(AJ_PROPERTY_VALUE.c_str(), propName))
-        return ER_BUS_PROPERTY_ACCESS_DENIED;
-
-    return ((Property*)m_Widget)->setPropertyValue(val, languageIndx);
-}
-
 } /* namespace services */
 } /* namespace ajn */
-
-
-
 

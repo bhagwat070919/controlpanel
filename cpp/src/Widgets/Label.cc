@@ -18,11 +18,11 @@
 #include "../ControlPanelConstants.h"
 #include "../BusObjects/LabelBusObject.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 using namespace cpsConsts;
 
-Label::Label(qcc::String name) : Widget(name, TAG_LABEL_WIDGET), m_GetLabelForLabel(0)
+Label::Label(qcc::String const& name) : Widget(name, TAG_LABEL_WIDGET), m_LabelWidgetGetLabel(0)
 {
 }
 
@@ -30,37 +30,40 @@ Label::~Label()
 {
 }
 
-GetStringFptr Label::getGetLabel() const
-{
-    return m_GetLabelForLabel;
-}
-
-void Label::setGetLabel(GetStringFptr getLabel)
-{
-    m_GetLabelForLabel = getLabel;
-}
-
-const std::vector<qcc::String>& Label::getLabel() const
-{
-    return m_LabelForLabel;
-}
-
-void Label::setLabel(const std::vector<qcc::String>& label)
-{
-    m_LabelForLabel = label;
-}
-
-QStatus Label::getLabelForArg(MsgArg& val, int16_t languageIndx)
-{
-    if (!m_LabelForLabel.size() & !m_GetLabelForLabel)
-        return ER_BUS_PROPERTY_VALUE_NOT_SET;
-
-    return val.Set(AJPARAM_STR.c_str(), m_GetLabelForLabel ? m_GetLabelForLabel(languageIndx) :
-                   m_LabelForLabel[languageIndx].c_str());
-}
-
 WidgetBusObject* Label::createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
                                               uint16_t langIndx, QStatus& status)
 {
     return new LabelBusObject(bus, objectPath, langIndx, status, this);
 }
+
+const std::vector<qcc::String>& Label::getLabel() const
+{
+    return m_LabelWidgetLabel;
+}
+
+void Label::setLabel(const std::vector<qcc::String>& label)
+{
+    m_LabelWidgetLabel = label;
+}
+
+GetStringFptr Label::getGetLabel() const
+{
+    return m_LabelWidgetGetLabel;
+}
+
+void Label::setGetLabel(GetStringFptr getLabel)
+{
+    m_LabelWidgetGetLabel = getLabel;
+}
+
+QStatus Label::fillLabelArg(MsgArg& val, uint16_t languageIndx)
+{
+    if (!m_LabelWidgetLabel.size() > languageIndx && !m_LabelWidgetGetLabel)
+        return ER_BUS_PROPERTY_VALUE_NOT_SET;
+
+    return val.Set(AJPARAM_STR.c_str(), m_LabelWidgetGetLabel ? m_LabelWidgetGetLabel(languageIndx) :
+                   m_LabelWidgetLabel[languageIndx].c_str());
+}
+
+} /* namespace services */
+} /* namespace ajn */

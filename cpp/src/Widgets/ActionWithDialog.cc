@@ -19,11 +19,11 @@
 #include "../ControlPanelConstants.h"
 #include "alljoyn/controlpanel/ControlPanelService.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 using namespace cpsConsts;
 
-ActionWithDialog::ActionWithDialog(qcc::String name) : Widget(name, TAG_ACTION_WIDGET), m_Dialog(0)
+ActionWithDialog::ActionWithDialog(qcc::String const& name) : Widget(name, TAG_ACTION_WIDGET), m_Dialog(0)
 {
 }
 
@@ -101,3 +101,6 @@ QStatus ActionWithDialog::unregisterObjects(BusAttachment* bus)
     }
     return returnStatus;
 }
+
+} /* namespace services */
+} /* namespace ajn */

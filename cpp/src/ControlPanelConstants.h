@@ -30,6 +30,8 @@ namespace services {
 namespace cpsConsts {
 
 static const uint16_t CONTROLPANELSERVICE_PORT = 1000;
+static const uint16_t DATE_PROPERTY_TYPE = 0;
+static const uint16_t TIME_PROPERTY_TYPE = 1;
 
 static const qcc::String TAG_CONTROLPANEL = "ControlPanel";
 static const qcc::String TAG_NOTIFICATIONACTION = "NotificationAction";
@@ -54,6 +56,7 @@ static const qcc::String TAG_CONSTRAINTRANGE = "ConstraintRange";
 
 
 static const qcc::String AJ_OBJECTPATH_PREFIX = "/ControlPanel/";
+static const qcc::String AJ_HTTP_OBJECTPATH_SUFFIX = "/HTTPControl";
 static const qcc::String AJ_CONTROLPANEL_INTERFACE = "org.alljoyn.ControlPanel.ControlPanel";
 static const qcc::String AJ_NOTIFICATIONACTION_INTERFACE = "org.alljoyn.ControlPanel.NotificationAction";
 static const qcc::String AJ_HTTPCONTROL_INTERFACE = "org.alljoyn.ControlPanel.HTTPControl";
@@ -103,6 +106,10 @@ static const qcc::String AJPARAM_ARRAY_UINT16 = "aq";
 static const qcc::String AJPARAM_STRUCT_VAR_STR = "(vs)";
 static const qcc::String AJPARAM_ARRAY_STRUCT_VAR_STR = "a(vs)";
 static const qcc::String AJPARAM_STRUCT_VAR_VAR_VAR = "(vvv)";
+static const qcc::String AJPARAM_DATE_OR_TIME = "(q(qqq))";
+
+static const qcc::String AJ_ERROR_UNKNOWN = "Unknown Error";
+static const qcc::String AJ_ERROR_UNKNOWN_MESSAGE = "An Unknown Error occured";
 
 enum OPT_PARAM_KEYS {
     LABEL_KEY = 0,

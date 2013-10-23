@@ -18,8 +18,8 @@
 #include "alljoyn/controlpanel/ControlPanelService.h"
 #include "../ControlPanelConstants.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 using namespace cpsConsts;
 
 #define TAG TAG_CONSTRAINTLIST
@@ -111,7 +111,7 @@ void ConstraintList::setGetDisplay(GetStringFptr getDisplay)
     m_GetDisplay = getDisplay;
 }
 
-QStatus ConstraintList::fillConstraintArg(MsgArg& val, int16_t languageIndx, PropertyType propertyType)
+QStatus ConstraintList::fillConstraintArg(MsgArg& val, uint16_t languageIndx, PropertyType propertyType)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
 
@@ -121,7 +121,7 @@ QStatus ConstraintList::fillConstraintArg(MsgArg& val, int16_t languageIndx, Pro
         return ER_FAIL;
     }
 
-    if (!m_Display.size() && !m_GetDisplay) {
+    if (!m_Display.size() > languageIndx && !m_GetDisplay) {
         if (logger)
             logger->warn(TAG, "Could not fill the Constraint Arg. Display is not set");
         return ER_FAIL;
@@ -188,3 +188,6 @@ QStatus ConstraintList::fillConstraintArg(MsgArg& val, int16_t languageIndx, Pro
     }
     return status;
 }
+
+} /* namespace services */
+} /* namespace ajn */

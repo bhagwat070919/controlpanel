@@ -62,7 +62,7 @@ class Dialog (common.Widget):
 
         self.generated.headerIncludes += """#include "../generated/{0}.h"\n""".format(regularName)
 
-        notDefined = "    executeActionNotDefined();"
+        notDefined = "return executeActionNotDefined();"
         for i in range(0, len(self.element.button)):
             self.setLabelAction(i)
             dialogSrcFile = dialogSrcFile.replace("CODE_OF_EXECUTE_ACTION%i_HERE" % (i+1), self.element.button[i].executeCode)            

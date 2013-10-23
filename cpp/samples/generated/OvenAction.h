@@ -30,7 +30,7 @@ class OvenAction : public ajn::services::Action {
     OvenAction(qcc::String name);
     virtual ~OvenAction();
 
-    void executeCallBack();
+    bool executeCallBack();
 };
 } //namespace services
 } //namespace ajn

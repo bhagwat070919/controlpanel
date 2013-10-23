@@ -19,16 +19,21 @@
 #include "alljoyn/controlpanel/ControlPanelService.h"
 #include "alljoyn/controlpanel/Dialog.h"
 
-using namespace qcc;
 namespace ajn {
 namespace services {
+using namespace qcc;
 using namespace cpsConsts;
 
-DialogBusObject::DialogBusObject(BusAttachment* bus, String const& servicePath, uint16_t langIndx,
-                                 QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_DIALOG_BUSOBJECT, widget)
+DialogBusObject::DialogBusObject(BusAttachment* bus, String const& objectPath, uint16_t langIndx,
+                                 QStatus& status, Widget* widget) :
+    WidgetBusObject(objectPath, langIndx, TAG_DIALOG_BUSOBJECT, status, widget)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-    status = ER_OK;
+    if (status != ER_OK) {
+        if (logger)
+            logger->debug(TAG, "Could not create the BusObject");
+        return;
+    }
 
     String interfaceName = widget->getIsSecured() ? AJ_SECURED_DIALOG_INTERFACE : AJ_DIALOG_INTERFACE;
     InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
@@ -93,47 +98,62 @@ DialogBusObject::DialogBusObject(BusAttachment* bus, String const& servicePath, 
         logger->debug(TAG, "Created DialogBusObject successfully");
 }
 
-void DialogBusObject::DialogExecute(const ajn::InterfaceDescription::Member* member, ajn::Message& msg)
+DialogBusObject::~DialogBusObject()
 {
-    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-
-    if (member->name.compare(AJ_METHOD_ACTION1) == 0) {
-        if (logger)
-            logger->debug(TAG, "Execute Action was called");
-        ((Dialog*)m_Widget)->executeAction1CallBack();
-    } else if (member->name.compare(AJ_METHOD_ACTION2) == 0) {
-        if (logger)
-            logger->debug(TAG, "Execute Action was called");
-        ((Dialog*)m_Widget)->executeAction2CallBack();
-    } else if (member->name.compare(AJ_METHOD_ACTION3) == 0) {
-        if (logger)
-            logger->debug(TAG, "Execute Action was called");
-        ((Dialog*)m_Widget)->executeAction3CallBack();
-    }
-    if (logger)
-        logger->warn(TAG, "Unknown Execute Action was called");
-    MsgArg replyArg;
-    MethodReply(msg, &replyArg, 0);
 }
 
-QStatus DialogBusObject::Get(const char* ifcName, const char* propName, MsgArg& val)
+QStatus DialogBusObject::Get(const char* interfaceName, const char* propName, MsgArg& val)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (logger)
         logger->debug(TAG, "Get property was called - in DialogBusObject class:\n");
 
     if (0 == strcmp(AJ_PROPERTY_NUMACTIONS.c_str(), propName)) {
-        return ((Dialog*)m_Widget)->getNumActionForArg(val, languageIndx);
+        return ((Dialog*)m_Widget)->fillNumActionArg(val, languageIndx);
     }
 
     if (0 == strcmp(AJ_PROPERTY_MESSAGE.c_str(), propName)) {
-        return ((Dialog*)m_Widget)->getMessageForArg(val, languageIndx);
+        return ((Dialog*)m_Widget)->fillMessageArg(val, languageIndx);
     }
 
-    return WidgetBusObject::Get(ifcName, propName, val);
+    return WidgetBusObject::Get(interfaceName, propName, val);
 }
 
-DialogBusObject::~DialogBusObject() {
+void DialogBusObject::DialogExecute(const ajn::InterfaceDescription::Member* member, ajn::Message& msg)
+{
+    QStatus status = ER_OK;
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    if (logger)
+        logger->debug(TAG, "Execute was called");
+
+    if (member->name.compare(AJ_METHOD_ACTION1) == 0 &&
+        ((Dialog*)m_Widget)->executeAction1CallBack()) {
+        MsgArg replyArg;
+        status = MethodReply(msg, &replyArg, 0);
+        if (logger)
+            logger->debug(TAG, "Execute Action 1 completed successfully");
+    } else if (member->name.compare(AJ_METHOD_ACTION2) == 0 &&
+               ((Dialog*)m_Widget)->executeAction2CallBack()) {
+        MsgArg replyArg;
+        status = MethodReply(msg, &replyArg, 0);
+        if (logger)
+            logger->debug(TAG, "Execute Action 2 completed successfully");
+    } else if (member->name.compare(AJ_METHOD_ACTION3) == 0 &&
+               ((Dialog*)m_Widget)->executeAction3CallBack()) {
+        MsgArg replyArg;
+        status = MethodReply(msg, &replyArg, 0);
+        if (logger)
+            logger->debug(TAG, "Execute Action 3 completed successfully");
+    } else {
+        if (logger)
+            logger->warn(TAG, "Unknown Execute Action was called, or action did not complete successfully");
+        status = MethodReply(msg, AJ_ERROR_UNKNOWN.c_str(), AJ_ERROR_UNKNOWN_MESSAGE.c_str());
+    }
+
+    if (ER_OK != status) {
+        if (logger)
+            logger->warn(TAG, "Did not reply successfully");
+    }
 }
 
 } /* namespace services */

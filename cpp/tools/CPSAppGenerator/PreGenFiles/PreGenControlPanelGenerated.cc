@@ -26,7 +26,7 @@ using namespace services;
 bool ControlPanelGenerated::languageSetsDone = false;
 //STATIC_DECLARATION_HERE
 
-#define CHECK(x) if ((x) != ER_OK) return status;
+#define CHECK(x) if ((status = x) != ER_OK) return status;
 #define UNIT_NAME "//UNITNAME_GO_HERE"
 
 void ControlPanelGenerated::PrepareLanguageSets()

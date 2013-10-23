@@ -24,19 +24,43 @@
 namespace ajn {
 namespace services {
 
+/**
+ * ControlPanelBusObject class. BusObject for a ControlPanel
+ */
 class ControlPanelBusObject : public BusObject {
   public:
-    ControlPanelBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath, QStatus& status);
 
+    /**
+     * Constructor for ControlPanelBusObject
+     * @param bus - bus used to create the interface
+     * @param objectPath - objectPath of BusObject
+     * @param status - success/failure
+     */
+    ControlPanelBusObject(ajn::BusAttachment* bus, qcc::String const& objectPath, QStatus& status);
+
+    /**
+     * Destructor of ControlPanelBusObject class
+     */
     virtual ~ControlPanelBusObject();
 
-    QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
+    /**
+     * Callback for Alljoyn when GetProperty is called on this BusObject
+     * @param interfaceName - the name of the Interface
+     * @param propName - the name of the Property
+     * @param val - the MsgArg to fill
+     * @return status - success/failure
+     */
+    QStatus Get(const char* interfaceName, const char* propName, MsgArg& val);
 
+    /**
+     * Callback for Alljoyn when SetProperty is called on this BusObject
+     * @param interfaceName - the name of the Interface
+     * @param propName - the name of the Property
+     * @param val - the MsgArg that contains the new Value
+     * @return status - success/failure
+     */
     QStatus Set(const char* ifcName, const char* propName, MsgArg& val);
 
-  private:
-
-    qcc::String const& TAG;
 };
 
 } /* namespace services */

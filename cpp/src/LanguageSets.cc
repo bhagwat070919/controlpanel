@@ -43,6 +43,5 @@ LanguageSet* LanguageSets::get(String const& languageSetName)
     return 0;
 }
 
-
 } /* namespace services */
 } /* namespace ajn */

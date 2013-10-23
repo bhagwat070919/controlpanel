@@ -17,7 +17,7 @@
 #include "ControlPanelGenerated.h"
 #include "alljoyn/controlpanel/LanguageSets.h"
 #include "alljoyn/controlpanel/Label.h"
-#include "../provided/ControlPanelProvided.h"
+#include "ControlPanelProvided.h"
 
 
 using namespace ajn;
@@ -35,7 +35,7 @@ NotificationAction* ControlPanelGenerated::areYouSureNotificationAction = 0;
 AreYouSure* ControlPanelGenerated::areYouSure = 0;
 
 
-#define CHECK(x) if ((x) != ER_OK) return status;
+#define CHECK(x) if ((status = x) != ER_OK) return status;
 #define UNIT_NAME "MyDevice"
 
 void ControlPanelGenerated::PrepareLanguageSets()
@@ -64,7 +64,7 @@ QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPa
     rootContainerControlPanel = ControlPanel::createControlPanel(LanguageSets::get("myLanguages"));
     if (!rootContainerControlPanel)
         return ER_FAIL;
-    controlPanelControllee->addControlPanel(rootContainerControlPanel);
+    CHECK(controlPanelControllee->addControlPanel(rootContainerControlPanel));
 
     rootContainer = new Container("rootContainer");
     CHECK(rootContainerControlPanel->setRootWidget(rootContainer));
@@ -84,7 +84,7 @@ QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPa
     rootContainer->setHints(rootContainerHintsVec);
 
     CurrentTemp = new Label("CurrentTemp");
-    CHECK(rootContainer->addChildElement(CurrentTemp));
+    CHECK(rootContainer->addChildWidget(CurrentTemp));
 
     CurrentTemp->setEnabled(true);
     CurrentTemp->setBgColor(0x98765);
@@ -99,7 +99,7 @@ QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPa
     CurrentTemp->setHints(CurrentTempHintsVec);
 
     heatProperty = new HeatProperty("heatProperty", UINT16_PROPERTY);
-    CHECK(rootContainer->addChildElement(heatProperty));
+    CHECK(rootContainer->addChildWidget(heatProperty));
 
     heatProperty->setEnabled(true);
     heatProperty->setIsSecured(false);
@@ -144,7 +144,7 @@ QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPa
     heatProperty->setConstraintList(heatPropertyConstraintListVec);
 
     ovenAction = new OvenAction("ovenAction");
-    CHECK(rootContainer->addChildElement(ovenAction));
+    CHECK(rootContainer->addChildWidget(ovenAction));
 
     ovenAction->setEnabled(true);
     ovenAction->setIsSecured(false);
@@ -160,7 +160,7 @@ QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPa
     ovenAction->setHints(ovenActionHintsVec);
 
     lightAction = new ActionWithDialog("lightAction");
-    CHECK(rootContainer->addChildElement(lightAction));
+    CHECK(rootContainer->addChildWidget(lightAction));
 
     lightAction->setEnabled(true);
     lightAction->setIsSecured(false);
@@ -215,7 +215,7 @@ QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPa
     areYouSureNotificationAction = NotificationAction::createNotificationAction(LanguageSets::get("myLanguages"));
     if (!areYouSureNotificationAction)
         return ER_FAIL;
-    controlPanelControllee->addNotificationAction(areYouSureNotificationAction);
+    CHECK(controlPanelControllee->addNotificationAction(areYouSureNotificationAction));
 
     areYouSure = new AreYouSure("areYouSure");
     CHECK(areYouSureNotificationAction->setRootWidget(areYouSure));

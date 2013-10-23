@@ -61,5 +61,13 @@ void setdoubleVar(double newdoubleVar);
 void* getStringVar();
 void setStringVar(const char* newStringVar);
 
+void startOven();
+void stopOven();
+void*getTemperature();
+void setTemperature(uint16_t temperature);
+void*getProgram();
+void setProgram(uint16_t program);
+const char* getProgramString(uint16_t language);
+
 #endif /* CONTROLPANELPROVIDED_H_ */
 

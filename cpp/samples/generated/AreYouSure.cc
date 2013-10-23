@@ -15,10 +15,10 @@
  ******************************************************************************/
 
 #include "AreYouSure.h"
-#include "../provided/ControlPanelProvided.h"
+#include "ControlPanelProvided.h"
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 
 AreYouSure::AreYouSure(qcc::String name) : Dialog(name)
 {
@@ -30,17 +30,29 @@ AreYouSure::~AreYouSure()
 
 }
 
-void AreYouSure::executeAction1CallBack()
+bool AreYouSure::executeAction1CallBack()
 {
-    //AJ_Printf("Execute Action1 was called\n");addDismissSignal(context, NOTIFICATION_ACTION_AREYOUSURE_SIGNAL_DISMISS);;
+    AJ_Printf("Execute Action1 was called\n");
+
+    //by default return success
+    return true;
 }
 
-void AreYouSure::executeAction2CallBack()
+bool AreYouSure::executeAction2CallBack()
 {
-    executeActionNotDefined();;
+    return executeActionNotDefined();
+
+    //by default return success
+    return true;
 }
 
-void AreYouSure::executeAction3CallBack()
+bool AreYouSure::executeAction3CallBack()
 {
-    executeActionNotDefined();;
+    return executeActionNotDefined();
+
+    //by default return success
+    return true;
 }
+
+} /* namespace services */
+} /* namespace ajn */

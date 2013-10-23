@@ -25,21 +25,65 @@
 namespace ajn {
 namespace services {
 
+/**
+ * HttpControlBusObject - BusObject for HttpControls
+ */
 class HttpControlBusObject : public BusObject {
   public:
 
-    HttpControlBusObject(BusAttachment* bus, qcc::String const& servicePath,
+    /**
+     * Constructor for HttpControlBusObject
+     * @param bus - bus used to create the interface
+     * @param objectPath - objectPath of BusObject
+     * @param status - success/failure
+     * @param httpControl - httpControl Widget
+     */
+    HttpControlBusObject(BusAttachment* bus, qcc::String const& objectPath,
                          QStatus& status, HttpControl* httpControl);
 
+    /**
+     * Destructor for HttpControlBusObject
+     */
     virtual ~HttpControlBusObject();
 
+    /**
+     * Get the Version of the Interface represented by this BusObject
+     * @return - interfaceVersion
+     */
+    virtual uint16_t getInterfaceVersion();
+
+    /**
+     * Callback for Alljoyn when GetProperty is called on this BusObject
+     * @param interfaceName - the name of the Interface
+     * @param propName - the name of the Property
+     * @param val - the MsgArg to fill
+     * @return status - success/failure
+     */
+    virtual QStatus Get(const char* interfaceName, const char* propName, MsgArg& val);
+
+    /**
+     * Callback for Alljoyn when SetProperty is called on this BusObject
+     * @param interfaceName - the name of the Interface
+     * @param propName - the name of the Property
+     * @param val - the MsgArg that contains the new Value
+     * @return status - success/failure
+     */
+    virtual QStatus Set(const char* interfaceName, const char* propName, MsgArg& val);
+
+    /**
+     * Callback when GetUrl  is called
+     * @param member - the member (method) of the interface that was executed
+     * @param msg - the Message of the method
+     */
     void HttpControlGetUrl(const ajn::InterfaceDescription::Member* member, ajn::Message& msg);
 
   private:
 
+    /**
+     * HttpControl widget of this BusObject
+     */
     HttpControl* m_HttpControl;
 
-    qcc::String const& TAG;
 };
 
 } /* namespace services */

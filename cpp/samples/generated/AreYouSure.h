@@ -30,9 +30,9 @@ class AreYouSure : public ajn::services::Dialog {
     AreYouSure(qcc::String name);
     virtual ~AreYouSure();
 
-    void executeAction1CallBack();
-    void executeAction2CallBack();
-    void executeAction3CallBack();
+    bool executeAction1CallBack();
+    bool executeAction2CallBack();
+    bool executeAction3CallBack();
 };
 } //namespace services
 } //namespace ajn

@@ -15,45 +15,22 @@
  ******************************************************************************/
 
 #include "alljoyn/controlpanel/Container.h"
-#include "../ControlPanelConstants.h"
 #include "alljoyn/controlpanel/ControlPanelService.h"
+#include "../ControlPanelConstants.h"
 #include "../BusObjects/ContainerBusObject.h"
 #include "../BusObjects/NotificationActionBusObject.h"
-#include <iostream>
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 using namespace cpsConsts;
 
-Container::Container(qcc::String name) : RootWidget(name, TAG_CONTAINER_WIDGET),
+Container::Container(qcc::String const& name) : RootWidget(name, TAG_CONTAINER_WIDGET),
     m_IsDismissable(false)
 {
 }
 
 Container::~Container()
 {
-}
-
-bool Container::getIsDismissable() const
-{
-    return m_IsDismissable;
-}
-
-void Container::setIsDismissable(bool isDismissable)
-{
-    m_IsDismissable = isDismissable;
-}
-
-QStatus Container::addChildElement(Widget* childElement)
-{
-    if (!childElement)
-        return ER_BAD_ARG_1;
-
-    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-    if (logger)
-        logger->debug(TAG, "Adding childElement named: " + childElement->getWidgetName());
-    m_ChildElements.push_back(childElement);
-    return ER_OK;
 }
 
 WidgetBusObject* Container::createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
@@ -74,27 +51,29 @@ QStatus Container::registerObjects(BusAttachment* bus, LanguageSet const& langua
     qcc::String newObjectPathSuffix = isRoot ? objectPathSuffix : objectPathSuffix + "/" + m_Name;
 
     if (m_IsDismissable) {
-        NotificationActionBusObject* NAbusObject = new NotificationActionBusObject(bus, newObjectPathSuffix, status);
+        NotificationActionBusObject* NaBusObject = new NotificationActionBusObject(bus, newObjectPathSuffix, status);
 
         if (status != ER_OK) {
             if (logger)
                 logger->warn(TAG, "Could not create NotificationActionBusObjects");
+            delete NaBusObject;
             return status;
         }
 
-        status = setNotificationActionBusObject(NAbusObject);
+        status = setNotificationActionBusObject(NaBusObject);
         if (status != ER_OK) {
             if (logger)
                 logger->warn(TAG, "Could not set NotificationActionBusObjects");
+            delete NaBusObject;
             return status;
         }
     }
 
-    for (size_t indx = 0; indx < m_ChildElements.size(); indx++) {
-        status = m_ChildElements[indx]->registerObjects(bus, languageSet, objectPathPrefix, newObjectPathSuffix);
+    for (size_t indx = 0; indx < m_ChildWidgets.size(); indx++) {
+        status = m_ChildWidgets[indx]->registerObjects(bus, languageSet, objectPathPrefix, newObjectPathSuffix);
         if (status != ER_OK) {
             if (logger)
-                logger->warn(TAG, "Could not register childElements objects");
+                logger->warn(TAG, "Could not register childWidgets objects");
             return status;
         }
     }
@@ -105,26 +84,50 @@ QStatus Container::unregisterObjects(BusAttachment* bus)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     QStatus returnStatus = ER_OK;
-    QStatus status = Widget::unregisterObjects(bus);
+    QStatus status = RootWidget::unregisterObjects(bus);
     if (status != ER_OK) {
         if (logger)
             logger->warn(TAG, "Could not unregister BusObjects");
         returnStatus = status;
     }
 
-    if (m_NotificationActionBusObject) {
-        bus->UnregisterBusObject(*m_NotificationActionBusObject);
-        delete m_NotificationActionBusObject;
-        m_NotificationActionBusObject = 0;
-    }
-
-    for (size_t indx = 0; indx < m_ChildElements.size(); indx++) {
-        status = m_ChildElements[indx]->unregisterObjects(bus);
+    for (size_t indx = 0; indx < m_ChildWidgets.size(); indx++) {
+        status = m_ChildWidgets[indx]->unregisterObjects(bus);
         if (status != ER_OK) {
             if (logger)
-                logger->warn(TAG, "Could not unregister Objects for the childElement");
+                logger->warn(TAG, "Could not unregister Objects for the childWidget");
             returnStatus = status;
         }
     }
     return ER_OK;
 }
+
+QStatus Container::addChildWidget(Widget* childWidget)
+{
+    if (!childWidget)
+        return ER_BAD_ARG_1;
+
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    if (logger)
+        logger->debug(TAG, "Adding childWidget named: " + childWidget->getWidgetName());
+    m_ChildWidgets.push_back(childWidget);
+    return ER_OK;
+}
+
+const std::vector<Widget*>& Container::getChildWidgets() const
+{
+    return m_ChildWidgets;
+}
+
+bool Container::getIsDismissable() const
+{
+    return m_IsDismissable;
+}
+
+void Container::setIsDismissable(bool isDismissable)
+{
+    m_IsDismissable = isDismissable;
+}
+
+} /* namespace services */
+} /* namespace ajn */

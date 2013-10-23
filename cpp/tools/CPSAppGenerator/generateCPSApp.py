@@ -58,6 +58,7 @@ if not cpvalidate.validate_all(o.root):
 print "\nxml logic validation passed"
 
 generated = gen.Generator(scriptDir, path)
+generated.confirmGenerate()
 generated.initializeFiles()
 generated.setControlDeviceData(o.root.controlPanelDevice.name, o.root.controlPanelDevice.headerCode)
 generated.setLanguageSets(o.root.controlPanelDevice.languageSet)

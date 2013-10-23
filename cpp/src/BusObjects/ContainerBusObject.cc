@@ -18,16 +18,21 @@
 #include "../ControlPanelConstants.h"
 #include "alljoyn/controlpanel/ControlPanelService.h"
 
-using namespace qcc;
 namespace ajn {
 namespace services {
+using namespace qcc;
 using namespace cpsConsts;
 
-ContainerBusObject::ContainerBusObject(BusAttachment* bus, String const& servicePath, uint16_t langIndx,
-                                       QStatus& status, Widget* widget) : WidgetBusObject(servicePath, langIndx, TAG_CONTAINER_BUSOBJECT, widget)
+ContainerBusObject::ContainerBusObject(BusAttachment* bus, String const& objectPath, uint16_t langIndx,
+                                       QStatus& status, Widget* widget) :
+    WidgetBusObject(objectPath, langIndx, TAG_CONTAINER_BUSOBJECT, status, widget)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-    status = ER_OK;
+    if (status != ER_OK) {
+        if (logger)
+            logger->debug(TAG, "Could not create the BusObject");
+        return;
+    }
 
     String interfaceName = widget->getIsSecured() ? AJ_SECURED_CONTAINER_INTERFACE : AJ_CONTAINER_INTERFACE;
     InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());

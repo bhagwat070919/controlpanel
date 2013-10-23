@@ -23,24 +23,59 @@
 namespace ajn {
 namespace services {
 
+/**
+ * Class used to define a LanguageSet
+ */
 class LanguageSet {
 
   public:
+
+    /**
+     * Constructor for LanguageSet class
+     * @param languageSetName - name of LanguageSet
+     */
     LanguageSet(qcc::String const& languageSetName);
 
+    /**
+     * Destructor for LanguageSet class
+     */
     virtual ~LanguageSet();
 
-    void addLanguage(qcc::String const& language);
-
-    const std::vector<qcc::String>& getLanguages() const;
-
+    /**
+     * Get the LanguageSetName
+     * @return LanguageSetName
+     */
     const qcc::String& getLanguageSetName() const;
 
+    /**
+     * Get the number of Languages defined
+     * @return number of Languages
+     */
     const size_t getNumLanguages() const;
 
+    /**
+     * Add a language to the LanguageSet
+     * @param language - language to Add
+     */
+    void addLanguage(qcc::String const& language);
+
+    /**
+     *
+     * Get the Languages defined in the LanguageSet
+     * @return languages vector
+     */
+    const std::vector<qcc::String>& getLanguages() const;
+
   private:
+
+    /**
+     * Name of LanguageSet
+     */
     qcc::String m_LanguageSetName;
 
+    /**
+     * vector to store Languages of LanguageSet
+     */
     std::vector<qcc::String> m_Languages;
 };
 

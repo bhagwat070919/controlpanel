@@ -18,15 +18,16 @@
 #include "../ControlPanelConstants.h"
 #include "alljoyn/controlpanel/ControlPanelService.h"
 
-using namespace qcc;
 namespace ajn {
 namespace services {
+using namespace qcc;
 using namespace cpsConsts;
 
 #define NOTIFICATIONACTION_INTERFACE_VERSION 1
+#define TAG TAG_NOTIFICATIONACTIONBUSOBJECT
 
-NotificationActionBusObject::NotificationActionBusObject(BusAttachment* bus, String const& servicePath,
-                                                         QStatus& status) : BusObject(servicePath.c_str()), m_SignalDismiss(0), TAG(TAG_NOTIFICATIONACTIONBUSOBJECT)
+NotificationActionBusObject::NotificationActionBusObject(BusAttachment* bus, String const& objectPath, QStatus& status) :
+    BusObject(objectPath.c_str()), m_SignalDismiss(0)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     status = ER_OK;
@@ -64,6 +65,24 @@ NotificationActionBusObject::~NotificationActionBusObject()
 {
 }
 
+QStatus NotificationActionBusObject::Get(const char* interfaceName, const char* propName, MsgArg& val)
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    if (logger)
+        logger->debug(TAG, "Get property was called - in NotificationActionBusObject class:\n");
+
+    if (0 == strcmp(AJ_PROPERTY_VERSION.c_str(), propName)) {
+        return val.Set(AJPARAM_UINT16.c_str(), NOTIFICATIONACTION_INTERFACE_VERSION);
+    }
+    return ER_BUS_NO_SUCH_PROPERTY;
+}
+
+QStatus NotificationActionBusObject::Set(const char* interfaceName, const char* propName, MsgArg& val)
+{
+    return ER_ALLJOYN_ACCESS_PERMISSION_ERROR;
+}
+
+
 QStatus NotificationActionBusObject::SendDismissSignal()
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
@@ -92,25 +111,6 @@ QStatus NotificationActionBusObject::SendDismissSignal()
     }
     return status;
 }
-
-
-QStatus NotificationActionBusObject::Get(const char* ifcName, const char* propName, MsgArg& val)
-{
-    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-    if (logger)
-        logger->debug(TAG, "Get property was called - in NotificationActionBusObject class:\n");
-
-    if (0 == strcmp(AJ_PROPERTY_VERSION.c_str(), propName)) {
-        return val.Set(AJPARAM_UINT16.c_str(), NOTIFICATIONACTION_INTERFACE_VERSION);
-    }
-    return ER_BUS_NO_SUCH_PROPERTY;
-}
-
-QStatus NotificationActionBusObject::Set(const char* ifcName, const char* propName, MsgArg& val)
-{
-    return ER_ALLJOYN_ACCESS_PERMISSION_ERROR;
-}
-
 
 } /* namespace services */
 } /* namespace ajn */

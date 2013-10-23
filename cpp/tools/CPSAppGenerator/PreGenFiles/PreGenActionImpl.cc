@@ -17,8 +17,8 @@
 #include "REGULAR_NAME_HERE.h"
 ADDITIONAL_INCLUDES_HERE
 
-using namespace ajn;
-using namespace services;
+namespace ajn {
+namespace services {
 
 REGULAR_NAME_HERE::REGULAR_NAME_HERE(qcc::String name) : Action(name)
 {
@@ -30,7 +30,13 @@ REGULAR_NAME_HERE::~REGULAR_NAME_HERE()
 
 }
 
-void REGULAR_NAME_HERE::executeCallBack()
+bool REGULAR_NAME_HERE::executeCallBack()
 {
     EXECUTE_ACTION_HERE
+
+    //by default return success
+    return true;
 }
+
+} /* namespace services */
+} /* namespace ajn */

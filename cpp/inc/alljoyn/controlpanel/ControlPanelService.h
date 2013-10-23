@@ -46,6 +46,9 @@ class ControlPanelService {
 
     /**
      * Initialize the controllee to be used
+     * @param bus - bus used for Controllee
+     * @param controlPanelControllee - controllee to initialize
+     * @return
      */
     QStatus initControllee(BusAttachment* bus, ControlPanelControllee* controlPanelControllee);
 
@@ -82,7 +85,8 @@ class ControlPanelService {
     Log::LogLevel getLogLevel();
 
     /**
-     * Virtual method to get the busAttachment used in the service.
+     * Method to get the busAttachment used in the service.
+     * @return BusAttachment
      */
     ajn::BusAttachment* getBusAttachment();
 
@@ -112,22 +116,22 @@ class ControlPanelService {
     static uint16_t const CONTROLPANEL_SERVICE_VERSION;
 
     /**
-     * instance variable - ControlPanelServiceImpl is a singleton
+     * Instance variable - ControlPanelServiceImpl is a singleton
      */
     static ControlPanelService* s_Instance;
 
     /**
-     *
+     * BusAttachement used in Service
      */
     BusAttachment* m_Bus;
 
     /**
-     *
+     * BusListener used in service
      */
     ControlPanelBusListener* m_BusListener;
 
     /**
-     *
+     * ControlPanelControllee of service
      */
     ControlPanelControllee* m_ControlPanelControllee;
 
@@ -140,11 +144,6 @@ class ControlPanelService {
      * Logger that is used in library
      */
     CPSLogger cpsLogger;
-
-    /**
-     * Tag for logging
-     */
-    qcc::String TAG;
 };
 } //namespace services
 } //namespace ajn

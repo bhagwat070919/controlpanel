@@ -17,46 +17,63 @@
 #ifndef CONTROLPANELHINTS_H_
 #define CONTROLPANELHINTS_H_
 
-#include <qcc/String.h>
-
 namespace ajn {
 namespace services {
 
+/**
+ * Hints for Containers Widgets
+ * determining the layout
+ */
 enum LAYOUT_HINTS {
-    VERTICAL_LINEAR = 1,
-    HORIZONTAL_LINEAR = 2
+    VERTICAL_LINEAR = 1, //!< VERTICAL_LINEAR
+    HORIZONTAL_LINEAR = 2 //!< HORIZONTAL_LINEAR
 };
 
+/**
+ * Hints for Dialog Widgets
+ */
 enum DIALOG_HINTS {
-    ALERTDIALOG = 1
+    ALERTDIALOG = 1 //!< ALERTDIALOG
 };
 
+/**
+ * Hints for Property Widgets
+ */
 enum PROPERTY_HINTS {
-    SWITCH = 1,
-    CHECKBOX = 2,
-    SPINNER = 3,
-    RADIOBUTTON = 4,
-    SLIDER = 5,
-    TIMEPICKER = 6,
-    DATEPICKER = 7,
-    NUMBERPICKER = 8,
-    KEYPAD = 9,
-    ROTARYKNOB = 10,
-    TEXTVIEW = 11,
-    NUMERICVIEW = 12,
-    EDITTEXT = 13
+    SWITCH = 1,      //!< SWITCH
+    CHECKBOX = 2,    //!< CHECKBOX
+    SPINNER = 3,     //!< SPINNER
+    RADIOBUTTON = 4, //!< RADIOBUTTON
+    SLIDER = 5,      //!< SLIDER
+    TIMEPICKER = 6,  //!< TIMEPICKER
+    DATEPICKER = 7,  //!< DATEPICKER
+    NUMBERPICKER = 8, //!< NUMBERPICKER
+    KEYPAD = 9,      //!< KEYPAD
+    ROTARYKNOB = 10, //!< ROTARYKNOB
+    TEXTVIEW = 11,   //!< TEXTVIEW
+    NUMERICVIEW = 12, //!< NUMERICVIEW
+    EDITTEXT = 13    //!< EDITTEXT
 };
 
+/**
+ * Hints for Label Widgets
+ */
 enum LABEL_HINTS {
-    TEXTLABEL = 1
+    TEXTLABEL = 1 //!< TEXTLABEL
 };
 
+/**
+ * Hints for ListProperty Widgets
+ */
 enum LIST_PROPERTY_HINTS {
-    DYNAMICSPINNER = 1
+    DYNAMICSPINNER = 1 //!< DYNAMICSPINNER
 };
 
+/**
+ * Hints for Action Widgets
+ */
 enum ACTION_HINTS {
-    ACTIONBUTTON = 1
+    ACTIONBUTTON = 1 //!< ACTIONBUTTON
 };
 
 } //namespace services

@@ -28,7 +28,7 @@ qcc::String ControlPanelServiceSampleUtil::DEFAULT_LANGUAGE = "en";
 const char* ControlPanelServiceSampleUtil::SUPPORTED_LANGUAGES[] = { "en" };
 
 
-BusAttachment* ControlPanelServiceSampleUtil::prepareBusAttachment(GenericLogger* logger)
+BusAttachment* ControlPanelServiceSampleUtil::prepareBusAttachment(GenericLogger* logger, AuthListener* authListener)
 {
     BusAttachment* bus = new BusAttachment("ControlPanelServiceApp", true);
 
@@ -48,7 +48,14 @@ BusAttachment* ControlPanelServiceSampleUtil::prepareBusAttachment(GenericLogger
         return NULL;
     }
 
-    ControlPanelServiceSampleUtil::EnableSecurity(bus);
+    if (authListener) {
+        status = ControlPanelServiceSampleUtil::EnableSecurity(bus, authListener);
+        if (status != ER_OK) {
+            if (logger)
+                logger->warn(TAG, "Could not enable Security. Status: " + qcc::String(QCC_StatusText(status)));
+            return NULL;
+        }
+    }
     return bus;
 }
 
@@ -150,8 +157,8 @@ QStatus ControlPanelServiceSampleUtil::addSessionlessMatch(BusAttachment*bus)
     return bus->AddMatch("sessionless='t',type='error'");
 }
 
-QStatus ControlPanelServiceSampleUtil::EnableSecurity(BusAttachment* bus)
+QStatus ControlPanelServiceSampleUtil::EnableSecurity(BusAttachment* bus, AuthListener* authListener)
 {
-    QStatus status = bus->EnablePeerSecurity("ALLJOYN_PIN_KEYX", new PinKeyXListener());
+    QStatus status = bus->EnablePeerSecurity("ALLJOYN_PIN_KEYX ALLJOYN_SRP_KEYX", authListener);
     return status;
 }

@@ -30,9 +30,9 @@ class LightConfirm : public ajn::services::Dialog {
     LightConfirm(qcc::String name);
     virtual ~LightConfirm();
 
-    void executeAction1CallBack();
-    void executeAction2CallBack();
-    void executeAction3CallBack();
+    bool executeAction1CallBack();
+    bool executeAction2CallBack();
+    bool executeAction3CallBack();
 };
 } //namespace services
 } //namespace ajn

@@ -54,9 +54,9 @@ class Container (common.Widget):
             elif elementType == "scalarProperty" or elementType == "stringProperty" or elementType == "booleanProperty" :
                 propertyW = pw.Property(self.generated, element, self.name, self.languageSetName)
                 propertyW.generate()
-#            elif elementType == "dateProperty" or elementType == "timeProperty" :
-#                propertyW = pw.Property(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
-#                propertyW.generate()
+            elif elementType == "dateProperty" or elementType == "timeProperty" :
+                propertyW = pw.Property(self.generated, element, self.name, self.languageSetName)
+                propertyW.generate()
             elif elementType == "labelProperty" :
                 label = lw.Label(self.generated, element, self.name, self.languageSetName)
                 label.generate()
