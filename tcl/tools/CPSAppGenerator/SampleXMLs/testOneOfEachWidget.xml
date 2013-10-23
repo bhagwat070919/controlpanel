@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<controlPanelDevice xmlns="http://www.alljoyn.org/controlpanel/gen">
+    <name>MyDevice</name>
+    <headerCode>#include "ControlPanelProvided.h"</headerCode>
+    <languageSet name="myLanguages">
+        <language>en</language>
+        <language>de-AT</language>        
+    </languageSet>
+    <controlPanels>
+        <controlPanel languageSet="myLanguages">
+            <rootContainer>
+                <name>rootContainer</name>
+                <secured>false</secured>
+                <enabled>true</enabled>
+                <bgcolor>0x200</bgcolor>
+                <label language="en">My Label of my container</label>
+                <label language="de-AT">Container Etikett</label>                
+                <hints>
+                    <hint>vertical_linear</hint>
+                    <hint>horizontal_linear</hint>
+                </hints>
+                <elements>
+                    <labelProperty>
+                        <name>CurrentTemp</name>
+                        <enabled>true</enabled>
+                        <label language="en">Current Temperature:</label>
+                        <label language="de-AT">Aktuelle Temperatur:</label>
+                        <bgcolor>0x98765</bgcolor>
+                        <hints>
+                            <hint>textlabel</hint>
+                        </hints>            
+                    </labelProperty>
+                    <scalarProperty dbusType="UINT16">
+                        <name>heatProperty</name>
+                        <getCode>getuint16Var</getCode>
+                        <setCode>setuint16Var(%s)</setCode>
+                        <!--<language>en_US</language>-->
+                        <secured>false</secured>
+                        <enabled>true</enabled>
+                        <writable>true</writable>
+                        <label language="en">Oven Temperature</label>
+                        <label language="de-AT">Ofentemperatur</label>                                                
+                        <bgcolor>0x500</bgcolor>
+                        <hints>
+                            <hint>spinner</hint>
+                        </hints>
+                        <constraintVals>
+                            <constraint>
+                                <display language="en">Regular</display>
+                                <display language="de-AT">Normal</display>                                
+                                <value>175</value>
+                            </constraint>
+                            <constraint>
+                                <display language="en">Hot</display>
+                                <display language="de-AT">Heiss</display>                                
+                                <value>200</value>
+                            </constraint>
+                            <constraint>
+                                <display language="en">Very Hot</display>
+                                <display language="de-AT">Sehr Heiss</display>                                
+                                <value>225</value>
+                            </constraint>
+                        </constraintVals>
+                        <constraintRange>
+                            <min>175</min>
+                            <max>225</max>
+                            <increment>25</increment>
+                        </constraintRange>
+                        <unitMeasure language="en">Degrees</unitMeasure>
+                        <unitMeasure language="de-AT">Grad</unitMeasure>                        
+                    </scalarProperty>
+                    <action>
+                        <name>ovenAction</name>
+                        <onAction>
+                            <executeCode>AJ_Printf("Starting the Oven. Execute was called\n");</executeCode>
+                        </onAction>
+                        <secured>false</secured>
+                        <enabled>true</enabled>
+                        <label language="en">Start Oven</label>
+                        <label language="de-AT">Ofen started</label>                        
+                        <bgcolor>0x400</bgcolor>
+                        <hints>
+                            <hint>actionButton</hint>
+                        </hints>
+                    </action>
+                    <action>
+                        <name>lightAction</name>
+                        <onAction>
+                            <dialog>
+                                <name>LightConfirm</name>
+                                <secured>false</secured>
+                                <enabled>true</enabled>
+                                <message language="en">Are you sure you want to turn on the light</message>
+                                <message language="de-AT">Are you sure you want to turn on the light</message>                                
+                                <numActions>3</numActions>
+                                <label language="en">Are you sure?</label>
+                                <label language="de-AT">Sind sie sicher?</label>                                
+                                <bgcolor>0x789</bgcolor>
+                                <hints>
+                                    <hint>alertdialog</hint>
+                                </hints>                 
+                                <labelAction1 language="en">Yes</labelAction1>
+                                <labelAction1 language="de-AT">Ja</labelAction1>
+                                <labelAction2 language="en">No</labelAction2>
+                                <labelAction2 language="de-AT">Nein</labelAction2>
+                                <labelAction3 language="en">Cancel</labelAction3>
+                                <labelAction3 language="de-AT">Abrechen</labelAction3>                                
+                                <executeCode1>AJ_Printf("Execute Action1 was called\n");</executeCode1>
+                                <executeCode2>AJ_Printf("Execute Action2 was called\n");</executeCode2>
+                                <executeCode3>AJ_Printf("Execute Action3 was called\n");</executeCode3>
+                            </dialog>
+                        </onAction>
+                        <secured>false</secured>
+                        <enabled>true</enabled>
+                        <label language="en">Turn on oven light</label>
+                        <label language="de-AT">Ofenlicht anschalten</label>                        
+                        <bgcolor>0x400</bgcolor>
+                        <hints>
+                            <hint>actionButton</hint>
+                        </hints>
+                    </action>
+                </elements>
+            </rootContainer>
+        </controlPanel>
+    </controlPanels>
+    <notificationActions>
+        <notificationActionDialog languageSet="myLanguages">
+             <name>areYouSure</name>
+             <secured>false</secured>
+             <enabled>true</enabled>
+             <message language="en">Are you sure?</message>
+             <message language="de-AT">Sind sie sicher?</message>             
+             <numActions>1</numActions>
+             <label language="en">Are you sure?</label>
+             <label language="de-AT">Sind sie sicher?</label>             
+             <bgcolor>0x789</bgcolor>
+             <labelAction1 language="en">Yes</labelAction1>
+             <labelAction1 language="de-AT">Ja</labelAction1>
+             <executeCode1>AJ_Printf("Execute Action1 was called\n");</executeCode1>
+        </notificationActionDialog>
+    </notificationActions>
+</controlPanelDevice>
+

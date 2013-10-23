@@ -1,0 +1,71 @@
+#*****************************************************************************
+# Copyright 2013, Qualcomm Innovation Center, Inc.
+#
+#    All rights reserved.
+#    This file is licensed under the 3-clause BSD license in the NOTICE.txt
+#    file for this project. A copy of the 3-clause BSD license is found at:
+#
+#        http://opensource.org/licenses/BSD-3-Clause.
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the license is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the license for the specific language governing permissions and
+#    limitations under the license.
+#*****************************************************************************
+
+about_root_default        = '../../about/tcl'
+serversample_root_default = '../../../applications/sample_apps/tcl/ServerSample'
+doxygen_path              = '../../../build_core/tools/scons'
+
+import os
+Import('iskoot_env')
+
+vars = Variables()
+vars.Add('ABOUT_ROOT', 'Root directory of About service', about_root_default)
+vars.Add('SERVERSAMPLE_ROOT', 'Root directory of services server sample', serversample_root_default)
+vars.Add(EnumVariable('DOCS', 'Output doc type', 'none', allowed_values=('none', 'pdf', 'html', 'dev', 'chm', 'sandcastle')))
+vars.Update(iskoot_env)
+
+Help(vars.GenerateHelpText(iskoot_env))
+
+if not iskoot_env.has_key('SERVERSAMPLE_ROOT'):
+    print "Mandatory parameter 'SERVERSAMPLE_ROOT' not found; aborting.\n"
+    exit(1)
+if not os.path.isfile(iskoot_env['SERVERSAMPLE_ROOT'] + '/SConscript'):
+    print "SConscript in 'SERVERSAMPLE_ROOT=" + iskoot_env['SERVERSAMPLE_ROOT'] + "' not found; aborting.\n"
+    exit(1)
+
+if not iskoot_env.has_key('ABOUT_ROOT'):
+    print "Mandatory parameter 'ABOUT_ROOT' not found; aborting.\n"
+    exit(1)
+if not os.path.isfile(iskoot_env['ABOUT_ROOT'] + '/SConscript'):
+    print "SConscript in 'ABOUT_ROOT=" + iskoot_env['ABOUT_ROOT'] + "' not found; aborting.\n"
+    exit(1)
+
+if iskoot_env['DOCS'] != 'none' :
+    if not os.path.isfile(doxygen_path + '/doxygen.py'):
+        print "Path to doxygen tool '" + doxygen_path + "' not found; aborting.\n"
+        exit(1)
+        
+# a flag to tell services server sample not to build its executable, but rather
+# to return to us build parameters and info for us to build here.
+iskoot_env['INDIV_BUILD'] = 1
+# convert locations to absolute
+iskoot_env['ABOUT_ROOT_FROM_COMPONENT']       = str(iskoot_env.Dir('$ABOUT_ROOT'))
+iskoot_env['SERVERSAMPLE_ROOT_FROM_COMPONENT'] = str(iskoot_env.Dir('$SERVERSAMPLE_ROOT'))
+
+# a sub environment for the controlpanel app, so they won't taint the main environment 
+# with defines and include dirs 
+controlpanel_env = iskoot_env.Clone()
+
+Export('controlpanel_env')
+
+controlpanel_env.SConscript('samples/CPSControlleeSample/SConscript')
+
+# Build docs
+if controlpanel_env['DOCS'] != 'none' :
+    controlpanel_env.Tool('doxygen', toolpath=[doxygen_path])
+    installDocs = controlpanel_env.SConscript('docs/SConscript', {'env': controlpanel_env})
+    controlpanel_env.Depends(installDocs, controlpanel_env.Glob('*.h'));
+    

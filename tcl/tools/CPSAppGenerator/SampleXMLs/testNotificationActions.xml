@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<controlPanelDevice xmlns="http://www.alljoyn.org/controlpanel/gen">
+    <name>MyDevice</name>
+    <headerCode>#include "ControlPanelProvided.h"</headerCode>
+    <languageSet name="myLanguages">
+        <language>en</language>
+    </languageSet>
+    <notificationActions>
+        <notificationActionDialog languageSet="myLanguages">
+             <name>areYouSure</name>
+             <secured>false</secured>
+             <enabled>true</enabled>
+             <message language="en">Are you sure?</message>
+             <numActions>1</numActions>
+             <label language="en">Are you sure?</label>
+             <bgcolor>0x789</bgcolor>
+             <labelAction1 language="en">Yes</labelAction1>
+             <executeCode1>AJ_Printf("Execute Action1 was called\n");</executeCode1>
+        </notificationActionDialog>
+        <notificationActionContainer languageSet="myLanguages">
+                <name>rootContainer</name>
+                <secured>false</secured>    
+                <enabled>true</enabled>
+                <bgcolor>0x200</bgcolor>
+                <label language="en">My Label of my container</label>
+                <hints>
+                    <hint>vertical_linear</hint>
+                </hints>
+                <elements>
+                    <scalarProperty dbusType="UINT16">
+                        <name>heatProperty</name>
+                        <getCode>getuint16Var</getCode>
+                        <setCode>setuint16Var(%s)</setCode>
+                        <!--<language>en_US</language>-->
+                        <secured>false</secured>
+                        <enabled>true</enabled>
+                        <writable>true</writable>
+                        <label code="true">getTestString</label>
+                        <bgcolor>0x500</bgcolor>
+                        <hints>
+                            <hint>spinner</hint>
+                        </hints>
+                        <constraintVals>
+                            <constraint>
+                                <display language="en">Regular</display>
+                                <value>175</value>
+                            </constraint>
+                            <constraint>
+                                <display language="en">Hot</display>
+                                <value>200</value>
+                            </constraint>
+                            <constraint>
+                                <display language="en">Very Hot</display>
+                                <value>225</value>
+                            </constraint>
+                        </constraintVals>
+                        <constraintRange>
+                            <min>175</min>
+                            <max>225</max>
+                            <increment>25</increment>
+                        </constraintRange>
+                        <unitMeasure language="en">Degrees</unitMeasure>
+                    </scalarProperty>
+                    <action>
+                        <name>ovenAction</name>
+                        <onAction>
+                            <executeCode>AJ_Printf("Starting the Oven. Execute was called\n");</executeCode>
+                        </onAction>
+                        <secured>false</secured>
+                        <enabled>true</enabled>
+                        <label language="en">Start Oven</label>
+                        <bgcolor>0x400</bgcolor>
+                        <hints>
+                            <hint>actionButton</hint>
+                        </hints>
+                    </action>
+                </elements>        
+        </notificationActionContainer>        
+    </notificationActions>
+</controlPanelDevice>

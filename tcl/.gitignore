@@ -1,0 +1,15 @@
+*~
+QA
+bin
+gen
+*.o
+*.so
+*.a
+lib
+build
+obj*
+.sconsign.dblite
+ajlite.nvram
+.cproject
+.project
+.settings/language.settings.xml

@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<controlPanelDevice xmlns="http://www.alljoyn.org/controlpanel/gen">
+    <name>MyDevice</name>
+    <headerCode>#include "ControlPanelProvided.h"</headerCode>
+    <languageSet name="myLanguages">
+        <language>en</language>
+    </languageSet>
+    <controlPanels>
+        <controlPanel languageSet="myLanguages">
+            <rootContainer>
+                <name>rootContainer</name>
+                <secured>false</secured>    
+                <enabled>true</enabled>
+                <bgcolor>0x200</bgcolor>
+                <label language="en">My Label of my container</label>
+                <hints>
+                    <hint>vertical_linear</hint>
+                </hints>
+                <elements>
+                    <scalarProperty dbusType="INT32">
+                        <name>fanSpeedProperty</name>
+                        <getCode>getint32Var</getCode>
+                        <setCode>setint32Var(%s)</setCode>
+                        <secured>false</secured>
+                        <enabled>false</enabled>
+                        <writable>false</writable>
+                        <label language="en">Oven Fan Speed</label>
+                        <bgcolor>0x350</bgcolor>
+                        <unitMeasure language="en">RPM</unitMeasure>		
+                    </scalarProperty>
+                    <container>
+                        <name>childContainer</name>
+                        <secured>false</secured>    
+                        <enabled>true</enabled>
+                        <bgcolor>0x200</bgcolor>
+                        <label language="en">Label of Child container</label>
+                        <hints>
+                            <hint>horizontal_linear</hint>
+                        </hints>
+                        <elements>
+                            <scalarProperty dbusType="UINT16">
+                                <name>heatProperty</name>
+                                <getCode>getuint16Var</getCode>
+                                <setCode>setuint16Var(%s)</setCode>
+                                <secured>false</secured>
+                                <enabled>true</enabled>
+                                <writable>true</writable>
+                                <label language="en">Oven Temperature</label>
+                                <bgcolor>0x500</bgcolor>
+                                <hints>
+                                    <hint>spinner</hint>
+                                </hints>
+                                <constraintVals>
+                                    <constraint>
+                                        <display language="en">Regular</display>
+                                        <value>175</value>
+                                    </constraint>
+                                    <constraint>
+                                        <display language="en">Hot</display>
+                                        <value>200</value>
+                                    </constraint>                    
+                                    <constraint>
+                                        <display language="en">Very Hot</display>
+                                        <value>225</value>                    
+                                    </constraint>
+                                </constraintVals>
+                                <constraintRange>
+                                    <min>175</min>
+                                    <max>225</max>
+                                    <increment>25</increment>                                                                                         
+                                </constraintRange>
+                                <unitMeasure language="en">Degrees</unitMeasure>
+                            </scalarProperty>
+                        </elements>
+                    </container>            
+                </elements>        
+            </rootContainer>
+        </controlPanel>
+    </controlPanels>
+</controlPanelDevice>

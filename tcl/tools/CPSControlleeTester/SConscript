@@ -1,0 +1,48 @@
+# Copyright 2013, Qualcomm Innovation Center, Inc.
+#
+#    All rights reserved.
+#    This file is licensed under the 3-clause BSD license in the NOTICE.txt
+#    file for this project. A copy of the 3-clause BSD license is found at:
+#
+#        http://opensource.org/licenses/BSD-3-Clause.
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the license is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the license for the specific language governing permissions and
+#    limitations under the license.
+
+Import('env')
+import os
+
+iskoot_env = env.Clone()
+
+target_name = 'ControlPanelClient'
+source_files = [
+    'ControlPanelClientGenerated.c',
+    'ControlPanelClient.c',
+]
+
+csObjs = [
+    'ControlPanelClientGenerated.c',
+    'ControlPanelClient.c',
+    
+]
+
+iskoot_env.Append(CPPPATH      = [os.getcwd()])
+
+objs = iskoot_env.Object(source_files)
+iskoot_env.SConscript('../../src/CPSControllee/SConscript', {'controlpanel_env': iskoot_env })
+
+#iskoot_env.Append(CPPPATH      = ['.'])
+
+objs = iskoot_env.Object(source_files)
+ 
+if iskoot_env['TARG'] == 'linux':
+    iskoot_env.Program(
+                target = target_name, 
+    			source = [
+	    			objs,
+	    			iskoot_env['aj_obj'],
+	    			iskoot_env['cps_obj'] 
+    			])

@@ -1,0 +1,41 @@
+# Copyright 2013, Qualcomm Innovation Center, Inc.
+#
+#    All rights reserved.
+#    This file is licensed under the 3-clause BSD license in the NOTICE.txt
+#    file for this project. A copy of the 3-clause BSD license is found at:
+#
+#        http://opensource.org/licenses/BSD-3-Clause.
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the license is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the license for the specific language governing permissions and
+#    limitations under the license.
+
+import os
+
+Import('controlpanel_env')
+
+source_files = [
+
+    'ControlPanelInterfaces',
+    'ControlPanelResponses.c',
+    
+    'Widgets/ContainerWidget.c',
+    'Widgets/PropertyWidget.c',
+    'Widgets/ListPropertyWidget.c',
+    'Widgets/ActionWidget.c',
+    'Widgets/LabelWidget.c',
+    'Widgets/DialogWidget.c',
+    
+    'Common/DateTimeUtil.c',
+    'Common/ConstraintRange.c',
+    'Common/ConstraintList.c',
+    'Common/HttpControl.c',
+    'Common/BaseWidget.c',    
+    'Common/ControlMarshalUtil.c',
+]
+
+controlpanel_env.Append(CPPPATH      = [os.getcwd() + '/../../inc'])
+
+controlpanel_env['cps_obj'] = controlpanel_env.Object(source_files)
