@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ Copyright 2013, Qualcomm Innovation Center, Inc.
+ All rights reserved.
+ This file is licensed under the 3-clause BSD license in the NOTICE.txt file for this project. 
+ A copy of the 3-clause BSD license is found at: http://opensource.org/licenses/BSD-3-Clause. 
+
+ Unless required by applicable law or agreed to in writing, 
+ software distributed under the license is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the license for the specific language governing permissions and limitations under the license.
+ -->
+ 
+<project name="ControlPanelService" basedir="." default="jar">
+    <property name="src.dir"     value="src" />
+    <property name="libs.dir"    value="libs"/>
+    <property name="internal.dir"   value="../../../internal/controlpanel/java/ControlPanelService"/>
+    <property name="compilelib.dir" value="${internal.dir}/compilelib"/>
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes" />
+    <property name="deploy.dir"  value="${build.dir}/deploy" />
+    
+    
+    <target name="clean">
+        <echo message="Cleaning ${ant.project.name} ${build.dir} directory..."/>
+        <delete dir="${build.dir}" includeemptydirs="true" quiet="true"/>
+    </target>
+          
+    <target name="init" depends="clean">
+        <echo message="${ant.project.name} Starting init..."/>
+        <echo message="${ant.project.name} Create build directory"/>
+        <mkdir dir="${build.dir}"/>
+        <echo message="${ant.project.name} Create ${classes.dir} directory"/>
+        <mkdir dir="${classes.dir}"/>
+        <echo message="${ant.project.name} Create ${deploy.dir} directory"/>
+        <mkdir dir="${deploy.dir}"/>    
+    </target>
+     
+    <target name="compile" depends="init" description="Compiles the code">
+        <echo message="${ant.project.name} starting compilation..."/>
+        <path id="classpath">
+            <fileset dir="${libs.dir}" includes="**/*"/>
+            <fileset dir="${compilelib.dir}" includes="**/*.jar"/>
+        </path>
+        <javac source="1.6" target="1.6" destdir="${classes.dir}" classpathref="classpath" debug="true" includeantruntime="false">
+              <src path="${src.dir}" />
+              <exclude name="org/alljoyn/ioe/controlpanelservice/application/**" />
+        </javac>
+    </target>
+    
+    <target name="jar" depends="compile">
+        <echo message="${ant.project.name} Creates compiled JAR file"/>
+        <jar destfile="${deploy.dir}/${ant.project.name}.jar" basedir="${classes.dir}" />
+        
+        <echo message="${ant.project.name}_src Creates JAR file of sources"/>
+        <jar destfile="${deploy.dir}/${ant.project.name}_src.jar" basedir="${src.dir}" />
+    </target>
+</project>
