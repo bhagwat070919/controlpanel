@@ -58,7 +58,7 @@ public:
     QStatus getStatesForArg(MsgArg& val, int16_t languageIndx);
 
     QStatus getOptParamsForArg(MsgArg& val, int16_t languageIndx,
-    		std::vector<MsgArg>& optParams, int32_t& optParamIndx);
+    		MsgArg* optParams, int32_t& optParamIndx);
 
     QStatus getOptParamsForArg(MsgArg& val, int16_t languageIndx);
 
@@ -86,8 +86,6 @@ public:
 	virtual const std::vector<qcc::String>& getLabel() const;
 	virtual void setLabel(const std::vector<qcc::String>& label);
 
-	const uint16_t getNumOptionalParams() const;
-
 	void setIsSecured(bool secured);
     bool getIsSecured();
 
@@ -97,7 +95,7 @@ public:
 	qcc::String const& getWidgetName();
 
 	virtual QStatus registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
-			qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix);
+			qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot = false);
 
 	virtual WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
 			uint16_t langIndx, QStatus status) = 0;
@@ -123,7 +121,6 @@ protected:
 
     std::vector<uint16_t> m_Hints;
 
-    uint16_t m_NumOptionalParams;
     /**
      * Tag used for Logging
      */

@@ -91,7 +91,7 @@ QStatus ControlPanel::registerObjects(BusAttachment* bus, qcc::String const& uni
     interfaces.push_back(AJ_CONTROLPANEL_INTERFACE);
     aboutService->AddObjectDescription(objectPath, interfaces);
 
-    status = m_RootContainer->registerObjects(bus, m_LanguageSet, objectPath, "");
+    status = m_RootContainer->registerObjects(bus, m_LanguageSet, objectPath + "/", "", true);
     return status;
 }
 

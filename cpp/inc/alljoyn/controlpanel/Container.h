@@ -31,7 +31,7 @@ public:
     QStatus addChildElement(Widget* childElement);
 
     QStatus registerObjects(BusAttachment* bus, LanguageSet const& m_LanguageSet,
-    		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix);
+    		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot = false);
 
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
     		uint16_t langIndx, QStatus status);

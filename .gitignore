@@ -7,7 +7,7 @@
 .cproject
 .project
 .sconsign.dblite
-.settings/*
+*/.settings/*
 libs
 QA
 ajlite.nvram

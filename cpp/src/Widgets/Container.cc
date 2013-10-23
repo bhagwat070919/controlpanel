@@ -18,6 +18,7 @@
 #include "../ControlPanelConstants.h"
 #include "alljoyn/controlpanel/ControlPanelService.h"
 #include "../BusObjects/ContainerBusObject.h"
+#include <iostream>
 
 using namespace ajn;
 using namespace services;
@@ -36,6 +37,7 @@ QStatus Container::addChildElement(Widget* childElement)
     if (!childElement)
     	return ER_BAD_ARG_1;
 
+    std::cout << "Child name is: " << childElement->getWidgetName().c_str() << std::endl;
     m_ChildElements.push_back(childElement);
     return ER_OK;
 }
@@ -47,16 +49,16 @@ WidgetBusObject* Container::createWidgetBusObject(BusAttachment* bus, qcc::Strin
 }
 
 QStatus Container::registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
-		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix)
+		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot)
 {
 	GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
 
-	QStatus status = Widget::registerObjects(bus, languageSet, objectPathPrefix, objectPathSuffix);
+	QStatus status = Widget::registerObjects(bus, languageSet, objectPathPrefix, objectPathSuffix, isRoot);
 	if (status != ER_OK)
 	    return status;
 
     //TODO if m_RootContainer->isdismissable add notificaitonActionObjectPath
-	qcc::String newObjectPathSuffix = objectPathSuffix.size() ? objectPathSuffix + "/" + m_Name : objectPathSuffix ;
+	qcc::String newObjectPathSuffix = isRoot ? objectPathSuffix : objectPathSuffix + "/" + m_Name;
     for (size_t indx = 0; indx < m_ChildElements.size(); indx++) {
         status = m_ChildElements[indx]->registerObjects(bus, languageSet, objectPathPrefix, newObjectPathSuffix);
         if (status != ER_OK) {

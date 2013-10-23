@@ -17,6 +17,7 @@
 #include "alljoyn/controlpanel/Widget.h"
 #include "../ControlPanelConstants.h"
 #include "alljoyn/controlpanel/ControlPanelService.h"
+#include <iostream>
 
 using namespace ajn;
 using namespace services;
@@ -28,34 +29,31 @@ using namespace cpsConsts;
 #define STATE_ENABLED 0x01
 #define STATE_WRITABLE 0x02
 
-//TODO m_NumOptionalParams - set based on opt params
-
-Widget::Widget(qcc::String const& name, qcc::String const& tag) :
-		m_Name(name)
+Widget::Widget(qcc::String const& name, qcc::String const& tag) : m_Name(name)
 {
 	m_IsSecured = false;
-
 	m_InterfaceVersion = 1;
 	m_States = 0;
 	m_GetEnabled = 0;
 	m_GetWritable = 0;
-
-	m_NumOptionalParams = 0;
-
 	m_GetLabel = 0;
 	m_BgColor = UINT32_MAX;
 	m_GetBgColor = 0;
 }
 
 QStatus Widget::registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
-		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix)
+		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot)
 {
+	std::cout << "Prefix, Suffix, name: " << objectPathPrefix.c_str() << " "
+		<< objectPathSuffix.c_str() << " " << m_Name.c_str() << std::endl;
+
 	GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
 	QStatus status;
 	const std::vector<qcc::String>& languages = languageSet.getLanguages();
-	qcc::String newObjectPathSuffix = objectPathSuffix.size() ? objectPathSuffix + "/" + m_Name : objectPathSuffix ;
+	qcc::String newObjectPathSuffix = isRoot? objectPathSuffix : objectPathSuffix + "/" + m_Name;
 	for (size_t indx = 0; indx < languages.size(); indx++) {
 		qcc::String objectPath = objectPathPrefix + languages[indx] + newObjectPathSuffix;
+		std::cout << "ObjectPath is: " << objectPath.c_str() << std::endl;
 		WidgetBusObject* busObject = createWidgetBusObject(bus, objectPath, indx, status);
 		if (status != ER_OK) {
 			if (logger)
@@ -200,11 +198,6 @@ void Widget::setLabel(const std::vector<qcc::String>& label)
 	m_Label = label;
 }
 
-const uint16_t Widget::getNumOptionalParams() const
-{
-	return m_NumOptionalParams;
-}
-
 void Widget::setIsSecured(bool secured)
 {
 	m_IsSecured = secured;
@@ -236,7 +229,7 @@ QStatus Widget::getStatesForArg(MsgArg& val, int16_t languageIndx)
 }
 
 QStatus Widget::getOptParamsForArg(MsgArg& val, int16_t languageIndx,
-		std::vector<MsgArg>& optParams, int32_t& optParamIndx)
+		MsgArg* optParams, int32_t& optParamIndx)
 {
 	QStatus status;
 
@@ -265,14 +258,12 @@ QStatus Widget::getOptParamsForArg(MsgArg& val, int16_t languageIndx,
 QStatus Widget::getOptParamsForArg(MsgArg& val, int16_t languageIndx)
 {
 	QStatus status;
-	std::vector<MsgArg> optParams(m_NumOptionalParams);
-	MsgArg optParamArray;
+	MsgArg* optParams = new MsgArg[OPT_PARAM_KEYS::NUM_OPT_PARAMS];
 
 	int32_t optParamIndx = 0;
 
 	CHECK_AND_RETURN(getOptParamsForArg(val, languageIndx, optParams, optParamIndx));
-	CHECK_AND_RETURN(optParamArray.Set(AJPARAM_ARRAY_DICT_UINT16_VAR.c_str(), optParamIndx, optParams.data()));
 
-	return val.Set(AJPARAM_OPTPARAM.c_str(), &optParamArray);
+	return val.Set(AJPARAM_OPTPARAM.c_str(), optParamIndx, optParams);
 }
 

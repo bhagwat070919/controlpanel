@@ -36,7 +36,7 @@ QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPa
 		return ER_BAD_ARG_1;
 
     QStatus status = ER_OK;
-    controlPanelControllee = new ControlPanelControllee("myDevice");
+    controlPanelControllee = new ControlPanelControllee("MyDevice");
 
     LanguageSet* langSet = LanguageSets::get("myLanguages");
     if (!langSet)
@@ -50,7 +50,7 @@ QStatus ControlPanelGenerated::PrepareWidgets(ControlPanelControllee*& controlPa
 
     container->setBgColor(200);
 
-    Label* label = new Label("testLabel");
+    Label* label = new Label("CurrentTemp");
     CHECK(container->addChildElement(label));
 
     return ER_OK;
