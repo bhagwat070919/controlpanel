@@ -16,6 +16,9 @@ Import('cpsenv')
 
 if not cpsenv.has_key('_ALLJOYNCORE_'):
     cpsenv.Append(LIBS = ['alljoyn'])
+    if cpsenv['BD'] == 'on' :
+        bdFile = cpsenv.subst('$DISTDIR') + '/cpp/lib/BundledDaemon.o'
+        cpsenv.Prepend(LIBS = [File(bdFile), 'ajdaemon'])    
     if cpsenv['OS'] == 'openwrt':
         cpsenv.AppendUnique(LIBS = [ 'stdc++', 'pthread' ])
 
