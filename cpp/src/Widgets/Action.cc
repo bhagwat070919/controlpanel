@@ -23,7 +23,7 @@ using namespace ajn;
 using namespace services;
 using namespace cpsConsts;
 
-Action::Action(qcc::String name) : Widget(name, TAG_ACTION_WIDGET)
+Action::Action(qcc::String name) : Widget(name, TAG_ACTION_WIDGET), m_Dialog(0)
 {
 }
 
@@ -40,4 +40,35 @@ WidgetBusObject* Action::createWidgetBusObject(BusAttachment* bus, qcc::String c
 void Action::executeCallBack()
 {
 
+}
+
+QStatus Action::addChildDialog(Dialog* childElement)
+{
+    if (!childElement)
+    	return ER_BAD_ARG_1;
+
+    m_Dialog = childElement;
+    return ER_OK;
+}
+
+QStatus Action::registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
+		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot)
+{
+	GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+
+	QStatus status = Widget::registerObjects(bus, languageSet, objectPathPrefix, objectPathSuffix, isRoot);
+	if (status != ER_OK)
+	    return status;
+
+	qcc::String newObjectPathSuffix = isRoot ? objectPathSuffix : objectPathSuffix + "/" + m_Name;
+
+	if (m_Dialog) {
+	    status = m_Dialog->registerObjects(bus, languageSet, objectPathPrefix, newObjectPathSuffix);
+        if (status != ER_OK) {
+        	if (logger)
+        	    logger->warn(TAG, "Could not register childDialog objects");
+        	return status;
+        }
+    }
+    return status;
 }

@@ -15,7 +15,7 @@ package org.alljoyn.ioe.controlpanelbrowser;
 *    limitations under the license.
 ******************************************************************************/
 
-import org.alljoyn.ioe.controlpanelbrowser.DeviceList.ControlPanelContext;
+import org.alljoyn.ioe.controlpanelbrowser.DeviceList.DeviceContext;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -54,7 +54,7 @@ public class DeviceDetailActivity extends FragmentActivity {
 		if (savedInstanceState == null) {
 			// Create the detail fragment and add it to the activity
 			// using a fragment transaction.
-			ControlPanelContext deviceContext = getIntent().getParcelableExtra(
+			DeviceContext deviceContext = getIntent().getParcelableExtra(
 					DeviceDetailFragment.ARG_ITEM_ID);
 			// set the activity title to the context's label
 			setTitle(deviceContext.toString());

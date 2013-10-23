@@ -14,40 +14,24 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#ifndef CONTROLPANELCONTROLLEE_H_
-#define CONTROLPANELCONTROLLEE_H_
+#ifndef DIALOGBUSOBJECT_H_
+#define DIALOGBUSOBJECT_H_
 
-#include "alljoyn/controlpanel/ControlPanel.h"
-#include "alljoyn/controlpanel/NotificationAction.h"
+#include "alljoyn/controlpanel/WidgetBusObject.h"
 
 namespace ajn {
 namespace services {
 
-class ControlPanelControllee {
+class DialogBusObject : public WidgetBusObject {
 public:
-	ControlPanelControllee(qcc::String const& unitName);
+	DialogBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath,
+			uint16_t langIndx, QStatus& status, Widget* widget);
 
-	virtual ~ControlPanelControllee();
+	virtual ~DialogBusObject();
 
-	void addControlPanel(ControlPanel* controlPanel);
-
-	void addNotificationAction(NotificationAction* notificationAction);
-
-	QStatus registerObjects(BusAttachment* bus);
-
-private :
-
-	qcc::String const& TAG;
-
-	qcc::String m_UnitName;
-
-    std::vector<ControlPanel*> m_ControlPanels;
-
-    std::vector<NotificationAction*> m_NotificationActions;
-
-
+    void DialogExecute(const ajn::InterfaceDescription::Member* member, ajn::Message& msg);
 };
 
 } /* namespace services */
 } /* namespace ajn */
-#endif /* CONTROLPANELCONTROLLEE_H_ */
+#endif /* DIALOGBUSOBJECT_H_ */

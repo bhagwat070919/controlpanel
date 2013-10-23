@@ -54,10 +54,10 @@ class scalarProperty(Validator):
 		if not self.has_hint('slider'): return True
 		return self.has_constraintRange()
 
-	def rule_numberpicker_no_vals(self):
-		'a "numberpicker" can not have a list of constraint vals'
+	def rule_numberpicker_has_range(self):
+		'a "numberpicker" must have a constraint Range'
 		if not self.has_hint('numberpicker'): return True
-	 	return not self.has_constraintRange()	 
+	 	return self.has_constraintRange()	 
 
 	def rule_keypad_no_constraints(self):
 		'keypad must have no constraints'

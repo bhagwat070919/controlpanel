@@ -14,37 +14,44 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#ifndef CONTAINER_H_
-#define CONTAINER_H_
+#ifndef DIALOG_H_
+#define DIALOG_H_
 
 #include "alljoyn/controlpanel/RootWidget.h"
+#include <map>
 
 namespace ajn {
 namespace services {
 
-class Container : public RootWidget {
+class Dialog : public RootWidget {
 public:
-	Container(qcc::String name);
-	virtual ~Container();
+	Dialog(qcc::String name);
+	virtual ~Dialog();
 
-    QStatus addChildElement(Widget* childElement);
+	WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
+			uint16_t langIndx, QStatus status);
 
-    QStatus registerObjects(BusAttachment* bus, LanguageSet const& m_LanguageSet,
-    		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot = false);
+	virtual void executeAction1CallBack();
+	virtual void executeAction2CallBack();
+	virtual void executeAction3CallBack();
 
-    WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-    		uint16_t langIndx, QStatus status);
+	virtual GetMessageFptr getGetMessage() const;
+	virtual void setGetMessage(GetMessageFptr getMessage);
 
-	bool getIsDismissable() const;
-	void setIsDismissable(bool isDismissable);
+	virtual const std::vector<qcc::String>& getMessage() const;
+	virtual void setMessage(const std::vector<qcc::String>& message);
+
+	virtual const uint16_t getNumActions() const;
+	virtual void setNumActions(const uint16_t numActions);
 
 private:
-	std::vector<Widget*> m_ChildElements;
 
-	bool m_IsDismissable;
+    std::vector<qcc::String> m_Message;
+    GetMessageFptr m_GetMessage;
 
+    uint16_t m_NumActions;
 };
 } //namespace services
 } //namespace ajn
 
-#endif /* CONTAINER_H_ */
+#endif /* DIALOG_H_ */

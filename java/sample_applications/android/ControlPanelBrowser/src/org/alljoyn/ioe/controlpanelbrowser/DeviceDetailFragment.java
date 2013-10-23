@@ -68,7 +68,7 @@ public class DeviceDetailFragment extends Fragment {
 	/**
 	 * The dummy content this fragment is presenting.
 	 */
-	private DeviceList.ControlPanelContext deviceContext;
+	private DeviceList.DeviceContext deviceContext;
 
 	/**
 	 * The device controller this fragment is presenting.
@@ -96,10 +96,12 @@ public class DeviceDetailFragment extends Fragment {
 			// get the controllable device
 			try {
 				
-				ControllableDevice controllableDevice = ControlPanelService.getInstance().getControllableDevice(deviceContext.deviceId, deviceContext.busName);
+				ControllableDevice controllableDevice = ControlPanelService.getInstance().getControllableDevice(deviceContext.getDeviceId(), deviceContext.getBusName());
 
 				if (controllableDevice != null) {
-					controllableDevice.addControlPanel(deviceContext.objPath, deviceContext.interfaces);
+					for (String objPath: deviceContext.getBusObjects()) {
+						controllableDevice.addControlPanel(objPath, deviceContext.getInterfaces(objPath));
+					}
 					deviceController = new DeviceController(controllableDevice);
 					deviceController.start();
 				}
@@ -286,7 +288,7 @@ public class DeviceDetailFragment extends Fragment {
 					} else {
 					// register a selection listener
 					OnItemSelectedListener listener = new OnItemSelectedListener() {
-						int currentSelection = 0;
+						int currentSelection = 1000;
 						public void onItemSelected(AdapterView<?> parent, View view, final int pos, long id) {
 							if (pos == currentSelection) {
 								Log.d(TAG, String.format("Selected position %d already selected. No action required", pos));
@@ -336,7 +338,7 @@ public class DeviceDetailFragment extends Fragment {
 					} else {
 					// register a selection listener
 					OnItemSelectedListener listener = new OnItemSelectedListener() {
-						int currentSelection = 0;
+						int currentSelection = 1000;
 						public void onItemSelected(AdapterView<?> parent, View view, final int pos, long id) {
 							if (pos == currentSelection) {
 								Log.d(TAG, String.format("Selected position %d already selected. No action required", pos));

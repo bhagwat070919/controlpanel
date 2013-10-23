@@ -28,16 +28,12 @@
 const uint16_t CPSPort = 1000;
 uint32_t CPSsessionId = 0;
 
-void ControlPanel_ConnectedHandler(AJ_BusAttachment* bus)
-{
-}
-
 void CPS_Init()
 {
     WidgetsInit();
 }
 
-AJ_Status CPS_StartService(AJ_BusAttachment* bus, const char* daemonName, uint32_t timeout, uint8_t connected)
+AJ_Status ControlPanel_ConnectedHandler(AJ_BusAttachment* bus)
 {
     AJ_SessionOpts sessionOpts = {
         AJ_SESSION_TRAFFIC_MESSAGES,
@@ -48,36 +44,14 @@ AJ_Status CPS_StartService(AJ_BusAttachment* bus, const char* daemonName, uint32
 
     AJ_Status status;
     AJ_Time timer = { 0, 0 };
-    uint8_t serviceStarted = FALSE;
-    uint8_t initial = TRUE;
     AJ_InitTimer(&timer);
 
-    while (TRUE) {
-        if (AJ_GetElapsedTime(&timer, TRUE) > timeout) {
-            return AJ_ERR_TIMEOUT;
-        }
-        if (!initial || !connected) {
-            initial = FALSE;
-            AJ_Printf("Attempting to connect to bus\n");
-            status = AJ_Connect(bus, daemonName, CONNECT_TIMEOUT);
-            if (status != AJ_OK) {
-                AJ_Printf("Failed to connect to bus sleeping for %d seconds\n", CONNECT_PAUSE / 1000);
-                AJ_Sleep(CONNECT_PAUSE);
-                continue;
-            }
-            AJ_Printf("AllJoyn service connected to bus\n");
-        }
-        /*
-         * Kick things off by binding a session port
-         */
-        status = AJ_BusBindSessionPort(bus, CPSPort, &sessionOpts);
-        if (status == AJ_OK) {
-            break;
-        }
+    status = AJ_BusBindSessionPort(bus, CPSPort, &sessionOpts);
+    if (status != AJ_OK) {
         AJ_Printf("Failed to send bind session port message\n");
-        AJ_Disconnect(bus);
     }
 
+    uint8_t serviceStarted = FALSE;
     while (!serviceStarted && (status == AJ_OK)) {
         AJ_Message msg;
 
@@ -86,7 +60,7 @@ AJ_Status CPS_StartService(AJ_BusAttachment* bus, const char* daemonName, uint32
         status = AJ_UnmarshalMsg(bus, &msg, UNMARSHAL_TIMEOUT);
 
         /*
-         * TODO This is a temporary hack to work around buggy select imlpementations
+         * TODO This is a temporary hack to work around buggy select implementations
          */
         if (status == AJ_ERR_TIMEOUT) {
             if (AJ_GetElapsedTime(&timer, TRUE) < UNMARSHAL_TIMEOUT) {
@@ -109,14 +83,6 @@ AJ_Status CPS_StartService(AJ_BusAttachment* bus, const char* daemonName, uint32
             }
             break;
 
-        case AJ_REPLY_ID(AJ_METHOD_ADVERTISE_NAME):
-            if (msg.hdr->msgType == AJ_MSG_ERROR) {
-                status = AJ_ERR_FAILURE;
-            } else {
-                serviceStarted = TRUE;
-            }
-            break;
-
         default:
             /*
              * Pass to the built-in bus message handlers
@@ -129,7 +95,7 @@ AJ_Status CPS_StartService(AJ_BusAttachment* bus, const char* daemonName, uint32
 
     if (status != AJ_OK) {
         AJ_Printf("AllJoyn disconnect bus status=%d\n", status);
-        AJ_Disconnect(bus);
+        status = AJ_ERR_READ;
     }
     return status;
 }

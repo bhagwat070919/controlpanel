@@ -18,6 +18,7 @@
 #include "ControlPanelConstants.h"
 #include "alljoyn/about/AboutServiceApi.h"
 #include "BusObjects/ControlPanelBusObject.h"
+#include "BusObjects/NotificationActionBusObject.h"
 #include "alljoyn/controlpanel/ControlPanelService.h"
 
 namespace ajn {
@@ -26,7 +27,7 @@ using namespace cpsConsts;
 
 ControlPanel::ControlPanel(LanguageSet const& languageSet) :
 	m_LanguageSet(languageSet), m_RootContainer(0),
-	m_ControlPanelBusObject(0), m_NotificationActionBusObject(0),
+	m_ControlPanelBusObject(0),	m_NotificationActionBusObject(0),
 	TAG(TAG_CONTROLPANEL)
 {
 
@@ -91,6 +92,21 @@ QStatus ControlPanel::registerObjects(BusAttachment* bus, qcc::String const& uni
     interfaces.push_back(AJ_CONTROLPANEL_INTERFACE);
     aboutService->AddObjectDescription(objectPath, interfaces);
 
+    if (m_RootContainer->getIsDismissable()) {
+        m_NotificationActionBusObject = new NotificationActionBusObject(bus, objectPath.c_str(), status);
+
+        if (status != ER_OK) {
+        	if (logger)
+        	    logger->warn(TAG, "Could not create NotificationActionBusObject");
+        	return status;
+        }
+        status = bus->RegisterBusObject(*m_ControlPanelBusObject);
+        if (status != ER_OK) {
+        	if (logger)
+        	    logger->warn(TAG, "Could not register ControlPanelBysObject.");
+        	return status;
+        }
+    }
     status = m_RootContainer->registerObjects(bus, m_LanguageSet, objectPath + "/", "", true);
     return status;
 }

@@ -43,11 +43,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.format.DateFormat;
@@ -69,7 +64,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RadioButton;
@@ -437,52 +431,85 @@ public class ControlPanelAdapter
 	 */
 	public View createPropertyView(PropertyWidget propertyWidget) {
 		ValueType valueType = propertyWidget.getValueType();
+
+		List<PropertyWidgetHintsType> hints = propertyWidget.getHints();
+		PropertyWidgetHintsType hint = (hints == null || hints.size() == 0) ? null : hints.get(0);
+
+		Log.d(TAG, "Creating a View for property '" + propertyWidget.getLabel() + "' , using UI hint: " + hint + ", value type: '" + valueType + "', objPath: '" + propertyWidget.getObjectPath() + "'");
+		// default view. just in case...
 		View returnView = new TextView(uiContext);
 
-		Log.d(TAG, "Creating a View for property '" + propertyWidget.getLabel() + "' , using UI hint: " + propertyWidget.getHints() + ", value type: '" + valueType + "', objPath: '" + propertyWidget.getObjectPath() + "'");
-
-		if (propertyWidget.getHints() == null || propertyWidget.getHints().size() == 0) {
-			Log.d(TAG, "No hint provided for property '" + propertyWidget.getLabel() + "' , returning an empty view");
-			return returnView;
-		}
-
-		PropertyWidgetHintsType hint = propertyWidget.getHints().get(0);
-		switch(hint) {
-		case SPINNER:
-			returnView = createSpinnerView(propertyWidget);
-			break;
-		case CHECKBOX:
-			returnView = createCheckBoxView(propertyWidget);
-			break;
-		case NUMERIC_VIEW: 
-			returnView = createNumericView(propertyWidget);
-			break;
-		case TEXT_VIEW:
-			returnView = createTextView(propertyWidget);
-			break;
-		case NUMBER_PICKER:
-			returnView = createNumberPickerView(propertyWidget);
-			break;
-		case SLIDER:
-			returnView = createSliderView(propertyWidget);
-			break;
-		case EDIT_TEXT:
-			returnView = createEditTextView(propertyWidget);
-			break;
-		case NUMERIC_KEYPAD:
-			returnView = createNumericKeypadView(propertyWidget);
-			break;
-		case RADIO_BUTTON:
-			returnView = createRadioButtonView(propertyWidget);
-			break;
-		case TIME_PICKER:
-			returnView = createTimePickerView(propertyWidget);
-			break;
-		case DATE_PICKER:
-			returnView = createDatePickerView(propertyWidget);
-			break;
-		default:
-			break;
+		switch(valueType) {
+		  case BOOLEAN:
+			  // Boolean Property
+				returnView = createCheckBoxView(propertyWidget);
+				break;
+		  case DATE:
+			  // Date Property
+				returnView = createDatePickerView(propertyWidget);
+				break;
+		  case TIME:
+			  // Time Property
+				returnView = createTimePickerView(propertyWidget);
+			  break;
+		  case BYTE: case INT: case SHORT: case LONG: case DOUBLE:
+			  // Scalar Property
+				if (hint == null) {
+					Log.d(TAG, "No hint provided for property '" + propertyWidget.getLabel() + "', creating default: NumericView");
+					returnView = createNumericView(propertyWidget);
+				} else {
+					switch (hint) {
+					case SPINNER:
+						returnView = createSpinnerView(propertyWidget);
+						break;
+					case RADIO_BUTTON:
+						returnView = createRadioButtonView(propertyWidget);
+						break;
+					case NUMERIC_VIEW: 
+						returnView = createNumericView(propertyWidget);
+						break;
+					case SLIDER:
+						returnView = createSliderView(propertyWidget);
+						break;
+					case NUMERIC_KEYPAD:
+						returnView = createNumericKeypadView(propertyWidget);
+						break;
+					default:
+						Log.d(TAG, "Unsupported hint provided for property '" + propertyWidget.getLabel() + "', creating default: NumericView");
+						returnView = createNumericView(propertyWidget);
+						break;
+					}
+				}
+			  break;
+		  case STRING:
+			  // String Property
+				if (hint == null) {
+					Log.d(TAG, "No hint provided for property '" + propertyWidget.getLabel() + "', creating default: TextView");
+					returnView = createTextView(propertyWidget);
+				} else {
+					switch (hint) {
+					case SPINNER:
+						returnView = createSpinnerView(propertyWidget);
+						break;
+					case RADIO_BUTTON:
+						returnView = createRadioButtonView(propertyWidget);
+						break;
+					case EDIT_TEXT:
+						returnView = createEditTextView(propertyWidget);
+						break;
+					case TEXT_VIEW:
+						returnView = createTextView(propertyWidget);
+						break;
+					default:
+						Log.d(TAG, "Unsupported hint provided for property '" + propertyWidget.getLabel() + "', creating default: TextView");
+						returnView = createTextView(propertyWidget);
+						break;
+					}
+				}
+			  break;
+			  default:
+					Log.d(TAG, "Received an unsupported ValueType: '" + valueType + "' , returning an empty view");
+					return returnView;
 		}
 
 		uiElementToView.put(propertyWidget.getObjectPath(), returnView);
@@ -1609,44 +1636,81 @@ public class ControlPanelAdapter
 			return;
 		}
 
-		for (PropertyWidgetHintsType hint: propertyWidget.getHints()) {
-			switch(hint) {
-			case SPINNER:
-				onSpinnerValueChange(propertyView, propertyWidget, newValue);
-				break;
-			case CHECKBOX:
+		ValueType valueType = propertyWidget.getValueType();
+
+		List<PropertyWidgetHintsType> hints = propertyWidget.getHints();
+		PropertyWidgetHintsType hint = (hints == null || hints.size() == 0) ? null : hints.get(0);
+
+		Log.d(TAG, "Refreshing the View for property '" + propertyWidget.getLabel() + "' , using UI hint: " + hint + ", value type: '" + valueType + "', objPath: '" + propertyWidget.getObjectPath() + "'");
+
+		switch(valueType) {
+		  case BOOLEAN:
+			  // Boolean Property
 				onCheckBoxValueChange(propertyView, propertyWidget, newValue);
 				break;
-			case SLIDER:
-				onSliderValueChange(propertyView, propertyWidget, newValue);
-				break;
-			case NUMERIC_VIEW: 
-				onNumericViewValueChange(propertyView, propertyWidget, newValue);
-				break;
-			case TEXT_VIEW:
-				onTextViewValueChange(propertyView, propertyWidget, newValue);
-				break;
-				//			case NUMBER_PICKER: HoneyComb 3.0
-				//				returnView = createNumberPickerView(property, uiContext);
-				//				break;
-			case EDIT_TEXT:
-				onEditTextValueChange(propertyView, propertyWidget, newValue);
-				break;
-			case NUMERIC_KEYPAD:
-				onNumericKeypadValueChange(propertyView, propertyWidget, newValue);
-				break;
-			case RADIO_BUTTON:
-				onRadioButtonValueChange(propertyView, propertyWidget, newValue);
-				break;
-			case TIME_PICKER:
-				onTimeValueChange(propertyView, propertyWidget, newValue);
-				break;
-			case DATE_PICKER:
+		  case DATE:
+			  // Date Property
 				onDateValueChange(propertyView, propertyWidget, newValue);
 				break;
-			default:
-				break;
-			}
+		  case TIME:
+			  // Time Property
+				onTimeValueChange(propertyView, propertyWidget, newValue);
+			  break;
+		  case BYTE: case INT: case SHORT: case LONG: case DOUBLE:
+			  // Scalar Property
+				if (hint == null) {
+					onNumericViewValueChange(propertyView, propertyWidget, newValue);
+				} else {
+					switch (hint) {
+					case SPINNER:
+						onSpinnerValueChange(propertyView, propertyWidget, newValue);
+						break;
+					case RADIO_BUTTON:
+						onRadioButtonValueChange(propertyView, propertyWidget, newValue);
+						break;
+					case NUMERIC_VIEW: 
+						onNumericViewValueChange(propertyView, propertyWidget, newValue);
+						break;
+					case SLIDER:
+						onSliderValueChange(propertyView, propertyWidget, newValue);
+						break;
+					case NUMERIC_KEYPAD:
+						onNumericKeypadValueChange(propertyView, propertyWidget, newValue);
+						break;
+					default:
+						onNumericViewValueChange(propertyView, propertyWidget, newValue);
+						break;
+					}
+				}
+			  break;
+		  case STRING:
+			  // String Property
+				if (hint == null) {
+					Log.d(TAG, "No hint provided for property '" + propertyWidget.getLabel() + "', creating default: TextView");
+					onTextViewValueChange(propertyView, propertyWidget, newValue);
+				} else {
+					switch (hint) {
+					case SPINNER:
+						onSpinnerValueChange(propertyView, propertyWidget, newValue);
+						break;
+					case RADIO_BUTTON:
+						onRadioButtonValueChange(propertyView, propertyWidget, newValue);
+						break;
+					case EDIT_TEXT:
+						onEditTextValueChange(propertyView, propertyWidget, newValue);
+						break;
+					case TEXT_VIEW:
+						onTextViewValueChange(propertyView, propertyWidget, newValue);
+						break;
+					default:
+						onTextViewValueChange(propertyView, propertyWidget, newValue);
+						break;
+					}
+				}
+			  break;
+			  default:
+					Log.d(TAG, "Received an unsupported ValueType: '" + valueType + "' , not refreshing any view");
+					break;
 		}
 	}
 
@@ -1890,6 +1954,8 @@ public class ControlPanelAdapter
 	 * @return
 	 */
 	private String formatDate(short day, short month, short year) {
+		// GregorianCalendar enums months from 0..11
+		month--;
 		Calendar calendar = new GregorianCalendar(year, month, day);
 		return DateFormat.getDateFormat(uiContext.getApplicationContext()).format(calendar.getTime());
 	}

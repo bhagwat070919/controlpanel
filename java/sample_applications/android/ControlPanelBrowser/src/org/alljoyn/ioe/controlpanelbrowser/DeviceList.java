@@ -16,7 +16,13 @@ package org.alljoyn.ioe.controlpanelbrowser;
 ******************************************************************************/
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.alljoyn.services.common.BusObjectDescription;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -31,34 +37,55 @@ public class DeviceList {
 	/**
 	 * An array of ControlPanelContexts.
 	 */
-	private List<ControlPanelContext> contexts = new ArrayList<ControlPanelContext>();
+	private List<DeviceContext> contexts = new ArrayList<DeviceContext>();
 
-	public void addItem(ControlPanelContext item) {
+	public void addItem(DeviceContext item) {
 		contexts.add(item);
 	}
 	
-	public List<ControlPanelContext> getContexts() {
+	public List<DeviceContext> getContexts() {
 		return contexts;
 	}
 
 	/**
 	 * An item representing a device.
 	 */
-	public static class ControlPanelContext implements Parcelable {
-		final public String deviceId;
-		final public String objPath;
-		final public String busName;
+	public static class DeviceContext implements Parcelable {
+		final private String deviceId;
+		final private String busName;
 		final private String label;
-		final public String[] interfaces;
+		final private Map<String,String[]> object2Interfaces; 
 
-		public ControlPanelContext(String deviceId, String objPath, String[] interfaces, String busName, String deviceName) {
+		public DeviceContext(String deviceId, String busName, String deviceName) {
 			this.deviceId = deviceId;
-			this.objPath = objPath;
 			this.busName = busName;
-			this.interfaces = interfaces;
+			this.object2Interfaces = new HashMap<String,String[]>(5);
 			label = deviceName + '(' + busName + ')';
 		}
 
+		
+		public String getDeviceId() {
+			return deviceId;
+		}
+
+
+		public String getBusName() {
+			return busName;
+		}
+
+
+		public String getLabel() {
+			return label;
+		}
+
+		public void addObjectInterfaces(String objPath, String[] interfaces) {
+			object2Interfaces.put(objPath, interfaces);
+		}
+		
+		public String[] getInterfaces(String objPath) {
+			return object2Interfaces.get(objPath);
+		}
+		
 		@Override
 		public String toString() {
 			return label;
@@ -70,43 +97,46 @@ public class DeviceList {
 	     }
 
 	     public void writeToParcel(Parcel out, int flags) {
-	         out.writeStringArray(new String[]{deviceId, objPath, busName, label});
-	         out.writeInt(interfaces.length);
-	         out.writeStringArray(this.interfaces);
+	         out.writeStringArray(new String[]{deviceId, busName, label});
+	         out.writeMap(this.object2Interfaces);
 	     }
 
-	     public static final Parcelable.Creator<ControlPanelContext> CREATOR
-	             = new Parcelable.Creator<ControlPanelContext>() {
-	         public ControlPanelContext createFromParcel(Parcel in) {
-	             return new ControlPanelContext(in);
+	     public static final Parcelable.Creator<DeviceContext> CREATOR
+	             = new Parcelable.Creator<DeviceContext>() {
+	         public DeviceContext createFromParcel(Parcel in) {
+	             return new DeviceContext(in);
 	         }
 
-	         public ControlPanelContext[] newArray(int size) {
-	             return new ControlPanelContext[size];
+	         public DeviceContext[] newArray(int size) {
+	             return new DeviceContext[size];
 	         }
 	     };
 	     
-	     private ControlPanelContext(Parcel in) {
-	    	 String[] fields = new String[4];
+	     private DeviceContext(Parcel in) {
+	    	 String[] fields = new String[3];
 	    	 in.readStringArray(fields);
 	    	 this.deviceId 	= fields[0];
-	    	 this.objPath 	= fields[1];
-	    	 this.busName 	= fields[2];
-	    	 this.label 	= fields[3];
-	    	 int numOfIfs = in.readInt();
-	    	 this.interfaces = new String[numOfIfs];
-	    	 in.readStringArray(this.interfaces);
-			
+	    	 this.busName 	= fields[1];
+	    	 this.label 	= fields[2];
+	    	 this.object2Interfaces = new HashMap<String,String[]>(5);
+	    	 in.readMap(object2Interfaces, getClass().getClassLoader());
 	     }
+
+
+		public Set<String> getBusObjects() {
+			return object2Interfaces.keySet();
+		}
 	}
 
 	public void onDeviceOffline(String busName) {
-		Collection<ControlPanelContext> toRemove = new ArrayList<ControlPanelContext>();
-		for (ControlPanelContext context: contexts) {
+		Collection<DeviceContext> toRemove = new ArrayList<DeviceContext>();
+		for (DeviceContext context: contexts) {
 			if (context.busName.equals(busName)) {
 				toRemove.add(context);
 			}
 		}
 		contexts.removeAll(toRemove);
 	}
+	
+	
 }

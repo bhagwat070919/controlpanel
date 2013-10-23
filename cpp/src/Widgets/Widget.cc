@@ -229,28 +229,34 @@ QStatus Widget::getStatesForArg(MsgArg& val, int16_t languageIndx)
 }
 
 QStatus Widget::getOptParamsForArg(MsgArg& val, int16_t languageIndx,
-		MsgArg* optParams, int32_t& optParamIndx)
+		MsgArg* optParams, int32_t& optParamIndx) //TODO Memory leak if set fails?
 {
 	QStatus status;
 
 	if (m_Label.size() || m_GetLabel) {
-		MsgArg* labelArg = new MsgArg(AJPARAM_STR.c_str(), m_GetLabel? m_GetLabel(languageIndx) : m_Label[languageIndx].c_str());
+		MsgArg* labelArg = new MsgArg(AJPARAM_STR.c_str(), m_GetLabel?
+				m_GetLabel(languageIndx) : m_Label[languageIndx].c_str());
 
-		CHECK_AND_RETURN(optParams[optParamIndx++].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
+		CHECK_AND_RETURN(optParams[optParamIndx].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
 				OPT_PARAM_KEYS::LABEL_KEY, labelArg));
+		optParams[optParamIndx++].SetOwnershipFlags(MsgArg::OwnsArgs, true);
 	}
 
 	if (m_BgColor != UINT32_MAX || m_GetBgColor) {
-		MsgArg* bgColorArg = new MsgArg(AJPARAM_UINT32.c_str(), m_GetBgColor? m_GetBgColor() : m_BgColor);
+		MsgArg* bgColorArg = new MsgArg(AJPARAM_UINT32.c_str(), m_GetBgColor?
+				m_GetBgColor() : m_BgColor);
 
-		CHECK_AND_RETURN(optParams[optParamIndx++].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
+		CHECK_AND_RETURN(optParams[optParamIndx].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
 				OPT_PARAM_KEYS::BGCOLOR_KEY, bgColorArg));
+		optParams[optParamIndx++].SetOwnershipFlags(MsgArg::OwnsArgs, true);
 	}
 
 	if (m_Hints.size()) {
-		MsgArg* hintsArg = new MsgArg(AJPARAM_ARRAY_UINT16.c_str(), m_Hints.size(), m_Hints.data());
-		CHECK_AND_RETURN(optParams[optParamIndx++].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
+		MsgArg* hintsArg = new MsgArg(AJPARAM_ARRAY_UINT16.c_str(),
+				m_Hints.size(), m_Hints.data());
+		CHECK_AND_RETURN(optParams[optParamIndx].Set(AJPARAM_DICT_UINT16_VAR.c_str(),
 				OPT_PARAM_KEYS::HINT_KEY, hintsArg));
+		optParams[optParamIndx++].SetOwnershipFlags(MsgArg::OwnsArgs, true);
 	}
 	return status;
 }
@@ -264,6 +270,8 @@ QStatus Widget::getOptParamsForArg(MsgArg& val, int16_t languageIndx)
 
 	CHECK_AND_RETURN(getOptParamsForArg(val, languageIndx, optParams, optParamIndx));
 
+    if (!optParamIndx)
+	    return val.Set(AJPARAM_OPTPARAM.c_str(), optParamIndx, NULL);
 	return val.Set(AJPARAM_OPTPARAM.c_str(), optParamIndx, optParams);
 }
 

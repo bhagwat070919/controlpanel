@@ -22,7 +22,7 @@
 
 #include "alljoyn/controlpanel/Definitions.h"
 #ifdef CONTROLPANEL_SERVICE
-#include "Services_Common.h"
+#include "Services_Handlers.h"
 #else
 #define NUM_PRE_CONTROLPANEL_OBJECTS 0
 #endif

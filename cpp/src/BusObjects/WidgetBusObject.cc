@@ -38,10 +38,9 @@ QStatus WidgetBusObject::addDefaultInterfaceVariables(InterfaceDescription* intf
 		return ER_BAD_ARG_1;
 
 	QStatus status;
-
+	CHECK_AND_RETURN(intf->AddProperty(AJ_PROPERTY_OPTPARAMS.c_str(), AJPARAM_OPTPARAM.c_str(), PROP_ACCESS_READ));
 	CHECK_AND_RETURN(intf->AddProperty(AJ_PROPERTY_VERSION.c_str(), AJPARAM_UINT16.c_str(), PROP_ACCESS_READ));
 	CHECK_AND_RETURN(intf->AddProperty(AJ_PROPERTY_STATES.c_str(), AJPARAM_UINT32.c_str(), PROP_ACCESS_READ));
-	CHECK_AND_RETURN(intf->AddProperty(AJ_PROPERTY_OPTPARAMS.c_str(), AJPARAM_OPTPARAM.c_str(), PROP_ACCESS_READ));
 	return intf->AddSignal(AJ_SIGNAL_PROPERTIES_CHANGED.c_str(), "", "", 0);
 }
 

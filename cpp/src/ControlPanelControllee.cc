@@ -38,12 +38,26 @@ void ControlPanelControllee::addControlPanel(ControlPanel* controlPanel)
 	m_ControlPanels.push_back(controlPanel);
 }
 
+void ControlPanelControllee::addNotificationAction(NotificationAction* notificationAction)
+{
+	m_NotificationActions.push_back(notificationAction);
+}
+
 QStatus ControlPanelControllee::registerObjects(BusAttachment* bus)
 {
 	GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
 	QStatus status;
     for (size_t indx = 0; indx < m_ControlPanels.size(); indx++) {
         status = m_ControlPanels[indx]->registerObjects(bus, m_UnitName);
+        if (status != ER_OK) {
+        	if (logger)
+        	    logger->warn(TAG, "Could not register Objects for the ControlPanels");
+        	return status;
+        }
+    }
+
+    for (size_t indx = 0; indx < m_NotificationActions.size(); indx++) {
+        status = m_NotificationActions[indx]->registerObjects(bus, m_UnitName);
         if (status != ER_OK) {
         	if (logger)
         	    logger->warn(TAG, "Could not register Objects for the ControlPanels");

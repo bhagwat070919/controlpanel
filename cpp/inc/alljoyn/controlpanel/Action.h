@@ -18,6 +18,7 @@
 #define ACTION_H_
 
 #include "alljoyn/controlpanel/Widget.h"
+#include "alljoyn/controlpanel/Dialog.h"
 #include <map>
 
 namespace ajn {
@@ -33,7 +34,14 @@ public:
 
 	virtual void executeCallBack(); //TODO make abstract and remove from c
 
+    QStatus addChildDialog(Dialog* childElement);
+
+    virtual QStatus registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
+    		qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot);
+
 private:
+
+	Dialog* m_Dialog;
 };
 } //namespace services
 } //namespace ajn

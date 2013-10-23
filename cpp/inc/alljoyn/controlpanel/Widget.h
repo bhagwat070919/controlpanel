@@ -31,6 +31,7 @@ typedef uint8_t (*GetEnabledFptr)();
 typedef uint8_t (*GetWritableFptr)();
 typedef uint32_t (*GetBgColorFptr)();
 typedef const char* (*GetLabelFptr)(uint16_t);
+typedef const char* (*GetMessageFptr)(uint16_t);
 
 
 class Widget {

@@ -18,18 +18,30 @@
 #include "../ControlPanelConstants.h"
 #include "alljoyn/controlpanel/ControlPanelService.h"
 #include "../BusObjects/ContainerBusObject.h"
+#include "../BusObjects/NotificationActionBusObject.h"
 #include <iostream>
 
 using namespace ajn;
 using namespace services;
 using namespace cpsConsts;
 
-Container::Container(qcc::String name) : Widget(name, TAG_CONTAINER_WIDGET)
+Container::Container(qcc::String name) : RootWidget(name, TAG_CONTAINER_WIDGET),
+		m_IsDismissable(false)
 {
 }
 
 Container::~Container()
 {
+}
+
+bool Container::getIsDismissable() const
+{
+    return m_IsDismissable;
+}
+
+void Container::setIsDismissable(bool isDismissable)
+{
+    m_IsDismissable = isDismissable;
 }
 
 QStatus Container::addChildElement(Widget* childElement)
@@ -59,6 +71,24 @@ QStatus Container::registerObjects(BusAttachment* bus, LanguageSet const& langua
 
     //TODO if m_RootContainer->isdismissable add notificaitonActionObjectPath
 	qcc::String newObjectPathSuffix = isRoot ? objectPathSuffix : objectPathSuffix + "/" + m_Name;
+
+	if (m_IsDismissable) {
+        NotificationActionBusObject* NAbusObject = new NotificationActionBusObject(bus, newObjectPathSuffix, status);
+
+        if (status != ER_OK) {
+        	if (logger)
+        	    logger->warn(TAG, "Could not create NotificationActionBusObjects");
+        	return status;
+        }
+
+        status = setNotificationActionBusObject(NAbusObject);
+        if (status != ER_OK) {
+        	if (logger)
+        	    logger->warn(TAG, "Could not set NotificationActionBusObjects");
+        	return status;
+        }
+	}
+
     for (size_t indx = 0; indx < m_ChildElements.size(); indx++) {
         status = m_ChildElements[indx]->registerObjects(bus, languageSet, objectPathPrefix, newObjectPathSuffix);
         if (status != ER_OK) {
@@ -69,3 +99,4 @@ QStatus Container::registerObjects(BusAttachment* bus, LanguageSet const& langua
     }
     return status;
 }
+

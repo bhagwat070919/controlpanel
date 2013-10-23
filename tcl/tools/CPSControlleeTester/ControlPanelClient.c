@@ -255,6 +255,8 @@ int AJ_Main(void)
 
     CPS_Init();
 
+    SetBusAuthPwdCallback(MyBusAuthPwdCB);
+
     while (TRUE) {
 
         /* Aljoyn related section */

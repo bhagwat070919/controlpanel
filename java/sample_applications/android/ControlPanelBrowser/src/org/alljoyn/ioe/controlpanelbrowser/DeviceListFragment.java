@@ -28,7 +28,7 @@ import org.alljoyn.bus.SessionOpts;
 import org.alljoyn.bus.Status;
 import org.alljoyn.bus.Variant;
 import org.alljoyn.bus.VariantUtil;
-import org.alljoyn.ioe.controlpanelbrowser.DeviceList.ControlPanelContext;
+import org.alljoyn.ioe.controlpanelbrowser.DeviceList.DeviceContext;
 import org.alljoyn.ioe.controlpanelservice.ControlPanelException;
 import org.alljoyn.ioe.controlpanelservice.ControlPanelService;
 import org.alljoyn.services.common.AnnouncementHandler;
@@ -96,7 +96,7 @@ public class DeviceListFragment extends ListFragment {
 		/**
 		 * Callback for when an item has been selected.
 		 */
-		public void onItemSelected(ControlPanelContext context);
+		public void onItemSelected(DeviceContext context);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class DeviceListFragment extends ListFragment {
 	 */
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(ControlPanelContext context) {
+		public void onItemSelected(DeviceContext context) {
 		}
 	};
 
@@ -467,6 +467,7 @@ public class DeviceListFragment extends ListFragment {
 		{
 			String deviceId;
 			String deviceFriendlyName;
+			DeviceContext deviceContext = null;
 			
 			try {
 				
@@ -500,12 +501,18 @@ public class DeviceListFragment extends ListFragment {
 				for(int j = 0; j < supportedInterfaces.length; ++j){
 					if(supportedInterfaces[j].startsWith("org.alljoyn.ControlPanel")){
 						// found a control panel interface
-						String objectPath 		= description.getPath();
-						String[] interfaces		= description.getInterfaces();
-						// add a device context
-						deviceRegistry.addItem(new ControlPanelContext(deviceId, objectPath, interfaces, busName, deviceFriendlyName));
+						Log.d(TAG, "ADding BusObjectDesciption: " + description);
+						if (deviceContext == null) {
+							deviceContext = new DeviceContext(deviceId, busName, deviceFriendlyName);
+						}
+						deviceContext.addObjectInterfaces(description.getPath(), supportedInterfaces);
 					}	
 				}
+			}
+			
+			// add the device context
+			if (deviceContext != null) {
+				deviceRegistry.addItem(deviceContext);
 			}
 			
 			// update the list
@@ -526,7 +533,7 @@ public class DeviceListFragment extends ListFragment {
 
 				@Override
 				public void run() {
-					ArrayAdapter<ControlPanelContext> arrayAdapter = new ArrayAdapter<DeviceList.ControlPanelContext>(getActivity(),
+					ArrayAdapter<DeviceContext> arrayAdapter = new ArrayAdapter<DeviceList.DeviceContext>(getActivity(),
 					android.R.layout.simple_list_item_activated_1,
 					android.R.id.text1, deviceRegistry.getContexts());
 					setListAdapter(arrayAdapter);

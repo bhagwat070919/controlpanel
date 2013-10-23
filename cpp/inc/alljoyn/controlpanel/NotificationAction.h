@@ -14,40 +14,37 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#ifndef CONTROLPANELCONTROLLEE_H_
-#define CONTROLPANELCONTROLLEE_H_
+#ifndef NOTIFICATIONACTION_H_
+#define NOTIFICATIONACTION_H_
 
-#include "alljoyn/controlpanel/ControlPanel.h"
-#include "alljoyn/controlpanel/NotificationAction.h"
+#include "alljoyn/controlpanel/RootWidget.h"
+#include "alljoyn/BusObject.h"
 
 namespace ajn {
 namespace services {
 
-class ControlPanelControllee {
+class NotificationAction {
 public:
-	ControlPanelControllee(qcc::String const& unitName);
 
-	virtual ~ControlPanelControllee();
+	NotificationAction(LanguageSet const& languageSet);
 
-	void addControlPanel(ControlPanel* controlPanel);
+	virtual ~NotificationAction();
 
-	void addNotificationAction(NotificationAction* notificationAction);
+	QStatus setRootWidget(RootWidget* rootWidget);
 
-	QStatus registerObjects(BusAttachment* bus);
+	QStatus registerObjects(BusAttachment* bus, qcc::String const& unitName);
 
-private :
+private:
 
-	qcc::String const& TAG;
+    LanguageSet const& m_LanguageSet;
 
-	qcc::String m_UnitName;
+    RootWidget* m_RootWidget;
 
-    std::vector<ControlPanel*> m_ControlPanels;
+    BusObject* m_NotificationActionBusObject;
 
-    std::vector<NotificationAction*> m_NotificationActions;
-
-
+    qcc::String const& TAG;
 };
 
 } /* namespace services */
 } /* namespace ajn */
-#endif /* CONTROLPANELCONTROLLEE_H_ */
+#endif /* NOTIFICATIONACTION_H_ */

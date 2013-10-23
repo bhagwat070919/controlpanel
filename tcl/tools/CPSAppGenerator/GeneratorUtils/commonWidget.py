@@ -130,7 +130,7 @@ class Widget:
   
     def setEnabled (self) :
         enabled = self.element.enabled
-        if hasattr(enabled, "attr") and hasattr(enabled.attr, "code") and enabled.attr["code"] == "true" : 
+        if hasattr(enabled, "attr") and "code" in enabled.attr and enabled.attr["code"] == "true" : 
             self.generated.initFunction += "\t{0}.base.getEnabled = {1};\n".format(self.name, enabled)
         else :
             enabledText = enabled.upper()
@@ -141,7 +141,7 @@ class Widget:
 
     def setWritable (self) :
         writable = self.element.writable
-        if hasattr(writable, "attr") and hasattr(writable.attr, "code") and writable.attr["code"] == "true" : 
+        if hasattr(writable, "attr") and "code" in writable.attr and writable.attr["code"] == "true" : 
             self.generated.initFunction += "\t{0}.base.getWritable = {1};\n".format(self.name, writable)
         else :
             writableText = writable.upper()
@@ -153,7 +153,7 @@ class Widget:
     def setBgColor (self) :
         if hasattr(self.element, "bgcolor") :
             bgColor = self.element.bgcolor
-            if hasattr(bgColor, "attr") and hasattr(bgColor.attr, "code") and bgColor.attr["code"] == "true" : 
+            if hasattr(bgColor, "attr") and "code" in bgColor.attr and bgColor.attr["code"] == "true" : 
                 self.generated.initFunction += "\t{0}.base.optParams.getBgColor = {1};\n".format(self.name, bgColor)
             else :
                 self.generated.initFunction += "\t{0}.base.optParams.bgColor = {1};\n".format(self.name, bgColor)

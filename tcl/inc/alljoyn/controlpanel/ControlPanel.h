@@ -61,9 +61,7 @@ Service_Status CPS_MessageProcessor(AJ_BusAttachment* bus, AJ_Message* msg, AJ_S
 
 uint8_t CPS_CheckSessionAccepted(uint16_t port, uint32_t sessionId, char*joiner);
 
-void ControlPanel_ConnectedHandler(AJ_BusAttachment*bus);
-
-AJ_Status CPS_StartService(AJ_BusAttachment* bus, const char* daemonName, uint32_t timeout, uint8_t connected);
+AJ_Status ControlPanel_ConnectedHandler(AJ_BusAttachment*bus);
 
 void CPS_IdleConnectedHandler(AJ_BusAttachment*bus);
 

@@ -138,7 +138,7 @@ void ControlPanelService::shutdown()
     }
 
     //if (m_ControlPanelControllee)
-    	//unregister all objects
+    	//TODO: unregister all objects
 
     s_Instance = 0;
     delete this;

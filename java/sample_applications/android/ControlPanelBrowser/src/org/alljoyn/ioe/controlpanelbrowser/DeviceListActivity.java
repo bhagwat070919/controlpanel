@@ -15,7 +15,7 @@ package org.alljoyn.ioe.controlpanelbrowser;
 *    limitations under the license.
 ******************************************************************************/
 
-import org.alljoyn.ioe.controlpanelbrowser.DeviceList.ControlPanelContext;
+import org.alljoyn.ioe.controlpanelbrowser.DeviceList.DeviceContext;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -85,7 +85,7 @@ public class DeviceListActivity extends FragmentActivity implements
 	 * that the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected(ControlPanelContext context) {
+	public void onItemSelected(DeviceContext context) {
 		if (isTwoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a

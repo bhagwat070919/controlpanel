@@ -73,8 +73,8 @@ int32_t main()
         return 1;
     }
 
-    qcc::String device_id = "", device_name = "";
-    qcc::String app_id = "", app_name = "";
+    qcc::String device_id = "123456", device_name = "testdeviceName";
+    qcc::String app_id = "2826752ae35c416a82bcef272c55eace", app_name = "testappName";
     propertyStoreImpl = ControlPanelServiceSampleUtil::preparePropertyStore(app_id, app_name, device_id, device_name);
 
     status = ControlPanelServiceSampleUtil::prepareAboutService(bus, propertyStoreImpl,

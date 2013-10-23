@@ -14,40 +14,39 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#ifndef CONTROLPANELCONTROLLEE_H_
-#define CONTROLPANELCONTROLLEE_H_
+#ifndef NOTIFICATIONACTIONBUSOBJECT_H_
+#define NOTIFICATIONACTIONBUSOBJECT_H_
 
-#include "alljoyn/controlpanel/ControlPanel.h"
-#include "alljoyn/controlpanel/NotificationAction.h"
+#include "alljoyn/BusAttachment.h"
+#include "alljoyn/BusObject.h"
+#include "alljoyn/InterfaceDescription.h"
 
 namespace ajn {
 namespace services {
 
-class ControlPanelControllee {
+class NotificationActionBusObject : public BusObject {
 public:
-	ControlPanelControllee(qcc::String const& unitName);
+	NotificationActionBusObject(ajn::BusAttachment* bus, qcc::String const& servicePath, QStatus& status);
 
-	virtual ~ControlPanelControllee();
+	virtual ~NotificationActionBusObject();
 
-	void addControlPanel(ControlPanel* controlPanel);
+	QStatus Get(const char* ifcName, const char* propName, MsgArg& val);
 
-	void addNotificationAction(NotificationAction* notificationAction);
+	QStatus Set(const char* ifcName, const char* propName, MsgArg& val);
 
-	QStatus registerObjects(BusAttachment* bus);
+	QStatus SendDismissSignal();
 
-private :
+private:
+
+    /**
+     * The pointer used to send signal/register Signal Handler
+     */
+    const ajn::InterfaceDescription::Member* m_SignalDismiss;
 
 	qcc::String const& TAG;
-
-	qcc::String m_UnitName;
-
-    std::vector<ControlPanel*> m_ControlPanels;
-
-    std::vector<NotificationAction*> m_NotificationActions;
-
 
 };
 
 } /* namespace services */
 } /* namespace ajn */
-#endif /* CONTROLPANELCONTROLLEE_H_ */
+#endif /* NOTIFICATIONACTIONBUSOBJECT_H_ */
