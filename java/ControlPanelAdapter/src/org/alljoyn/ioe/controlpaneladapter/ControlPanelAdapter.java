@@ -733,10 +733,25 @@ public class ControlPanelAdapter
 			int currentCheckedId = initialCheckedId;
 			@Override
 			public void onCheckedChanged(final RadioGroup group, final int checkedId) {
+				
 				int index = group.indexOfChild(group.findViewById(checkedId));
 				if (index > -1)
 				{
+					// avoid fast consecutive selections. the problem is with rebounds: the valueChange events that the board sends.
+					// If a user selects Hot,Cold,Hot,Cold very fast enough, the rebounds start toggling the group automatically :)
+					for (int i=0;i<group.getChildCount();i++) {
+						group.getChildAt(i).setEnabled(false);
+					} 
+					group.postDelayed(new Runnable(){
+						@Override
+						public void run() {
+							for (int i=0;i<group.getChildCount();i++) {
+							group.getChildAt(i).setEnabled(true);
+						}
+						}}, 1000);
+					
 					ConstrainToValues<?> item  = listOfConstraint.get(index);
+					Log.d(TAG, "Selected radio button, Label: '" + item.getLabel() + "' Value: " + item.getValue());
 
 					// set the property in a background task
 					SetPropertyAsyncTask asyncTask = new SetPropertyAsyncTask() {
@@ -1668,7 +1683,7 @@ public class ControlPanelAdapter
 	 */
 	public void onValueChange(UIElement element, Object newValue) {
 		UIElementType elementType = element.getElementType();
-		Log.d(TAG, "Value changed for the Android View for element : '" + element.getObjectPath() + "'");
+		Log.d(TAG, "Value changed for the Android View for element : '" + element.getObjectPath() + "', newValue: '" + newValue);
 
 		switch(elementType) {
 		case PROPERTY_WIDGET: {
@@ -1718,7 +1733,7 @@ public class ControlPanelAdapter
 		List<PropertyWidgetHintsType> hints = propertyWidget.getHints();
 		PropertyWidgetHintsType hint = (hints == null || hints.size() == 0) ? null : hints.get(0);
 
-		Log.d(TAG, "Refreshing the View for property '" + propertyWidget.getLabel() + "' , using UI hint: " + hint + ", value type: '" + valueType + "', objPath: '" + propertyWidget.getObjectPath() + "'");
+		Log.d(TAG, "Refreshing the View for property '" + propertyWidget.getLabel() + "' , using UI hint: " + hint + ", value type: '" + valueType + "', objPath: '" + propertyWidget.getObjectPath() + "'"+ "', newValue: '" + newValue);
 
 		switch(valueType) {
 		  case BOOLEAN:
@@ -1957,7 +1972,7 @@ public class ControlPanelAdapter
 	// =====================================================================================================================
 
 	private void onRadioButtonValueChange(View propertyView, PropertyWidget propertyWidget, Object newValue) {
-		Log.d(TAG, "Refreshing the RadioButton of property " + propertyWidget.getLabel());
+		Log.d(TAG, "Refreshing the RadioButton of property '" + propertyWidget.getLabel() + "', new value: " + newValue);
 
 		final ViewGroup layout = (ViewGroup) propertyView;
 		final RadioGroup radioGroup = (RadioGroup) layout.findViewWithTag(PROPERTY_VALUE);
@@ -1967,14 +1982,14 @@ public class ControlPanelAdapter
 		final List<ConstrainToValues<?>> listOfConstraint = propertyWidget.getListOfConstraint();
 		if ( listOfConstraint != null ) {
 			for (ConstrainToValues<?> valueCons : listOfConstraint) {
-				boolean isDefault = valueCons.getValue().equals(newValue);
-				Log.d(TAG, "Adding radio button, Label: " + valueCons.getLabel() + " Value: " + valueCons.getValue() + (isDefault?" (default)":""));
+				boolean selectThis = valueCons.getValue().equals(newValue);
 
 				// check the default value
-				if (isDefault) {
+				if (selectThis) {
+					Log.d(TAG, "Selecting radio button, Label: " + valueCons.getLabel() + " Value: " + valueCons.getValue());
 					RadioButton radioButton = (RadioButton) radioGroup.getChildAt(selection);
 					if (!radioButton.isChecked()) {
-						radioButton.toggle();
+						radioButton.setChecked(true);
 					}
 				} else {
 					selection++;
@@ -2036,5 +2051,5 @@ public class ControlPanelAdapter
 		Calendar calendar = new GregorianCalendar(year, month, day);
 		return DateFormat.getDateFormat(uiContext.getApplicationContext()).format(calendar.getTime());
 	}
-
+	
 }

@@ -22,12 +22,13 @@ samples_env.Append(CPPPATH = samples_env.Dir('provided').srcnode())
 
 #samples_env.Append(CPPDEFINES = 'USE_SAMPLE_LOGGER')
 
-samples_env.Prepend(LIBS = ['alljoyn_controlpanel', 'alljoyn_about', 'alljoyn'])
+samples_env.Prepend(LIBS = ['alljoyn_controlpanel', 'alljoyn_about'])
 
 cobjs = samples_env.SConscript('common/SConscript', {'env': samples_env})
 genobjs = samples_env.SConscript('generated/SConscript', {'env': samples_env})
 providedobjs = samples_env.SConscript('provided/SConscript', {'env': samples_env})
 
+# Sample programs
 sample_dirs = [
     'ControlPanelSample'
     ]

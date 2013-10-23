@@ -17,25 +17,6 @@
 #ifndef DEFINES_H_
 #define DEFINES_H_
 
-/**
- * Times definitions used in code. Values in milliseconds
- */
-#ifndef CONNECT_TIMEOUT
-#define CONNECT_TIMEOUT     (1000 * 60)
-#endif
-
-#ifndef CONNECT_PAUSE
-#define CONNECT_PAUSE       (1000 * 10)
-#endif
-
-#ifndef UNMARSHAL_TIMEOUT
-#define UNMARSHAL_TIMEOUT   (1000 * 5)
-#endif
-
-#ifndef SLEEP_TIME
-#define SLEEP_TIME          (1000 * 2)
-#endif
-
 #define SIGNAL_TYPE_DISMISS 0
 #define SIGNAL_TYPE_DATA_CHANGED 1
 

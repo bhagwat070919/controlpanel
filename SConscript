@@ -22,16 +22,20 @@ env['_ALLJOYN_CONTROLPANEL_'] = True
 env.Append(LIBPATH = '$DISTDIR/controlpanel/lib');
 env.Append(CPPPATH = '$DISTDIR/controlpanel/inc');
 
-if not env.has_key('_ALLJOYN_ABOUT_'):
+if not env.has_key('_ALLJOYN_ABOUT_') and os.path.exists('../about/SConscript'):
     env.SConscript('../about/SConscript')
 
-if 'cpp' in env['bindings'] and not env.has_key('_ALLJOYNCORE_'): 
+if 'cpp' in env['bindings'] and not env.has_key('_ALLJOYNCORE_') and os.path.exists('../../alljoyn_core/SConscript'):
    env.SConscript('../../alljoyn_core/SConscript')
 
-if 'java' in env['bindings'] and not env.has_key('_ALLJOYN_JAVA_'): 
+if 'java' in env['bindings'] and not env.has_key('_ALLJOYN_JAVA_') and os.path.exists('../../alljoyn_java/SConscript'):
    env.SConscript('../../alljoyn_java/SConscript')
 
 cpsenv = env.Clone()
 
-cpsenv.SConscript(['%s/SConscript' % b for b in env['bindings'] if os.path.exists('%s/SConscript' % b) ],
+for b in cpsenv['bindings']:
+    if os.path.exists('%s/SConscript' % b):
+        cpsenv.VariantDir('$OBJDIR/%s' % b, b, duplicate = 0)
+
+cpsenv.SConscript(['$OBJDIR/%s/SConscript' % b for b in env['bindings'] if os.path.exists('%s/SConscript' % b) ],
                   exports = ['cpsenv'])

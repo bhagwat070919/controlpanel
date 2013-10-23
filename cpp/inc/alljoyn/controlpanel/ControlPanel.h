@@ -74,7 +74,7 @@ class ControlPanel {
      * Get the LanguageSet of the ControlPanel
      * @return
      */
-    const LanguageSet && getLanguageSet() const;
+    const LanguageSet& getLanguageSet() const;
 
   private:
 

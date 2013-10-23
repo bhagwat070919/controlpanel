@@ -14,8 +14,8 @@
 #    limitations under the license.
 #*****************************************************************************
 
-about_root_default        = '../../about/tcl'
-serversample_root_default = '../../../applications/sample_apps/tcl/ServerSample'
+about_root_default           = '../../about/tcl'
+serversample_root_default    = '../../../applications/sample_apps/tcl/ServerSample'
 
 import os
 Import('cps_env')

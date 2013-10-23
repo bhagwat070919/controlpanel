@@ -14,14 +14,17 @@
 
 Import('cpsenv')
 
+if not cpsenv.has_key('_ALLJOYNCORE_'):
+    cpsenv.Append(LIBS = ['alljoyn'])
+    if cpsenv['OS'] == 'openwrt':
+        cpsenv.AppendUnique(LIBS = [ 'stdc++', 'pthread' ])
+
 cpsenv['CPS_DISTDIR'] = cpsenv['DISTDIR'] + '/controlpanel'
 
-cpsenv.VariantDir('$OBJDIR', 'src', duplicate = 0)
-cpsenv.VariantDir('$OBJDIR/samples', 'samples', duplicate = 0)
-
 cpsenv.Install('$CPS_DISTDIR/inc/alljoyn/controlpanel', cpsenv.Glob('inc/alljoyn/controlpanel/*.h'))
-cpsenv.Install('$CPS_DISTDIR/lib', cpsenv.SConscript('$OBJDIR/SConscript', exports = ['cpsenv']))
-cpsenv.Install('$CPS_DISTDIR/bin', cpsenv.SConscript('$OBJDIR/samples/SConscript', exports = ['cpsenv']))
+cpsenv.Install('$CPS_DISTDIR/lib', cpsenv.SConscript('src/SConscript', exports = ['cpsenv']))
+if cpsenv['BUILD_SERVICES_SAMPLES'] == 'on':
+    cpsenv.Install('$CPS_DISTDIR/bin', cpsenv.SConscript('samples/SConscript', exports = ['cpsenv']))
 
 # Build docs
 installDocs = cpsenv.SConscript('docs/SConscript', exports = ['cpsenv'])

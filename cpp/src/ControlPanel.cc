@@ -158,7 +158,7 @@ QStatus ControlPanel::unregisterObjects(BusAttachment* bus)
     return status;
 }
 
-const LanguageSet && ControlPanel::getLanguageSet() const
+const LanguageSet& ControlPanel::getLanguageSet() const
 {
     return m_LanguageSet;
 }
