@@ -22,9 +22,12 @@ import org.alljoyn.about.AboutService;
 import org.alljoyn.about.AboutServiceImpl;
 import org.alljoyn.bus.AuthListener;
 import org.alljoyn.bus.BusAttachment;
+import org.alljoyn.bus.BusException;
 import org.alljoyn.bus.PasswordManager;
 import org.alljoyn.bus.SessionOpts;
 import org.alljoyn.bus.Status;
+import org.alljoyn.bus.Variant;
+import org.alljoyn.bus.VariantUtil;
 import org.alljoyn.ioe.controlpanelbrowser.DeviceList.ControlPanelContext;
 import org.alljoyn.ioe.controlpanelservice.ControlPanelException;
 import org.alljoyn.ioe.controlpanelservice.ControlPanelService;
@@ -141,7 +144,7 @@ public class DeviceListFragment extends ListFragment {
 	/**
 	 * The password for authentication with a remote secured Interface
 	 */
-	private static final String DEFAULT_SECURED_SRP_PASSWORD     = "ABCDEFGH";
+	private static final String DEFAULT_SECURED_SRP_PASSWORD     = "000000";
 	private String srpPassword = DEFAULT_SECURED_SRP_PASSWORD;
 	
 	/**
@@ -460,12 +463,36 @@ public class DeviceListFragment extends ListFragment {
 		 * @see org.alljoyn.services.common.AnnouncementHandler#onAnnouncement(java.lang.String, short, org.alljoyn.services.common.BusObjectDescription[], java.util.Map)
 		 */
 		@Override
-		public void onAnnouncement(String busName, short port, BusObjectDescription[] objectDescriptions, Map<String, Object> aboutMap)
+		public void onAnnouncement(String busName, short port, BusObjectDescription[] objectDescriptions, Map<String, Variant> aboutMap)
 		{
-			// extract the device id
-			String deviceId = (String) (aboutMap.get(AboutKeys.ABOUT_DEVICE_ID).toString());
-			// extract the friendly name. This is only useful for display
-			String deviceFriendlyName = (String) aboutMap.get(AboutKeys.ABOUT_DEVICE_NAME);
+			String deviceId;
+			String deviceFriendlyName;
+			
+			try {
+				
+				Variant varDeviceId = aboutMap.get(AboutKeys.ABOUT_DEVICE_ID);
+				String devIdSig     = VariantUtil.getSignature(varDeviceId);
+				if ( !devIdSig.equals("s") ) {
+					Log.e(TAG, "Received '" + AboutKeys.ABOUT_DEVICE_ID + "', that has an unexpected signature: '" + devIdSig + "', the expected signature is: 's'");
+					return;
+				}
+				
+				deviceId = varDeviceId.getObject(String.class);
+
+				Variant varFriendlyName = aboutMap.get(AboutKeys.ABOUT_DEVICE_NAME);
+				String friendlyNameSig     = VariantUtil.getSignature(varFriendlyName);
+				if ( !friendlyNameSig.equals("s") ) {
+					Log.e(TAG, "Received '" + AboutKeys.ABOUT_DEVICE_NAME + "', that has an unexpected signature: '" + friendlyNameSig + "', the expected signature is: 's'");
+					return;
+				}
+				
+				deviceFriendlyName = varFriendlyName.getObject(String.class);
+			}
+			catch (BusException be) {
+				Log.e(TAG, "Failed to retreive an Announcement properties, Error: '" + be.getMessage() + "'");
+				return;
+			}
+
 			// scan the object descriptions, pick those who implement a control panel interface
 			for(int i = 0; i < objectDescriptions.length; ++i){
 				BusObjectDescription description	= objectDescriptions[i];

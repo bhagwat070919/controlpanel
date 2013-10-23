@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<controlPanelDevice xmlns="http://www.alljoyn.org/controlpanel/gen">
+    <name>MyDevice</name>
+    <headerCode>#include "ControlPanelProvided.h"</headerCode>
+    <languageSet name="myLanguages">
+        <language>heb</language>
+        <language>chi</language>        
+    </languageSet>
+    <controlPanels>
+        <controlPanel languageSet="myLanguages">
+            <rootContainer>
+                <name>rootContainer</name>
+                <secured>false</secured>    
+                <enabled>true</enabled>
+                <bgcolor>0x200</bgcolor>
+                <hints>
+                    <hint>vertical_linear</hint>
+                </hints>
+                <elements>
+                    <stringProperty>
+                        <name>unicodeStringProperty</name>
+                        <getCode>getStringVar</getCode>
+                        <setCode>setStringVar(%s)</setCode>
+                        <secured>false</secured>
+                        <enabled>true</enabled>
+                        <writable>true</writable>
+                        <label>
+                            <value type="constant" language="heb">UNICODE_HI_IN_HEBREW</value>
+                            <value type="constant" language="chi">UNICODE_HI_IN_CHINESE</value>
+                        </label>
+                        <bgcolor>0x500</bgcolor>
+                        <hints>
+                            <hint>edittext</hint>
+                        </hints>
+                    </stringProperty>
+                </elements>
+            </rootContainer>
+        </controlPanel>
+    </controlPanels>
+</controlPanelDevice>

@@ -66,10 +66,14 @@
             -post-build
             -pre-clean
     -->
+    <!--target name="-pre-compile">
+		<copy file="../ControlPanelService/build/deploy/ControlPanelService.jar" verbose="true"
+			todir="libs/"/>
+    </target>
 
     <target name="-post-compile">
 		<move file="bin/classes.jar" tofile="bin/ControlPanelAdapter.jar"/>
-    </target>
+    </target-->
 
     <import file="custom_rules.xml" optional="true" />
 

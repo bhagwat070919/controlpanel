@@ -3,6 +3,7 @@
 	<name>ControlPanelAdapter</name>
 	<comment></comment>
 	<projects>
+		<project>ControlPanelService</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

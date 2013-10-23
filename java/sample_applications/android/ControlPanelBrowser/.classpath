@@ -6,5 +6,8 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ControlPanelAdapter"/>
+	<classpathentry kind="lib" path="libs/alljoyn_about.jar"/>
+	<classpathentry kind="lib" path="libs/alljoyn_apps_android_utils.jar"/>
+	<classpathentry kind="lib" path="libs/alljoyn_services_common.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

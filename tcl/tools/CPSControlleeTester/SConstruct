@@ -1,0 +1,32 @@
+#*****************************************************************************
+# Copyright 2013, Qualcomm Innovation Center, Inc.
+#
+#    All rights reserved.
+#    This file is licensed under the 3-clause BSD license in the NOTICE.txt
+#    file for this project. A copy of the 3-clause BSD license is found at:
+#
+#        http://opensource.org/licenses/BSD-3-Clause.
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the license is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the license for the specific language governing permissions and
+#    limitations under the license.
+#*****************************************************************************
+
+# usage:
+# scons VARIANT=debug TARG=linux WS=off 
+#    optional additional parameters:
+#        AJ_TCL_ROOT=path/to/ajtcl
+#        <name of target to build>
+# sample usage:
+# scons VARIANT=debug TARG=linux WS=off AJ_TCL_ROOT=../../../ajtcl
+
+ajtcl_root_default = '../../../../../ajtcl'
+
+env = SConscript(ajtcl_root_default + '/SConscript')
+
+# we create a cloned ajtcl environment, so we don't taint ajtcl build with our defines and flags
+cps_env = env.Clone()
+Export('cps_env')
+cps_env.SConscript('SConscript')

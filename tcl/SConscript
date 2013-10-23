@@ -1,0 +1,48 @@
+#*****************************************************************************
+# Copyright 2013, Qualcomm Innovation Center, Inc.
+#
+#    All rights reserved.
+#    This file is licensed under the 3-clause BSD license in the NOTICE.txt
+#    file for this project. A copy of the 3-clause BSD license is found at:
+#
+#        http://opensource.org/licenses/BSD-3-Clause.
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the license is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the license for the specific language governing permissions and
+#    limitations under the license.
+#*****************************************************************************
+
+about_root_default        = '../../about/tcl'
+serversample_root_default = '../../../applications/sample_apps/tcl/ServerSample'
+
+import os
+Import('cps_env')
+
+vars = Variables()
+vars.Add('ABOUT_ROOT', 'Root directory of About service', about_root_default)
+vars.Add('SERVERSAMPLE_ROOT', 'Root directory of services server sample', serversample_root_default)
+
+vars.Update(cps_env)
+
+Help(vars.GenerateHelpText(cps_env))
+
+if not os.path.isfile(cps_env['SERVERSAMPLE_ROOT'] + '/SConscript'):
+    print "SConscript in 'SERVERSAMPLE_ROOT=" + cps_env['SERVERSAMPLE_ROOT'] + "' not found; aborting.\n"
+    exit(1)
+
+# a flag to tell services server sample not to build its executable, but rather
+# to return to us build parameters and info for us to build here.
+cps_env['INDIV_BUILD'] = 1
+# convert locations to absolute, to be passed on to sample apps in subdirectories
+cps_env['SERVERSAMPLE_ROOT_FROM_COMPONENT'] = str(cps_env.Dir('$SERVERSAMPLE_ROOT'))
+# abs. path to About service is needed by server sample scons
+cps_env['ABOUT_ROOT_FROM_COMPONENT']        = str(cps_env.Dir('$ABOUT_ROOT'))
+
+returnValue = []
+controlpanel_app = cps_env.SConscript('samples/CPSControlleeSample/SConscript')
+cps_env.Install("build", controlpanel_app)
+returnValue += controlpanel_app
+
+Return('returnValue')

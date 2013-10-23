@@ -20,8 +20,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.alljoyn.about.AboutKeys;
+import org.alljoyn.bus.BusException;
+import org.alljoyn.bus.Variant;
+import org.alljoyn.bus.VariantUtil;
 import org.alljoyn.services.common.AnnouncementHandler;
 import org.alljoyn.services.common.BusObjectDescription;
+import org.alljoyn.services.common.utils.TransportUtil;
 
 import android.os.Handler;
 import android.os.Message;
@@ -38,7 +42,8 @@ public class AnnouncementReceiver implements AnnouncementHandler {
      * @see org.alljoyn.services.common.AnnouncementHandler#onAnnouncement(java.lang.String, short, org.alljoyn.services.common.BusObjectDescription[], java.util.Map)
      */
     @Override
-	public void onAnnouncement(String serviceName, short port, BusObjectDescription[] objectDescriptions, Map<String, Object> serviceMetadata) {
+	public void onAnnouncement(String serviceName, short port, BusObjectDescription[] objectDescriptions, Map<String, Variant> aboutData) {
+    	
     	Log.v(TAG, "Received Announcement signal");
 		Handler handler = ConnectionManager.getInstance().getHandler();
 
@@ -46,15 +51,43 @@ public class AnnouncementReceiver implements AnnouncementHandler {
 			return;
 		}
 		
-		UUID appId = (UUID)serviceMetadata.get(AboutKeys.ABOUT_APP_ID);
-		if ( appId == null ) {
-			Log.e(TAG, "Received an undefined AppId");
+		UUID appId;
+		String deviceId;
+		
+		try {
+			
+			Variant varAppId = aboutData.get(AboutKeys.ABOUT_APP_ID);
+			String appIdSig  = VariantUtil.getSignature(varAppId); 
+			if ( !appIdSig.equals("ay") ) {
+				Log.e(TAG, "Received '" + AboutKeys.ABOUT_APP_ID + "', that has an unexpected signature: '" + appIdSig + "', the expected signature is: 'ay'");
+				return;
+			}
+			
+			byte[]  rawAppId = varAppId.getObject(byte[].class);
+			appId            = TransportUtil.byteArrayToUUID(rawAppId);
+			
+			if ( appId == null ) {
+				Log.e(TAG, "Failed to translate the received AppId into UUID");
+				return;
+			}
+			
+			Variant varDeviceId = aboutData.get(AboutKeys.ABOUT_DEVICE_ID);
+			String devIdSig     = VariantUtil.getSignature(varDeviceId);
+			if ( !devIdSig.equals("s") ) {
+				Log.e(TAG, "Received '" + AboutKeys.ABOUT_DEVICE_ID + "', that has an unexpected signature: '" + devIdSig + "', the expected signature is: 's'");
+				return;
+			}
+			
+			deviceId = varDeviceId.getObject(String.class);
+		}
+		catch (BusException be) {
+			Log.e(TAG, "Failed to retreive an Announcement properties, Error: '" + be.getMessage() + "'");
 			return;
 		}
-		
+			
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("SENDER", serviceName);
-		args.put("DEVICE_ID", (String)serviceMetadata.get(AboutKeys.ABOUT_DEVICE_ID));
+		args.put("DEVICE_ID", deviceId);
 		args.put("APP_ID", appId.toString());
 		args.put("OBJ_DESC", objectDescriptions);
 		

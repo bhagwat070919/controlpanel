@@ -42,6 +42,12 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.format.DateFormat;
@@ -63,6 +69,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RadioButton;
@@ -115,24 +122,38 @@ public class ControlPanelAdapter
 			return null;
 		}
 
+		Log.d(TAG, "Received main container, objPath: '" + container.getObjectPath() + "'");
+
 		// the returned Layout object
 		ViewGroup scrollView;
-		ViewGroup containerLayout;
-
-		ViewGroup.LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		Log.d(TAG, "Received main container, objPath: '" + container.getObjectPath() + "'");
+		LinearLayout containerLayout;
+		ViewGroup.LayoutParams layoutParams;
 
 		// initialize the container by type
 		List<LayoutHintsType> layoutHints = container.getLayoutHints();
 		Log.d(TAG, "Container has LayoutHints: " + layoutHints);
 
+		LayoutHintsType layoutHintsType = (layoutHints.size() == 0) ? LayoutHintsType.VERTICAL_LINEAR : layoutHints.get(0);
 		// set the layout
-		if ( layoutHints.size() == 0 ) {
+		switch(layoutHintsType) {
+		case HORIZONTAL_LINEAR:
+			scrollView 		= new HorizontalScrollView(uiContext);
+			LinearLayout linearLayout = new LinearLayout(uiContext);
+			linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+			linearLayout.setGravity(Gravity.CENTER_VERTICAL);
+			containerLayout	= linearLayout;
+			LinearLayout.LayoutParams hLinearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			hLinearLayoutParams.setMargins(10, 10, 10, 10);
+			layoutParams = hLinearLayoutParams;
+			break;
+		case VERTICAL_LINEAR: default:
 			scrollView 		= new ScrollView(uiContext);
-			LinearLayout linearLayout1 = new LinearLayout(uiContext);
-			linearLayout1.setOrientation(LinearLayout.VERTICAL);
-			linearLayout1.setGravity(Gravity.CENTER_HORIZONTAL);
-			containerLayout	= linearLayout1;
+			containerLayout = new LinearLayout(uiContext);
+			containerLayout.setOrientation(LinearLayout.VERTICAL);
+			containerLayout.setGravity(Gravity.LEFT);
+			LinearLayout.LayoutParams vLinearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+			vLinearLayoutParams.setMargins(10, 10, 10, 10);
+			layoutParams = vLinearLayoutParams;
 			// set the inner label
 			if (container.getLabel() != null && container.getLabel().trim().length() > 0)
 			{
@@ -143,37 +164,7 @@ public class ControlPanelAdapter
 				textLayoutParams.setMargins(20, 0, 20, 0);
 				containerLayout.addView(titleTextView, textLayoutParams);
 			}
-		} else {
-			LayoutHintsType layoutHintsType = layoutHints.get(0);
-			switch(layoutHintsType) {
-			case HORIZONTAL_LINEAR:
-				scrollView 		= new HorizontalScrollView(uiContext);
-				LinearLayout linearLayout = new LinearLayout(uiContext);
-				linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-				linearLayout.setGravity(Gravity.CENTER_VERTICAL);
-				containerLayout	= linearLayout;
-				LinearLayout.LayoutParams hLinearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-				hLinearLayoutParams.setMargins(10, 10, 10, 10);
-				layoutParams = hLinearLayoutParams;
-				break;
-			case VERTICAL_LINEAR: default:
-				scrollView 		= new ScrollView(uiContext);
-				LinearLayout linearLayout1 = new LinearLayout(uiContext);
-				linearLayout1.setOrientation(LinearLayout.VERTICAL);
-				linearLayout1.setGravity(Gravity.CENTER_HORIZONTAL);
-				containerLayout	= linearLayout1;
-				// set the inner label
-				if (container.getLabel() != null && container.getLabel().trim().length() > 0)
-				{
-					Log.d(TAG,"Setting container label to: " + container.getLabel());
-					TextView titleTextView = new TextView(uiContext);
-					titleTextView.setText(container.getLabel());
-					LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-					textLayoutParams.setMargins(20, 0, 20, 0);
-					containerLayout.addView(titleTextView, textLayoutParams);
-				}
-				break;
-			}
+			break;
 		}
 		Log.d(TAG, "Initialized Layout of class: " +containerLayout.getClass().getSimpleName());
 
@@ -188,9 +179,15 @@ public class ControlPanelAdapter
 		List<UIElement> elements = container.getElements();
 		Log.d(TAG, String.format("Laying out %d elements", elements.size()));
 
+		int i = 0;
 		for(UIElement element : elements) {
+			i++;
 			View childView = createInnerView(element);
 			containerLayout.addView(childView, layoutParams);
+			if (layoutHintsType == LayoutHintsType.VERTICAL_LINEAR && i < elements.size()) {
+				// add a divider
+				containerLayout.addView(createDividerView(), layoutParams);
+			}
 		}//for :: elements
 
 		LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -200,6 +197,24 @@ public class ControlPanelAdapter
 	}
 
 	// =====================================================================================================================
+	/**
+	 * Creates a list divider for vertical layout
+	 * @return A list divider
+	 */
+	private View createDividerView() {
+		View listDivider = new View(uiContext);
+	    TypedArray listDividerAttrs = uiContext.getTheme().obtainStyledAttributes(new int[] {android.R.attr.listDivider});
+	    
+	    if (listDividerAttrs.length() > 0) {
+	    	// don't change this to setBackground() it'll fly on run time
+			listDivider.setBackgroundDrawable(listDividerAttrs.getDrawable(0));
+		}
+
+	    listDividerAttrs.recycle();
+	    return listDivider;
+	}
+	// =====================================================================================================================
+
 
 	/**
 	 * Creates an Android View that corresponds with the given UIElement
@@ -477,7 +492,7 @@ public class ControlPanelAdapter
 
 	// =====================================================================================================================
 
-	private Spinner createSpinnerView(final PropertyWidget propertyWidget)
+	private View createSpinnerView(final PropertyWidget propertyWidget)
 	{
 		Log.d(TAG, "Creating a spinner for propertyWidget " + propertyWidget.getLabel());
 
@@ -488,9 +503,18 @@ public class ControlPanelAdapter
 			Log.e(TAG, "propertyWidget.getCurrentValue() failed, initializing property without current value", e);
 		}
 
+		final LinearLayout layout = new LinearLayout(uiContext);
+		layout.setOrientation(LinearLayout.VERTICAL);
+		final TextView nameTextView = new TextView(uiContext);
+		nameTextView.setPadding(10, 0, 0, 0);
+		nameTextView.setText(propertyWidget.getLabel());
 		final Spinner spinner = new Spinner(uiContext);
 		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
 		spinner.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
+		LinearLayout.LayoutParams vLinearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		layout.addView(nameTextView, vLinearLayoutParams);
+		layout.addView(spinner, vLinearLayoutParams);
+		spinner.setTag(PROPERTY_VALUE);
 
 		// set the data model
 		final ArrayAdapter<LabelValuePair> adapter = new ArrayAdapter<LabelValuePair>(uiContext, android.R.layout.simple_spinner_item);
@@ -582,12 +606,12 @@ public class ControlPanelAdapter
 		};
 		spinner.setOnItemSelectedListener(listener);
 
-		return spinner;
+		return layout;
 	}
 
 	// =====================================================================================================================
 
-	private RadioGroup createRadioButtonView(final PropertyWidget propertyWidget)
+	private View createRadioButtonView(final PropertyWidget propertyWidget)
 	{
 		Log.d(TAG, "Creating a radio button group for property " + propertyWidget.getLabel());
 
@@ -599,9 +623,18 @@ public class ControlPanelAdapter
 			Log.e(TAG, "property.getCurrentValue() failed, initializing property without current value", e);
 		}
 
+		final LinearLayout layout = new LinearLayout(uiContext);
+		layout.setOrientation(LinearLayout.VERTICAL);
+		final TextView nameTextView = new TextView(uiContext);
+		nameTextView.setPadding(10, 0, 0, 0);
+		nameTextView.setText(propertyWidget.getLabel());
 		RadioGroup radioGroup = new RadioGroup(uiContext);
 		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
 		radioGroup.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
+		LinearLayout.LayoutParams vLinearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		layout.addView(nameTextView, vLinearLayoutParams);
+		layout.addView(radioGroup, vLinearLayoutParams);
+		radioGroup.setTag(PROPERTY_VALUE);
 
 		final List<ConstrainToValues<?>> listOfConstraint = propertyWidget.getListOfConstraint();
 		if ( listOfConstraint != null ) {
@@ -662,7 +695,7 @@ public class ControlPanelAdapter
 			}
 		});
 
-		return radioGroup;
+		return layout;
 	}
 
 	// =====================================================================================================================
@@ -1759,7 +1792,9 @@ public class ControlPanelAdapter
 	// =====================================================================================================================
 
 	private void onSpinnerValueChange(View propertyView, PropertyWidget propertyWidget, Object newValue) {
-		Spinner spinner = (Spinner) propertyView;
+		// extract the text view
+		final ViewGroup layout = (ViewGroup) propertyView;
+		final Spinner spinner = (Spinner) layout.findViewWithTag(PROPERTY_VALUE);
 		Log.d(TAG, "Refreshing the spinner of property " + propertyWidget.getLabel());
 
 		// set the selected item
@@ -1783,7 +1818,8 @@ public class ControlPanelAdapter
 	private void onRadioButtonValueChange(View propertyView, PropertyWidget propertyWidget, Object newValue) {
 		Log.d(TAG, "Refreshing the RadioButton of property " + propertyWidget.getLabel());
 
-		RadioGroup radioGroup = (RadioGroup) propertyView;
+		final ViewGroup layout = (ViewGroup) propertyView;
+		final RadioGroup radioGroup = (RadioGroup) layout.findViewWithTag(PROPERTY_VALUE);
 
 		// set the selected item
 		int selection = 0;
