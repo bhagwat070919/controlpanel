@@ -33,7 +33,7 @@ class Container : public RootWidget {
                             qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot = false);
 
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-                                           uint16_t langIndx, QStatus status);
+                                           uint16_t langIndx, QStatus& status);
 
     bool getIsDismissable() const;
     void setIsDismissable(bool isDismissable);

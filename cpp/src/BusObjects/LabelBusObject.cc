@@ -54,6 +54,8 @@ LabelBusObject::LabelBusObject(BusAttachment* bus, String const& servicePath, ui
 
     //Get the signal methods for future use
     m_SignalPropertyChanged = intf->GetMember(AJ_SIGNAL_PROPERTIES_CHANGED.c_str());
+    if (logger)
+        logger->debug(TAG, "Created LabelBusObject successfully");
 }
 
 LabelBusObject::~LabelBusObject() {

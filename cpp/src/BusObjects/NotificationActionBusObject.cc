@@ -56,6 +56,8 @@ NotificationActionBusObject::NotificationActionBusObject(BusAttachment* bus, Str
 
     //Get the signal methods for future use
     m_SignalDismiss = intf->GetMember(AJ_SIGNAL_DISMISS.c_str());
+    if (logger)
+        logger->debug(TAG, "Created NotificationActionBusObject successfully");
 }
 
 NotificationActionBusObject::~NotificationActionBusObject()

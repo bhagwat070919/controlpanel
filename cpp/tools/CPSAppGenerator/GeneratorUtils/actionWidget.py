@@ -20,38 +20,44 @@ class Action (common.Widget):
 
     def __init__(self, generated, actionElement, parentObjectPath, languageSetName) :
         common.Widget.__init__(self, generated, actionElement, parentObjectPath, languageSetName)
-        self.widgetName = "ActionWidget"
-        self.widgetType = "WIDGET_TYPE_ACTION"
-        self.nonSecuredInterfaceName = "ActionInterfaces"
-        self.securedInterfaceName = "SecuredActionInterfaces"
-        self.hintPrefix = "ACTION_WIDGET_HINT_"
-        self.executeCases = ""
+        if hasattr(self.element.onAction, "executeCode") : 
+            self.widgetName = self.name[:1].upper() + self.name [1:]
+            self.name = self.name[:1].lower() + self.name [1:]
+        else :
+            self.widgetName = "ActionWithDialog"
 
     def generate(self) :
         common.Widget.generate(self)
         self.generateOnAction()
 
-    def generateDefines(self, capName) :
-        common.Widget.generateDefines(self, capName) 
-        self.generated.defines += "#define {0}_EXEC                       AJ_APP_MESSAGE_ID({1} + NUM_PRECEDING_OBJECTS, 1, 4)\n".format(capName, self.generated.definesIndx)
-        self.generated.actionCases += "case {0}_EXEC: \\\n".format(capName)
-        self.executeCases += "\t\tcase {0}_EXEC:\n".format(capName) 
-
-    def generateTests(self, capName) : 
-        common.Widget.generateTests(self, capName) 
-        self.generated.initTests += """    testsToRun[{1}].msgId = {0}_EXEC;
-    testsToRun[{1}].numParams = 0;\n""".format(capName, self.generated.numTests, self.generated.definesIndx - 1)
-        self.generated.numTests = self.generated.numTests + 1
-        self.generated.allReplies += "case AJ_REPLY_ID({0}_EXEC): \\\n".format(capName)
-
     def generateOnAction (self) :
         onAction = self.element.onAction
         if hasattr(onAction, "executeCode") : 
-            self.generated.executeAction += self.executeCases + "\t\t{0}\n".format("{")    
-            self.generated.executeAction += "\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n".format(onAction.executeCode, "}")
+            actionHeaderFile = self.generated.actionHeaderFile
+            actionSrcFile = self.generated.actionSrcFile
+
+            regularName = self.widgetName
+            capitalName = self.name.upper()
+
+            actionHeaderFile = actionHeaderFile.replace("CAPITAL_NAME_HERE", capitalName)
+            actionHeaderFile = actionHeaderFile.replace("REGULAR_NAME_HERE", regularName)
+
+            actionSrcFile = actionSrcFile.replace("CAPITAL_NAME_HERE", capitalName)
+            actionSrcFile = actionSrcFile.replace("REGULAR_NAME_HERE", regularName)
+            actionSrcFile = actionSrcFile.replace("ADDITIONAL_INCLUDES_HERE", self.generated.srcIncludes)
+            actionSrcFile = actionSrcFile.replace("EXECUTE_ACTION_HERE", onAction.executeCode)
+
+            self.generated.headerIncludes += """#include "../generated/{0}.h"\n""".format(regularName)
+
+            genH = open(self.generated.path + "/" + regularName + ".h", 'w')
+            genH.write(actionHeaderFile)
+            genH.close()
+            genC = open(self.generated.path + "/" + regularName + ".cc", 'w')
+            genC.write(actionSrcFile)
+            genC.close()
+
         elif hasattr(onAction, "dialog") : 
-            dialogElem = onAction.dialog
-            dialog = dw.Dialog(self.generated, dialogElem, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
+            dialog = dw.Dialog(self.generated, onAction.dialog, self.name, self.languageSetName)
             dialog.generate()
 
 

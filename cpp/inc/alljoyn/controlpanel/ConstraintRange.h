@@ -25,14 +25,13 @@ namespace ajn {
 namespace services {
 
 typedef union {
-    uint8_t defined;
-    uint16_t* uint16Value;
-    int16_t* int16Value;
-    uint32_t* uint32Value;
-    int32_t* int32Value;
-    uint64_t* uint64Value;
-    int64_t* int64Value;
-    double* doubleValue;
+    uint16_t uint16Value;
+    int16_t int16Value;
+    uint32_t uint32Value;
+    int32_t int32Value;
+    uint64_t uint64Value;
+    int64_t int64Value;
+    double doubleValue;
 } ConstraintRangeVal;
 
 /**
@@ -44,36 +43,35 @@ typedef union {
 class ConstraintRange {
   public:
     ConstraintRange();
+    ConstraintRange( const ConstraintRange &constraintRange);
     virtual ~ConstraintRange();
     const ConstraintRangeVal& getIncrementValue() const;
     const ConstraintRangeVal& getMaxValue() const;
     const ConstraintRangeVal& getMinValue() const;
 
-    bool setConstraintMin(uint16_t* minValue);
-    bool setConstraintMin(int16_t* minValue);
-    bool setConstraintMin(uint32_t* minValue);
-    bool setConstraintMin(int32_t* minValue);
-    bool setConstraintMin(uint64_t* minValue);
-    bool setConstraintMin(int64_t* minValue);
-    bool setConstraintMin(double* minValue);
+    QStatus setConstraintMin(uint16_t minValue);
+    QStatus setConstraintMin(int16_t minValue);
+    QStatus setConstraintMin(uint32_t minValue);
+    QStatus setConstraintMin(int32_t minValue);
+    QStatus setConstraintMin(uint64_t minValue);
+    QStatus setConstraintMin(int64_t minValue);
+    QStatus setConstraintMin(double minValue);
 
-    bool setConstraintMax(uint16_t* maxValue);
-    bool setConstraintMax(int16_t* maxValue);
-    bool setConstraintMax(uint32_t* maxValue);
-    bool setConstraintMax(int32_t* maxValue);
-    bool setConstraintMax(uint64_t* maxValue);
-    bool setConstraintMax(int64_t* maxValue);
-    bool setConstraintMax(double* maxValue);
+    QStatus setConstraintMax(uint16_t maxValue);
+    QStatus setConstraintMax(int16_t maxValue);
+    QStatus setConstraintMax(uint32_t maxValue);
+    QStatus setConstraintMax(int32_t maxValue);
+    QStatus setConstraintMax(uint64_t maxValue);
+    QStatus setConstraintMax(int64_t maxValue);
+    QStatus setConstraintMax(double maxValue);
 
-    bool setConstraintIncrement(uint16_t* incrementValue);
-    bool setConstraintIncrement(int16_t* incrementValue);
-    bool setConstraintIncrement(uint32_t* incrementValue);
-    bool setConstraintIncrement(int32_t* incrementValue);
-    bool setConstraintIncrement(uint64_t* incrementValue);
-    bool setConstraintIncrement(int64_t* incrementValue);
-    bool setConstraintIncrement(double* incrementValue);
-
-    bool isDefined();
+    QStatus setConstraintIncrement(uint16_t incrementValue);
+    QStatus setConstraintIncrement(int16_t incrementValue);
+    QStatus setConstraintIncrement(uint32_t incrementValue);
+    QStatus setConstraintIncrement(int32_t incrementValue);
+    QStatus setConstraintIncrement(uint64_t incrementValue);
+    QStatus setConstraintIncrement(int64_t incrementValue);
+    QStatus setConstraintIncrement(double incrementValue);
 
     QStatus getConstraintForArg(MsgArg& val, int16_t languageIndx, PropertyType propertyType);
 
@@ -89,7 +87,7 @@ class ConstraintRange {
 
     PropertyType m_PropertyType;
 
-    qcc::String const& TAG;
+    qcc::String TAG;
 };
 
 } /* namespace services */

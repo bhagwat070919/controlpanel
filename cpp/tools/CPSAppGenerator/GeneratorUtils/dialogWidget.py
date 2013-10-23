@@ -17,71 +17,64 @@ import commonWidget as common
 
 class Dialog (common.Widget):
 
-    def __init__(self, generated, dialogElement, parentObjectPath, languageSetName, isRoot = 0) :
-        common.Widget.__init__(self, generated, dialogElement, parentObjectPath, languageSetName)
-        self.widgetName = "DialogWidget"
-        self.widgetType = "WIDGET_TYPE_DIALOG"
-        self.nonSecuredInterfaceName = "DialogInterfaces"
-        self.securedInterfaceName = "SecuredDialogInterfaces"
-        self.hintPrefix = "DIALOG_HINT_"
-        self.executeCases = ""
-        if isRoot:
-            self.objectPathSuffix = ""  
+    def __init__(self, generated, dialogElement, parentName, languageSetName, isRoot = 0) :
+        common.Widget.__init__(self, generated, dialogElement, parentName, languageSetName)
+        self.isRoot = 1
+        self.widgetName = self.name[:1].upper() + self.name [1:]
+        self.name = self.name[:1].lower() + self.name [1:]
+        if not isRoot :
+            self.parentAddFunc = "addChildDialog"
+        else :
+            self.parentAddFunc = "setRootWidget"
 
     def generate(self) :
         common.Widget.generate(self)
         self.generateOnAction()
 
-    def generateDefines(self, capName) :
-        common.Widget.generateDefines(self, capName) 
-        self.generated.defines += "#define {0}_MESSAGE_PROPERTY           AJ_APP_PROPERTY_ID({1} + NUM_PRECEDING_OBJECTS, 1, 4)\n".format(capName, self.generated.definesIndx)
-        self.generated.defines += "#define {0}_NUM_ACTIONS_PROPERTY       AJ_APP_PROPERTY_ID({1} + NUM_PRECEDING_OBJECTS, 1, 5)\n".format(capName, self.generated.definesIndx)
-        self.generated.defines += "#define {0}_EXEC_ACTION1               AJ_APP_MESSAGE_ID({1} + NUM_PRECEDING_OBJECTS, 1, 6)\n".format(capName, self.generated.definesIndx)
-        self.generated.defines += "#define {0}_EXEC_ACTION2               AJ_APP_MESSAGE_ID({1} + NUM_PRECEDING_OBJECTS, 1, 7)\n".format(capName, self.generated.definesIndx)
-        self.generated.defines += "#define {0}_EXEC_ACTION3               AJ_APP_MESSAGE_ID({1} + NUM_PRECEDING_OBJECTS, 1, 8)\n".format(capName, self.generated.definesIndx)
-
-        self.generated.actionCases += "case {0}_EXEC_ACTION1: \\\n".format(capName)
-        self.generated.actionCases += "case {0}_EXEC_ACTION2: \\\n".format(capName)
-        self.generated.actionCases += "case {0}_EXEC_ACTION3: \\\n".format(capName)
-
-        self.executeCases += "\t\tcase {0}_EXEC_ACTION{1}:\n".format(capName, '{0}') 
-
-    def generateTests(self, capName) : 
-        common.Widget.generateTests(self, capName) 
-        self.generated.initTests += """    testsToRun[{1}].msgId = {0}_EXEC_ACTION1;
-    testsToRun[{1}].numParams = 0;\n""".format(capName, self.generated.numTests, self.generated.definesIndx - 1)
-        self.generated.numTests = self.generated.numTests + 1
-        self.generated.allReplies += "case AJ_REPLY_ID({0}_EXEC_ACTION1): \\\n".format(capName)
-
-        self.generated.initTests += """    testsToRun[{1}].msgId = {0}_EXEC_ACTION2;
-    testsToRun[{1}].numParams = 0;\n""".format(capName, self.generated.numTests, self.generated.definesIndx - 1)
-        self.generated.numTests = self.generated.numTests + 1
-        self.generated.allReplies += "case AJ_REPLY_ID({0}_EXEC_ACTION2): \\\n".format(capName)
-
-        self.generated.initTests += """    testsToRun[{1}].msgId = {0}_EXEC_ACTION3;
-    testsToRun[{1}].numParams = 0;\n""".format(capName, self.generated.numTests, self.generated.definesIndx - 1)
-        self.generated.numTests = self.generated.numTests + 1
-        self.generated.allReplies += "case AJ_REPLY_ID({0}_EXEC_ACTION3): \\\n".format(capName)
-
     def generateMandatoryVariables (self) :
-        self.generated.initFunction  += "\tinitializeDialogWidget(&{0});\n".format(self.name)
-        self.setNumLanguages()
-        self.setEnabled()
+        common.Widget.generateMandatoryVariables(self)
         self.setMessage()
         self.setNumActions() 
-        self.generated.initFunction += "\n"
+
+    def setMessage (self) :
+        self.setCodeOrValueString ("message", "setMessage", "setGetMessage")
 
     def setNumActions (self) :
-        self.generated.initFunction += "\t{0}.numActions = {1};\n".format(self.name, len(self.element.button))
+        self.generated.initCode += "    {0}->setNumActions({1});\n".format(self.name, len(self.element.button))
+
+    def setLabelAction (self, i) :
+        self.setCodeOrValueString ('label', "setLabelAction%i" % (i+1), "setGetLabelAction%i" % (i+1), "LabelAction%i" % (i+1), self.element.button[i])
+
 
     def generateOnAction (self) :
+        dialogHeaderFile = self.generated.dialogHeaderFile
+        dialogSrcFile = self.generated.dialogSrcFile
 
-        error = "AJ_MarshalErrorMsg(msg, &reply, AJ_ErrServiceUnknown);"
+        regularName = self.widgetName
+        capitalName = self.name.upper()
+
+        dialogHeaderFile = dialogHeaderFile.replace("CAPITAL_NAME_HERE", capitalName)
+        dialogHeaderFile = dialogHeaderFile.replace("REGULAR_NAME_HERE", regularName)
+
+        dialogSrcFile = dialogSrcFile.replace("CAPITAL_NAME_HERE", capitalName)
+        dialogSrcFile = dialogSrcFile.replace("REGULAR_NAME_HERE", regularName)
+        dialogSrcFile = dialogSrcFile.replace("ADDITIONAL_INCLUDES_HERE", self.generated.srcIncludes)
+
+        self.generated.headerIncludes += """#include "../generated/{0}.h"\n""".format(regularName)
+
+        notDefined = "    executeActionNotDefined();"
         for i in range(0, len(self.element.button)):
-            self.generated.executeAction += self.executeCases.format(str(i+1)) + "\t\t{\n"
-            self.generated.executeAction += """\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n""".format(self.element.button[i].executeCode, "}")
             self.setLabelAction(i)
+            dialogSrcFile = dialogSrcFile.replace("CODE_OF_EXECUTE_ACTION%i_HERE" % (i+1), self.element.button[i].executeCode)            
         for i in range(len(self.element.button), 3):    
-            self.generated.executeAction += self.executeCases.format(str(i+1)) + "\t\t{0}\n".format("{")    
-            self.generated.executeAction += """\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n""".format(error, "}")
+            dialogSrcFile = dialogSrcFile.replace("CODE_OF_EXECUTE_ACTION%i_HERE" % (i+1), notDefined)            
+
+        genH = open(self.generated.path + "/" + regularName + ".h", 'w')
+        genH.write(dialogHeaderFile)
+        genH.close()
+        genC = open(self.generated.path + "/" + regularName + ".cc", 'w')
+        genC.write(dialogSrcFile)
+        genC.close()
+
+
 

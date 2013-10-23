@@ -20,73 +20,108 @@ class Property (common.Widget):
 
     def __init__(self, generated, propertyElement, parentObjectPath, languageSetName) :
         common.Widget.__init__(self, generated, propertyElement, parentObjectPath, languageSetName)
-        self.widgetName = "PropertyWidget"
-        self.widgetType = "WIDGET_TYPE_PROPERTY"
-        self.nonSecuredInterfaceName = "PropertyInterfaces"
-        self.securedInterfaceName = "SecuredPropertyInterfaces"
-        self.hintPrefix = "PROPERTY_WIDGET_HINT_"
-        self.propertyCases = ""
+        self.widgetName = self.name[:1].upper() + self.name [1:]
+        self.name = self.name[:1].lower() + self.name [1:]
         self.getSignatureAndVarType()
-        self.signalsString = ""
-        self.signalsIndx = 0
-
-    def generateDefines(self, capName) :
-        common.Widget.generateDefines(self, capName) 
-        self.generated.defines += "#define {0}_VALUE_PROPERTY             AJ_APP_PROPERTY_ID({1} + NUM_PRECEDING_OBJECTS, 1, 4)\n".format(capName, self.generated.definesIndx)
-        self.generated.defines += "#define {0}_SIGNAL_VALUE_CHANGED       AJ_APP_MESSAGE_ID({1} + NUM_PRECEDING_OBJECTS, 1, 5)\n".format(capName, self.generated.definesIndx)
-        self.propertyCases += "\t\tcase {0}_VALUE_PROPERTY:\n".format(capName) 
-        self.signalsString += "\t\t\t((SetValueContext*)context)->signals[{0}] = {1}_SIGNAL_VALUE_CHANGED; \n".format(self.signalsIndx, capName)
-        self.signalsIndx += 1
-
-    def generateIdentify(self, capName, language) :
-        common.Widget.generateIdentify(self, capName, language)
-        self.generated.identify += """\t\tcase {0}_VALUE_PROPERTY :
-            *widgetType = WIDGET_TYPE_PROPERTY;
-            *propType = PROPERTY_TYPE_VALUE;
-            *language = {2};
-            return &{1};\n""".format(capName, self.name, language)
-
-        self.generated.identifySignal += """\t\tcase {0}_SIGNAL_VALUE_CHANGED :
-            *isProperty = TRUE;
-            return &{1};\n""".format(capName, self.name) 
+        self.additionalParams = ", " + self.propType
 
     def generateMandatoryVariables (self) :
-        self.generated.initFunction  += "\tinitializePropertyWidget(&{0});\n".format(self.name)
-        self.setNumLanguages()
-        self.setEnabled()
+        common.Widget.generateMandatoryVariables(self)
         self.setWritable()
-        self.setPropertyVariables()
-        self.generated.initFunction += "\n"
+        self.generateSetAndGetCode()
 
-    def setPropertyVariables (self) :
-        if len(self.signature) > 0 :
-            self.generated.staticVars += "static const char* const {0}Signature = \"{1}\";\n".format(self.name, self.signature)  
-            self.generated.initFunction += "\n"
-            self.generated.initFunction += "\t{0}.signature = {0}Signature;\n".format(self.name)
-        self.generated.initFunction += "\t{0}.propertyType = {1};\n".format(self.name, self.propType)
-        self.generated.initFunction += "\t{0}.getValue = &{1};\n".format(self.name, self.element.getCode)
-        ### setProperty
-        setCode = self.element.setCode
-        if self.propType == "SINGLE_VALUE_PROPERTY" :
-            setCode = setCode.replace("%s", "newValue")
+    def setWritable (self) :
+        if not hasattr(self.element, "writable") :
+            return
+        writable = self.element.writable
+        if hasattr(writable, "attr") and "code" in writable.attr and writable.attr["code"] == "true" : 
+            self.generated.initCode += "    {0}->setGetWritable({1});\n".format(self.name, writable)
         else :
-            setCode = setCode.replace("%s", "&newValue")
-        self.generated.setWidgetPropFunc += self.propertyCases + "\t\t{0}\n".format("{")    
-        self.generated.setWidgetPropFunc += "\t\t\t{0} newValue;\n".format(self.varType)
-        self.generated.setWidgetPropFunc += "\t\t\tif ((status = unmarshalPropertyValue(&{0}, replyMsg, &newValue, ((SetValueContext*)context)->sender)))\n".format(self.name)
-        self.generated.setWidgetPropFunc += "\t\t\t\treturn status;\n"
-        self.generated.setWidgetPropFunc += "\t\t\t{0};\n".format(setCode)
-        self.generated.setWidgetPropFunc += "\t\t\t((SetValueContext*)context)->numSignals = {0};\n".format(self.signalsIndx)
-        self.generated.setWidgetPropFunc += self.signalsString + "\t\t}\n\t\tbreak;\n"
+            if writable != "true" and writable != "false" :
+                print "ERROR - The value {0} is not supported for writable in {1}. Exiting".format(writable, self.name)
+                sys.exit(0)	
+            self.generated.initCode += "    {0}->setWritable({1});\n".format(self.name, writable)
+
+    def generateSetAndGetCode (self) :
+
+        self.generated.initCode += "    CHECK({0}->setGetValue({1}));\n".format(self.name, self.element.getCode)
+        propertyHeaderFile = self.generated.propertyHeaderFile
+        propertySrcFile = self.generated.propertySrcFile
+
+        regularName = self.widgetName
+        capitalName = self.name.upper()
+
+        propertyHeaderFile = propertyHeaderFile.replace("CAPITAL_NAME_HERE", capitalName)
+        propertyHeaderFile = propertyHeaderFile.replace("REGULAR_NAME_HERE", regularName)
+        propertyHeaderFile = propertyHeaderFile.replace("VALUE_TYPE_HERE", self.varType)
+
+        propertySrcFile = propertySrcFile.replace("CAPITAL_NAME_HERE", capitalName)
+        propertySrcFile = propertySrcFile.replace("REGULAR_NAME_HERE", regularName)
+        propertySrcFile = propertySrcFile.replace("ADDITIONAL_INCLUDES_HERE", self.generated.srcIncludes)
+        propertySrcFile = propertySrcFile.replace("VALUE_TYPE_HERE", self.varType)
+        propertySrcFile = propertySrcFile.replace("CODE_OF_SET_VALUE_HERE", self.element.setCode.replace("%s", "value"))
+
+        self.generated.headerIncludes += """#include "../generated/{0}.h"\n""".format(regularName)
+
+        genH = open(self.generated.path + "/" + regularName + ".h", 'w')
+        genH.write(propertyHeaderFile)
+        genH.close()
+        genC = open(self.generated.path + "/" + regularName + ".cc", 'w')
+        genC.write(propertySrcFile)
+        genC.close()
 
     def generateOptionalVariables (self) :
-        self.setBgColor()
-        self.setLabel()
-        self.setHints() 
+        common.Widget.generateOptionalVariables(self)
         self.setUnitMeasure() 
         self.setConstraintList() 
         self.setConstraintRange() 
 
+    def setUnitMeasure (self) :
+        self.setCodeOrValueString ("unitMeasure", "setUnitOfMeasure", "setGetUnitOfMeasure")
+
+    def setConstraintRange (self) :
+        if not self.element._has('constraintDefs'): return
+        if not self.element.constraintDefs._has('constraintRange'): return
+
+        constraintRange = self.element.constraintDefs.constraintRange
+        constraintRangeName = self.name + "ConstraintRange"
+
+        self.generated.initCode += "\n    ConstraintRange* {0} = new ConstraintRange();\n".format(constraintRangeName)
+        self.generated.initCode += "    CHECK({0}->setConstraintMin(({1}){2}));\n".format(constraintRangeName, self.varType, constraintRange.min)
+        self.generated.initCode += "    CHECK({0}->setConstraintMax(({1}){2}));\n".format(constraintRangeName, self.varType, constraintRange.max)
+        self.generated.initCode += "    CHECK({0}->setConstraintIncrement(({1}){2}));\n".format(constraintRangeName, self.varType, constraintRange.increment)
+        self.generated.initCode += "    {0}->setConstraintRange({1});\n".format(self.name, constraintRangeName)
+
+    def setConstraintList (self) :
+        if self.element._name == "stringProperty" :
+            if not self.element._has('constraintVals'): return
+            constraintList = self.element.constraintVals
+        else :
+            if not self.element._has('constraintDefs'): return
+            if not self.element.constraintDefs._has('constraintVals'): return
+            constraintList = self.element.constraintDefs.constraintVals
+
+        if isinstance(constraintList.constraint, list) :
+            constraints = constraintList.constraint
+        else :
+            constraints = [constraintList.constraint];
+
+        if len(constraints) > 0:
+            vectorName = self.name + "ConstraintListVec"
+            numConstraints = len(constraints)
+            self.generated.initCode += "\n    std::vector<ConstraintList> {0}({1});\n".format(vectorName, str(numConstraints))
+
+            indx = 0
+            for constraint in constraints:
+                self.setCodeOrValueString ("display", "setDisplay", "setGetDisplay", "Display%i" % (indx+1), 
+                                           constraint, "{0}[{1}]".format(vectorName, str(indx)))
+                if self.element._name == "stringProperty" :
+                    self.generated.initCode += """    {0}[{1}].setConstraintValue("{2}");\n""".format(vectorName, str(indx), constraint.value)    
+                else :
+                    self.generated.initCode += """    {0}[{1}].setConstraintValue(({2}){3});\n""".format(vectorName, str(indx), 
+                                               self.varType, constraint.value)    
+                indx = indx + 1
+            self.generated.initCode += "\n    {0}->setConstraintList({1});\n".format(self.name, vectorName)
 
     def getSignatureAndVarType(self) :
         self.signature = ""
@@ -95,46 +130,39 @@ class Property (common.Widget):
     
         propertyType = self.element._name
         if propertyType == "stringProperty" :
-            self.signature = "s"
             self.varType = "const char*"
-            self.propType = "SINGLE_VALUE_PROPERTY"
-        elif propertyType == "recordName" :
-            self.signature = "s"
-            self.varType = "const char*"
-            self.propType = "SINGLE_VALUE_PROPERTY"
+            self.propType = "STRING_PROPERTY"
         elif propertyType == "booleanProperty" :
-            self.signature = "b"
-            self.varType = "uint32_t"
-            self.propType = "SINGLE_VALUE_PROPERTY"
-        elif propertyType == "dateProperty" :
-            self.varType = "DatePropertyValue"
-            self.propType = "DATE_VALUE_PROPERTY"
-        elif propertyType == "timeProperty" :
-            self.varType = "TimePropertyValue"
-            self.propType = "TIME_VALUE_PROPERTY"
+            self.varType = "bool"
+            self.propType = "BOOL_PROPERTY"
+#        elif propertyType == "dateProperty" :
+#            self.varType = "DatePropertyValue"
+#            self.propType = "DATE_VALUE_PROPERTY"
+#        elif propertyType == "timeProperty" :
+#            self.varType = "TimePropertyValue"
+#            self.propType = "TIME_VALUE_PROPERTY"
         elif propertyType == "scalarProperty" :
-            self.propType = "SINGLE_VALUE_PROPERTY"
             dbusType = self.element.attr["dbusType"]
        	    if dbusType == "INT16":
-                self.signature = "n"
+                self.propType = "INT16_PROPERTY"
                 self.varType = "int16_t"
             elif dbusType == "UINT16":
-                self.signature = "q"
+                self.propType = "UINT16_PROPERTY"
                 self.varType = "uint16_t"
             elif dbusType == "INT32":
-                self.signature = "i"
+                self.propType = "INT32_PROPERTY"
                 self.varType = "int32_t"
 	    elif dbusType == "UINT32":
-                self.signature = "u"
+                self.propType = "UINT32_PROPERTY"
                 self.varType = "uint32_t"
             elif dbusType == "INT64":
-                self.signature = "x"
+                self.propType = "INT64_PROPERTY"
                 self.varType = "int64_t"
             elif dbusType == "UINT64":
-                self.signature = "t"
+                self.propType = "UINT64_PROPERTY"
                 self.varType = "uint64_t"
 	    elif dbusType == "DOUBLE":
-                self.signature = "d"
+                self.propType = "DOUBLE_PROPERTY"
                 self.varType = "double"
             else :
                 print "ERROR - dbusType of property Unknown. Exiting"

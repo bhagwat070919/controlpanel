@@ -67,6 +67,8 @@ int32_t main()
     // Initialize Service objects
     controlpanelBusListener = new ControlPanelBusListener();;
     controlPanelService = ControlPanelService::getInstance();
+    controlPanelService->setLogLevel(Log::LogLevel::LEVEL_DEBUG);
+
     bus = ControlPanelServiceSampleUtil::prepareBusAttachment(controlPanelService->getLogger());
     if (bus == NULL) {
         std::cout << "Could not initialize BusAttachment." << std::endl;
@@ -81,12 +83,6 @@ int32_t main()
                                                                 controlpanelBusListener, SERVICE_PORT);
     if (status != ER_OK) {
         std::cout << "Could not register bus object." << std::endl;
-        return 1;
-    }
-
-    status = ControlPanelGenerated::PrepareLanguageSets();
-    if (status != ER_OK) {
-        std::cout << "Could not prepare LanguageSets." << std::endl;
         return 1;
     }
 

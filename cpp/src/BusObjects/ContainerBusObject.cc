@@ -53,6 +53,8 @@ ContainerBusObject::ContainerBusObject(BusAttachment* bus, String const& service
 
     //Get the signal methods for future use
     m_SignalPropertyChanged = intf->GetMember(AJ_SIGNAL_PROPERTIES_CHANGED.c_str());
+    if (logger)
+        logger->debug(TAG, "Created ContainerBusObject successfully");
 }
 
 ContainerBusObject::~ContainerBusObject() {

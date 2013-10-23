@@ -44,26 +44,22 @@ Widget::Widget(qcc::String const& name, qcc::String const& tag) : m_Name(name)
 QStatus Widget::registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
                                 qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot)
 {
-    std::cout << "Prefix, Suffix, name: " << objectPathPrefix.c_str() << " "
-              << objectPathSuffix.c_str() << " " << m_Name.c_str() << std::endl;
-
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
-    QStatus status;
+    QStatus status = ER_OK;
     const std::vector<qcc::String>& languages = languageSet.getLanguages();
     qcc::String newObjectPathSuffix = isRoot ? objectPathSuffix : objectPathSuffix + "/" + m_Name;
     for (size_t indx = 0; indx < languages.size(); indx++) {
         qcc::String objectPath = objectPathPrefix + languages[indx] + newObjectPathSuffix;
-        std::cout << "ObjectPath is: " << objectPath.c_str() << std::endl;
         WidgetBusObject* busObject = createWidgetBusObject(bus, objectPath, indx, status);
         if (status != ER_OK) {
             if (logger)
-                logger->warn(TAG, "Could not Create BusObject for Action");
+                logger->warn(TAG, "Could not Create BusObject");
             return status;
         }
         status = bus->RegisterBusObject(*busObject);
         if (status != ER_OK) {
             if (logger)
-                logger->warn(TAG, "Could not register BusObject for Action");
+                logger->warn(TAG, "Could not register BusObject");
             return status;
         }
         m_BusObjects.push_back(busObject);

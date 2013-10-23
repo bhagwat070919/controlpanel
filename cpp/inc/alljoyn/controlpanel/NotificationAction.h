@@ -26,7 +26,7 @@ namespace services {
 class NotificationAction {
   public:
 
-    NotificationAction(LanguageSet const& languageSet);
+    static NotificationAction* createNotificationAction(LanguageSet* languageSet);
 
     virtual ~NotificationAction();
 
@@ -36,13 +36,15 @@ class NotificationAction {
 
   private:
 
+    NotificationAction(LanguageSet const& languageSet);
+
     LanguageSet const& m_LanguageSet;
 
     RootWidget* m_RootWidget;
 
     BusObject* m_NotificationActionBusObject;
 
-    qcc::String const& TAG;
+    static qcc::String const& TAG;
 };
 
 } /* namespace services */

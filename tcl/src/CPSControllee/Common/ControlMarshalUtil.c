@@ -80,7 +80,7 @@ AJ_Status AddBasicOptionalParam(AJ_Message* reply, uint16_t key, const char* sig
 }
 
 AJ_Status AddPropertyForGetAll(AJ_Message* reply, char* key, const char* sig,
-                               void* widget, uint16_t lang, void* functionPtr)
+                               BaseWidget* widget, uint16_t lang, MarshalWidgetFptr functionPtr)
 {
     AJ_Status status;
     AJ_Arg dictArg;
@@ -88,7 +88,7 @@ AJ_Status AddPropertyForGetAll(AJ_Message* reply, char* key, const char* sig,
     CPS_CHECK(AJ_MarshalContainer(reply, &dictArg, AJ_ARG_DICT_ENTRY));
     CPS_CHECK(AJ_MarshalArgs(reply, "s", key));
     CPS_CHECK(AJ_MarshalVariant(reply, sig));
-    CPS_CHECK((*(MarshalWidgetFptr*)(&functionPtr))(widget, reply, lang));
+    CPS_CHECK(functionPtr(widget, reply, lang));
 
     return AJ_MarshalCloseContainer(reply, &dictArg);
 }

@@ -15,6 +15,7 @@
 Import('env')
 
 srcs = env.Glob('*.cc')
+srcs += env.Glob('../provided/*.cc')
 objs = env.Object(srcs)
 
 Return('objs')

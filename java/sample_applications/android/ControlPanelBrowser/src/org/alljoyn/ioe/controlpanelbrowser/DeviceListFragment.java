@@ -38,6 +38,7 @@ import org.alljoyn.services.common.utils.GenericLogger;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -144,6 +145,8 @@ public class DeviceListFragment extends ListFragment {
 	/**
 	 * The password for authentication with a remote secured Interface
 	 */
+    private static final String PREFS_NAME = "MyPrefsFile";
+	private static final String PREFS_PASSWORD = "CPB_PASS";
 	private static final String DEFAULT_SECURED_SRP_PASSWORD     = "000000";
 	private String srpPassword = DEFAULT_SECURED_SRP_PASSWORD;
 	
@@ -365,11 +368,14 @@ public class DeviceListFragment extends ListFragment {
 //			m_busAttachment.setDaemonDebug("ALL", 7);
 //			m_busAttachment.setLogLevels("ALL=7");
 //			m_busAttachment.useOSLogging(true);
-			 		
+
+			// load the password for accessing secured interfaces on the board
+			SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+			srpPassword = settings.getString(PREFS_PASSWORD, DEFAULT_SECURED_SRP_PASSWORD);
 
 			// Set the password for the daemon to allow thin clients to connect.
 			Log.d(TAG, "Setting daemon password");
-			Status passwordStatus = PasswordManager.setCredentials("ALLJOYN_PIN_KEYX", "000000");
+			Status passwordStatus = PasswordManager.setCredentials("ALLJOYN_PIN_KEYX", DEFAULT_SECURED_SRP_PASSWORD);
 			
 			if ( passwordStatus != Status.OK ) {
 				Log.e(TAG, "Failed to set password for daemon, Error: " + passwordStatus);
@@ -430,7 +436,7 @@ public class DeviceListFragment extends ListFragment {
 			// DO the AJ addMatch.
 			Status s = bus.addMatch(SESSIONLESS_MATCH_RULE);
 			logger.info(TAG, "BusAttachment.addMatch() status = " + s);
-			Toast.makeText(getActivity(), "AllJoyn initialized" , Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "Initialized" , Toast.LENGTH_SHORT).show();
 
 			// update the list
 			refreshListView();			
@@ -570,6 +576,11 @@ public class DeviceListFragment extends ListFragment {
 		alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				srpPassword = input.getText().toString();
+				// store the new password
+			      SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+			      SharedPreferences.Editor editor = settings.edit();
+			      editor.putString(PREFS_PASSWORD, srpPassword);
+			      editor.commit();
 			}
 		});
 
@@ -604,13 +615,14 @@ public class DeviceListFragment extends ListFragment {
          */
 		@Override
 		public boolean requested(String mechanism, String peerName, int count, String userName, AuthListener.AuthRequest[] requests) {
-			 Log.d(TAG, "AuthListener requested() called, checking the Auth mechanisms...");
+			 Log.d(TAG, "AuthListener requested() called, checking the Auth mechanisms... given mechanism is: " + mechanism);
 			 
 			 if ( !getMechanisms().contains(mechanism) ) {
 				 Log.w(TAG, "Recieved an unsupported Auth mechanism: '" + mechanism + "'");
 				 return false;
 			 }
 			 
+			 Log.w(TAG, "Recieved a supported Auth mechanism: '" + mechanism + "'");
 		     for (AuthRequest request : requests) {
                  if (request instanceof PasswordRequest) {
                 	 Log.d(TAG, "Password request was found, setting it, returning TRUE");
@@ -627,13 +639,21 @@ public class DeviceListFragment extends ListFragment {
 		 * @see org.alljoyn.bus.AuthListener#completed(java.lang.String, java.lang.String, boolean)
 		 */
 		@Override
-		public void completed(String authMechanism, String authPeer, boolean authenticated) {
+		public void completed(String authMechanism, String authPeer, final boolean authenticated) {
+			Log.d(TAG, "Authentication completed. peer: '" + authPeer + "', authenticated: " + authenticated+ " using mechanism: '" + authMechanism + "'");
 			if ( authenticated ) {
 				Log.d(TAG, "The peer: '" + authPeer + "', authenticated successfully for authMechanism: '" + authMechanism + "'");
 			}
 			else {
 				Log.w(TAG, "The peer: '" + authPeer + "', WAS NOT authenticated for authMechanism: '" + authMechanism + "'");
 			}
+			
+			if (getActivity() != null)
+				getActivity().runOnUiThread(new Runnable(){
+					@Override
+					public void run() {
+						Toast.makeText(getActivity(), "Authenticated: " + authenticated, Toast.LENGTH_SHORT).show();
+					}});
 		}//completed
 		
 	}

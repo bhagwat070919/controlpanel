@@ -12,38 +12,18 @@
 #    See the license for the specific language governing permissions and
 #    limitations under the license.
 
-Import('env')
+Import('cpsenv')
 
-# Dependent Projects
-if not env.has_key('_ALLJOYNCORE_'):
-    env.SConscript('../../../alljoyn_core/SConscript')
-if not env.has_key('_ALLJOYN_ABOUT_'):
-    env.SConscript('../../about/cpp/SConscript')
-
-env['_ALLJOYN_CONTROLPANEL_'] = True
-
-cpsenv = env.Clone()
-
-cpsenv['CPS_DISTDIR'] = cpsenv['DISTDIR'] + '/services'
-
-cpsenv.Append(LIBS = ['alljoyn_about'])
-
-Export('cpsenv')
-
-cpsenv.Append(CPPPATH = ['$CPS_DISTDIR/inc', 'inc'])
-cpsenv.Append(LIBPATH = ['$CPS_DISTDIR/lib'])
+cpsenv['CPS_DISTDIR'] = cpsenv['DISTDIR'] + '/controlpanel'
 
 cpsenv.VariantDir('$OBJDIR', 'src', duplicate = 0)
 cpsenv.VariantDir('$OBJDIR/samples', 'samples', duplicate = 0)
 
-headers = cpsenv.Install('$CPS_DISTDIR/inc/alljoyn/controlpanel', cpsenv.Glob('inc/alljoyn/controlpanel/*.h'))
-libs = cpsenv.Install('$CPS_DISTDIR/lib', cpsenv.SConscript('$OBJDIR/SConscript'))
-samples = cpsenv.Install('$CPS_DISTDIR/bin', cpsenv.SConscript('$OBJDIR/samples/SConscript'))
+cpsenv.Install('$CPS_DISTDIR/inc/alljoyn/controlpanel', cpsenv.Glob('inc/alljoyn/controlpanel/*.h'))
+cpsenv.Install('$CPS_DISTDIR/lib', cpsenv.SConscript('$OBJDIR/SConscript', exports = ['cpsenv']))
+cpsenv.Install('$CPS_DISTDIR/bin', cpsenv.SConscript('$OBJDIR/samples/SConscript', exports = ['cpsenv']))
 
 # Build docs
 #installDocs = cpsenv.SConscript('docs/SConscript')
-#cpsenv.Depends(installDocs, cpsenv.Glob('*.h'));
+#cpsenv.Depends(installDocs, cpsenv.Glob('$CONTROLPANEL_DISTDIR/inc/alljoyn/controlpanel/*.h'));
 
-#returnValue = libs + samples + headers + installDocs
-returnValue = libs + samples + headers
-Return('returnValue')

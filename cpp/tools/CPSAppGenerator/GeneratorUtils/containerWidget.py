@@ -21,46 +21,48 @@ import commonWidget as common
 
 class Container (common.Widget):
 
-    def __init__(self, generated, containerElement, parentObjectPath, languageSetName, isRoot = 0) :
-        common.Widget.__init__(self, generated, containerElement, parentObjectPath, languageSetName)
+    def __init__(self, generated, element, parentName, languageSetName, isRoot = 0) :
+        common.Widget.__init__(self, generated, element, parentName, languageSetName)
         self.isRoot = isRoot
-        self.widgetName = "ContainerWidget"
-        self.widgetType = "WIDGET_TYPE_CONTAINER"
-        self.securedInterfaceName = "SecuredContainerInterfaces"
-        self.nonSecuredInterfaceName = "ContainerInterfaces"
-        self.hintPrefix = "LAYOUT_HINT_"
-        if isRoot:
-            self.objectPathSuffix = ""  
+        self.widgetName = "Container"
+        if isRoot :
+            self.parentAddFunc = "setRootWidget"
 
     def generate(self) :
         common.Widget.generate(self)
+        if self.isRoot:
+            self.setDismissable()
         self.generateChildElements()
+
+    def setDismissable(self) :
+        if not hasattr(self.element, "dismissable") :
+            return
+        self.generated.initCode += "    {0}->setIsDismissable({1});\n".format(self.name, self.element.dismissable)
 
     def generateChildElements (self) :
         elements = self.element.elements.sub_nodes
 
         for element in elements:
             elementType = element._name
-            self.generated.initFunction += "\n"
 
             if elementType == "action" :
-                action = aw.Action(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
+                action = aw.Action(self.generated, element, self.name, self.languageSetName)
                 action.generate()
             elif elementType == "container" :
-                container = Container(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
+                container = Container(self.generated, element, self.name, self.languageSetName)
                 container.generate()
             elif elementType == "scalarProperty" or elementType == "stringProperty" or elementType == "booleanProperty" :
-                propertyW = pw.Property(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
+                propertyW = pw.Property(self.generated, element, self.name, self.languageSetName)
                 propertyW.generate()
-            elif elementType == "dateProperty" or elementType == "timeProperty" :
-                propertyW = pw.Property(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
-                propertyW.generate()
+#            elif elementType == "dateProperty" or elementType == "timeProperty" :
+#                propertyW = pw.Property(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
+#                propertyW.generate()
             elif elementType == "labelProperty" :
-                label = lw.Label(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
+                label = lw.Label(self.generated, element, self.name, self.languageSetName)
                 label.generate()
-            elif elementType == "listProperty" :
-                listProp = lpw.ListProperty(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
-                listProp.generate()
+#            elif elementType == "listProperty" :
+#                listProp = lpw.ListProperty(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
+#                listProp.generate()
             else :
                 print "ERROR - This type is not supported. Exiting " + elementType
                 sys.exit(0)

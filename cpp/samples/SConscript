@@ -19,7 +19,7 @@ samples_env = cpsenv.Clone()
 samples_env.Append(CPPPATH = samples_env.Dir('common').srcnode())
 samples_env.Append(CPPPATH = samples_env.Dir('generated').srcnode())
 #samples_env.Append(CPPDEFINES = 'USE_SAMPLE_LOGGER')
-samples_env.Append(LIBS = ['alljoyn_controlpanel'])
+samples_env.Prepend(LIBS = ['alljoyn_controlpanel', 'alljoyn_about', 'alljoyn'])
 
 cobjs = samples_env.SConscript('common/SConscript', {'env': samples_env})
 genobjs = samples_env.SConscript('generated/SConscript', {'env': samples_env})
@@ -28,10 +28,8 @@ sample_dirs = [
     'ControlPanelSample'
     ]
 
-returnValue = []
-for sampleapp in sample_dirs:
-    returnValue += samples_env.SConscript('%s/SConscript' % sampleapp, exports = { 'env': samples_env,
-                                                                                   'cobjs': cobjs,
-                                                                                   'genobjs' : genobjs })
+exports = { 'env': samples_env, 'cobjs': cobjs, 'genobjs' : genobjs }
 
-Return('returnValue')
+progs = [ samples_env.SConscript('%s/SConscript' % sampleapp, exports = exports) for sampleapp in sample_dirs ]
+
+Return('progs')

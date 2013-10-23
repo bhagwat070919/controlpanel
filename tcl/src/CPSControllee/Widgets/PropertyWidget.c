@@ -23,7 +23,7 @@ void initializePropertyWidget(PropertyWidget* widget)
     initializeBaseWidget(&widget->base);
     widget->signature = 0;
     widget->getValue = 0;
-    widget->propertyType = 0;
+    widget->propertyType = SINGLE_VALUE_PROPERTY;
     widget->parentListProperty = 0;
 
     initializePropertyOptParam(&widget->optParams);
@@ -119,16 +119,13 @@ AJ_Status marshalAllPropertyProperties(BaseWidget* widget, AJ_Message* reply, ui
 
     CPS_CHECK(AJ_MarshalContainer(reply, &propertyGetAllArray, AJ_ARG_ARRAY));
 
-    CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_VERSION_NAME, PROPERTY_TYPE_VERSION_SIG,
-                                   widget, language, &marshalBaseVersion));
-
     CPS_CHECK(marshalAllBaseProperties(widget, reply, language));
 
     CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_OPTPARAMS_NAME, PROPERTY_TYPE_OPTPARAMS_SIG,
-                                   widget, language, &marshalPropertyOptParam));
+                                   widget, language, marshalPropertyOptParam));
 
     CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_VALUE_NAME, PROPERTY_TYPE_VALUE_SIG,
-                                   widget, language, &marshalPropertyValue));
+                                   widget, language, (MarshalWidgetFptr)marshalPropertyValue));
 
     return AJ_MarshalCloseContainer(reply, &propertyGetAllArray);
 }

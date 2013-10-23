@@ -24,9 +24,22 @@ namespace ajn {
 namespace services {
 using namespace cpsConsts;
 
+qcc::String const& NotificationAction::TAG = TAG_NOTIFICATIONACTION;
+
+NotificationAction* NotificationAction::createNotificationAction(LanguageSet* languageSet)
+{
+    if (!languageSet) {
+        GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+        if (logger)
+            logger->warn(TAG, "Could not create NotificationAction. LanguageSet is NULL");
+        return NULL;
+    }
+    return new NotificationAction(*languageSet);
+}
+
 NotificationAction::NotificationAction(LanguageSet const& languageSet) :
     m_LanguageSet(languageSet), m_RootWidget(0),
-    m_NotificationActionBusObject(0), TAG(TAG_NOTIFICATIONACTION)
+    m_NotificationActionBusObject(0)
 {
 
 }

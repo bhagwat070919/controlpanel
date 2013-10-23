@@ -45,6 +45,7 @@ import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spanned;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.util.SparseArray;
@@ -336,8 +337,10 @@ public class ControlPanelAdapter
 
 		Button actionButton = new Button(uiContext);
 		actionButton.setText(label);
-		if (bgColor != null)
-			actionButton.setBackgroundColor(bgColor);
+//		if (bgColor != null) {
+// Unfortunately button loses its pressed behavior when background is set.
+// actionButton.setBackgroundColor(bgColor);
+//		}
 
 		// register a click listener
 		OnClickListener actionButtonListener = new OnClickListener() {
@@ -529,7 +532,7 @@ public class ControlPanelAdapter
 		} catch (ControlPanelException e) {
 			Log.e(TAG, "propertyWidget.getCurrentValue() failed, initializing property without current value", e);
 		}
-		Log.d(TAG, "Propert current value: " +currentValue);
+		Log.d(TAG, "Property current value: " +currentValue);
 
 		final LinearLayout layout = new LinearLayout(uiContext);
 		layout.setOrientation(LinearLayout.VERTICAL);
@@ -932,11 +935,42 @@ public class ControlPanelAdapter
 
 		// register edit listener
 		valueEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-		// limit the number of characters
-		int maxChars = String.valueOf(Integer.MAX_VALUE).length();
-		Log.d(TAG, "Setting maximum input characters to: " +maxChars);
+		// limit to Short/Integer MAX_VALUE
+        InputFilter filter = new InputFilter() {
+        	 
+			@Override
+			public CharSequence filter(CharSequence source, int start, int end,
+					Spanned dest, int dstart, int dend) {
+				String insert = source.toString();
+				String insertInto = dest.toString();
+				Log.d(TAG, "Trying to insert ' " + insert + "' into '" + insertInto + "' between charcters " + dstart + " and " + dend);
+				try {
+					String prefix = insertInto.substring(0, dstart);
+					String suffix = insertInto.substring(dend);
+					String result = prefix+insert+suffix;
+					if (ValueType.SHORT.equals(valueType)) {
+						short input = Short.parseShort(result);
+						Log.d(TAG, "Valid short entered: " + input);
+						// if we got here we're fine. Accept the editing by returning null
+						return null;
+					}
+					if (ValueType.INT.equals(valueType)) {
+						int input = Integer.parseInt(result);
+						Log.d(TAG, "Valid int entered: " + input);
+						// if we got here we're fine. Accept the editing by returning null
+						return null;
+					}
+				}
+				catch (NumberFormatException nfe) {
+					Log.e(TAG, "Rejecting insert because'" + nfe.getMessage() + "'");
+				}
+				// returning "" will reject the editing action
+				return "";
+			}  
+        };
+         
 
-		valueEditText.setFilters( new InputFilter[] {new InputFilter.LengthFilter(maxChars)});
+		valueEditText.setFilters( new InputFilter[] {filter});
 		valueEditText.setOnEditorActionListener(new OnEditorActionListener() {
 			Number currentValue = initialValue;
 			@Override
@@ -951,7 +985,11 @@ public class ControlPanelAdapter
 							readEnteredValue = Integer.valueOf(v.getText().toString());
 						}
 					} catch (NumberFormatException nfe) {
-						Log.e(TAG, "Failed parsing Integer: '" + nfe.getMessage() + "'");
+						if (ValueType.SHORT==valueType) {
+							Log.e(TAG, "Failed parsing Short: '" + nfe.getMessage() + "' returing to previous value");
+						} else if (ValueType.INT==valueType) {
+							Log.e(TAG, "Failed parsing Integer: '" + nfe.getMessage() + "' returing to previous value");
+						}
 						v.setText(String.valueOf(currentValue));
 						return true;
 					}
@@ -1531,8 +1569,10 @@ public class ControlPanelAdapter
 
 		actionButton.setText(label);
 		actionButton.setEnabled(enabled);
-		if (bgColor != null)
-			actionButton.setBackgroundColor(bgColor);
+//		if (bgColor != null) {
+// Unfortunately button loses its pressed behavior when background is set.
+// actionButton.setBackgroundColor(bgColor);
+//		}
 
 	}//onActionMetaDataChange
 

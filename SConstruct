@@ -1,11 +1,10 @@
-#******************************************************************************
 # Copyright 2013, Qualcomm Innovation Center, Inc.
 #
 #    All rights reserved.
 #    This file is licensed under the 3-clause BSD license in the NOTICE.txt
 #    file for this project. A copy of the 3-clause BSD license is found at:
 #
-#        http://opensource.org/licenses/BSD-3-Clause.
+#        http://opensource.org/licenses/BSD-3-Clause. 
 #
 #    Unless required by applicable law or agreed to in writing, software
 #    distributed under the license is distributed on an "AS IS" BASIS,
@@ -15,8 +14,16 @@
 
 import os
 
-# include the core
-env = SConscript('../../../build_core/SConscript')
+env = SConscript('../../build_core/SConscript')
 
+vars = Variables()
+vars.Add('BINDINGS', 'Bindings to build (comma separated list): cpp, java', 'cpp,java')
+vars.Add(EnumVariable('BUILD_SERVICES_SAMPLES', 'Build the services samples that require libxml2 and json libraries.', 'on', allowed_values = ['on', 'off']))
+vars.Update(env)
+Help(vars.GenerateHelpText(env))
+
+env['bindings'] = set([ b.strip() for b in env['BINDINGS'].split(',') ])
+
+
+# Add/remove projects from build
 env.SConscript('SConscript')
-

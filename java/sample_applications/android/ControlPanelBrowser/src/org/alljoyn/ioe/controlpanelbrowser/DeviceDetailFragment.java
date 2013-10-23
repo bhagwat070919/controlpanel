@@ -44,6 +44,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -233,9 +234,9 @@ public class DeviceDetailFragment extends Fragment {
 						public void run()
 						{
 							if (rootView != null) {
-								((LinearLayout) rootView.findViewById(R.id.device_control_panel))
-								.addView(adapterView);
-
+								RelativeLayout body = (RelativeLayout) rootView.findViewById(R.id.control_panel);
+								body.removeAllViews();
+								body.addView(adapterView);
 							}
 						}});
 				}
@@ -266,8 +267,9 @@ public class DeviceDetailFragment extends Fragment {
 					public void run()
 					{
 						if (rootView != null) {
-							((LinearLayout) rootView.findViewById(R.id.device_control_panel))
-							.addView(returnView);
+							RelativeLayout body = (RelativeLayout) rootView.findViewById(R.id.control_panel);
+							body.removeAllViews();
+							body.addView(returnView);
 						}
 					}});
 				return;
@@ -371,7 +373,8 @@ public class DeviceDetailFragment extends Fragment {
 			String language_IETF_RFC5646_java = Locale.getDefault().toString(); //"en_US", "es_SP"
 			String language_IETF_RFC5646 = language_IETF_RFC5646_java.replace('_', '-');
 			String languageISO639 = Locale.getDefault().getLanguage(); //"en", "es"
-			DeviceControlPanel previousControlPanel = deviceControlPanel; 
+			DeviceControlPanel previousControlPanel = deviceControlPanel;
+			boolean found = false;
 			for(DeviceControlPanel controlPanel : controlPanels) {
 				String cpLanugage = controlPanel.getLanguage();
 				Log.d(TAG, String.format("Control Panel language: %s", cpLanugage));
@@ -381,11 +384,12 @@ public class DeviceDetailFragment extends Fragment {
 						|| cpLanugage.startsWith(languageISO639))
 				{
 					deviceControlPanel = controlPanel;
+					found = true;
 					Log.d(TAG, String.format("Found a control panel that matches phone languages: RFC5646=%s, ISO639=%s, Given language was: %s", language_IETF_RFC5646, languageISO639, cpLanugage));
 					break;
 				}
 			}
-			if (deviceControlPanel == null  && !controlPanels.isEmpty())
+			if (!found  && !controlPanels.isEmpty())
 			{
 				Log.w(TAG, String.format("Could not find a control panel that matches phone languages: RFC5646=%s, ISO639=%s", language_IETF_RFC5646, languageISO639));
 				deviceControlPanel =  controlPanels.iterator().next();

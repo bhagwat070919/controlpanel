@@ -24,7 +24,8 @@ using namespace services;
 using namespace cpsConsts;
 
 Dialog::Dialog(qcc::String name) : RootWidget(name, TAG_DIALOG_WIDGET),
-    m_GetMessage(0), m_NumActions(0)
+    m_GetMessage(0), m_NumActions(0), m_GetLabelAction1(0),
+    m_GetLabelAction2(0), m_GetLabelAction3(0)
 {
 }
 
@@ -80,7 +81,7 @@ QStatus Dialog::getNumActionForArg(MsgArg& val, int16_t languageIndx)
 }
 
 WidgetBusObject* Dialog::createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-                                               uint16_t langIndx, QStatus status)
+                                               uint16_t langIndx, QStatus& status)
 {
     return new DialogBusObject(bus, objectPath, langIndx, status, this);
 }
@@ -156,6 +157,13 @@ void Dialog::executeAction2CallBack()
 void Dialog::executeAction3CallBack()
 {
 
+}
+
+void Dialog::executeActionNotDefined()
+{
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    if (logger)
+        logger->warn(TAG, "Could not execute this Action. It is not defined");
 }
 
 GetStringFptr Dialog::getGetLabelAction1() const

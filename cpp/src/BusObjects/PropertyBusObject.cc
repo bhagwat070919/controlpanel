@@ -35,7 +35,7 @@ PropertyBusObject::PropertyBusObject(BusAttachment* bus, String const& servicePa
         do {
             CHECK_AND_BREAK(bus->CreateInterface(AJ_PROPERTY_INTERFACE.c_str(), intf));
             CHECK_AND_BREAK(addDefaultInterfaceVariables(intf));
-            CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_VALUE.c_str(), AJPARAM_STR.c_str(), PROP_ACCESS_READ));
+            CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_VALUE.c_str(), AJPARAM_VAR.c_str(), PROP_ACCESS_RW));
             CHECK_AND_BREAK(intf->AddSignal(AJ_SIGNAL_VALUE_CHANGED.c_str(), AJPARAM_VAR.c_str(), AJ_PROPERTY_VALUE.c_str(), 0));
             intf->Activate();
         } while (0);
@@ -56,6 +56,8 @@ PropertyBusObject::PropertyBusObject(BusAttachment* bus, String const& servicePa
     //Get the signal methods for future use
     m_SignalPropertyChanged = intf->GetMember(AJ_SIGNAL_PROPERTIES_CHANGED.c_str());
     m_SignalValueChanged = intf->GetMember(AJ_SIGNAL_VALUE_CHANGED.c_str());
+    if (logger)
+        logger->debug(TAG, "Created PropertyBusObject successfully");
 }
 
 PropertyBusObject::~PropertyBusObject()

@@ -104,7 +104,7 @@ public class ControlPanelApplication extends Application {
 	
 	private static final String DAEMON_CONN_PASSWORD     = "000000";
 	
-	private static final String SECURED_SRP_PASSWORD     = "ABCDEFGH";
+	private static final String SECURED_SRP_PASSWORD     = "000000";         // ABCDEFGH
 		
 	static {
 		System.loadLibrary("alljoyn_java");

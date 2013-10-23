@@ -52,6 +52,8 @@ ControlPanelBusObject::ControlPanelBusObject(BusAttachment* bus, String const& s
             logger->debug(TAG, "Could not add interface");
         return;
     }
+    if (logger)
+        logger->debug(TAG, "Created ControlPanelBusObject successfully");
 }
 
 ControlPanelBusObject::~ControlPanelBusObject() {

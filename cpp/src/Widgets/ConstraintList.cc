@@ -30,51 +30,52 @@ ConstraintList::~ConstraintList()
 {
 }
 
-void ConstraintList::setConstraintValue(uint16_t* value)
+void ConstraintList::setConstraintValue(uint16_t value)
 {
     m_ConstraintValue.uint16Value = value;
     m_PropertyType = UINT16_PROPERTY;
 }
 
-void ConstraintList::setConstraintValue(int16_t* value)
+void ConstraintList::setConstraintValue(int16_t value)
 {
     m_ConstraintValue.int16Value = value;
     m_PropertyType = INT16_PROPERTY;
 }
 
-void ConstraintList::setConstraintValue(uint32_t* value)
+void ConstraintList::setConstraintValue(uint32_t value)
 {
     m_ConstraintValue.uint32Value = value;
     m_PropertyType = UINT32_PROPERTY;
 }
 
-void ConstraintList::setConstraintValue(int32_t* value)
+void ConstraintList::setConstraintValue(int32_t value)
 {
     m_ConstraintValue.int32Value = value;
     m_PropertyType = INT32_PROPERTY;
 }
 
-void ConstraintList::setConstraintValue(uint64_t* value)
+void ConstraintList::setConstraintValue(uint64_t value)
 {
     m_ConstraintValue.uint64Value = value;
     m_PropertyType = UINT64_PROPERTY;
 }
 
-void ConstraintList::setConstraintValue(int64_t* value)
+void ConstraintList::setConstraintValue(int64_t value)
 {
     m_ConstraintValue.int64Value = value;
     m_PropertyType = INT64_PROPERTY;
 }
 
-void ConstraintList::setConstraintValue(double* value)
+void ConstraintList::setConstraintValue(double value)
 {
     m_ConstraintValue.doubleValue = value;
     m_PropertyType = DOUBLE_PROPERTY;
 }
 
-void ConstraintList::setConstraintValue(char** value)
+void ConstraintList::setConstraintValue(qcc::String value)
 {
-    m_ConstraintValue.charValue = value;
+    m_ConstraintValueString = value;
+    m_ConstraintValue.charValue = m_ConstraintValueString.c_str();
     m_PropertyType = STRING_PROPERTY;
 }
 
@@ -120,35 +121,35 @@ QStatus ConstraintList::getConstraintForArg(MsgArg& val, int16_t languageIndx, P
     MsgArg* valueArg = new MsgArg();
     switch (propertyType) {
     case UINT16_PROPERTY:
-        status = valueArg->Set(AJPARAM_UINT16.c_str(), *m_ConstraintValue.uint16Value);
+        status = valueArg->Set(AJPARAM_UINT16.c_str(), m_ConstraintValue.uint16Value);
         break;
 
     case INT16_PROPERTY:
-        status = valueArg->Set(AJPARAM_INT16.c_str(), *m_ConstraintValue.int16Value);
+        status = valueArg->Set(AJPARAM_INT16.c_str(), m_ConstraintValue.int16Value);
         break;
 
     case UINT32_PROPERTY:
-        status = valueArg->Set(AJPARAM_UINT32.c_str(), *m_ConstraintValue.uint32Value);
+        status = valueArg->Set(AJPARAM_UINT32.c_str(), m_ConstraintValue.uint32Value);
         break;
 
     case INT32_PROPERTY:
-        status = valueArg->Set(AJPARAM_INT32.c_str(), *m_ConstraintValue.int32Value);
+        status = valueArg->Set(AJPARAM_INT32.c_str(), m_ConstraintValue.int32Value);
         break;
 
     case UINT64_PROPERTY:
-        status = valueArg->Set(AJPARAM_UINT64.c_str(), *m_ConstraintValue.uint64Value);
+        status = valueArg->Set(AJPARAM_UINT64.c_str(), m_ConstraintValue.uint64Value);
         break;
 
     case INT64_PROPERTY:
-        status = valueArg->Set(AJPARAM_INT64.c_str(), *m_ConstraintValue.int64Value);
+        status = valueArg->Set(AJPARAM_INT64.c_str(), m_ConstraintValue.int64Value);
         break;
 
     case DOUBLE_PROPERTY:
-        status = valueArg->Set(AJPARAM_DOUBLE.c_str(), *m_ConstraintValue.doubleValue);
+        status = valueArg->Set(AJPARAM_DOUBLE.c_str(), m_ConstraintValue.doubleValue);
         break;
 
     case STRING_PROPERTY:
-        status = valueArg->Set(AJPARAM_STR.c_str(), *m_ConstraintValue.charValue);
+        status = valueArg->Set(AJPARAM_STR.c_str(), m_ConstraintValue.charValue);
         break;
 
     default:

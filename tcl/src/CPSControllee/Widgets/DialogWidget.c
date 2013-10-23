@@ -107,19 +107,16 @@ AJ_Status marshalAllDialogProperties(BaseWidget* widget, AJ_Message* reply, uint
 
     CPS_CHECK(AJ_MarshalContainer(reply, &dialogGetAllArray, AJ_ARG_ARRAY));
 
-    CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_VERSION_NAME, PROPERTY_TYPE_VERSION_SIG,
-                                   widget, language, &marshalBaseVersion));
-
     CPS_CHECK(marshalAllBaseProperties(widget, reply, language));
 
     CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_OPTPARAMS_NAME, PROPERTY_TYPE_OPTPARAMS_SIG,
-                                   widget, language, &marshalDialogOptParam));
+                                   widget, language, marshalDialogOptParam));
 
     CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_MESSAGE_NAME, PROPERTY_TYPE_MESSAGE_SIG,
-                                   widget, language, &marshalDialogMessage));
+                                   widget, language, (MarshalWidgetFptr)marshalDialogMessage));
 
     CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_NUM_ACTIONS_NAME, PROPERTY_TYPE_NUM_ACTIONS_SIG,
-                                   widget, language, &marshalDialogNumActions));
+                                   widget, language, (MarshalWidgetFptr)marshalDialogNumActions));
 
     return AJ_MarshalCloseContainer(reply, &dialogGetAllArray);
 }

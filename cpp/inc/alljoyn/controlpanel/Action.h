@@ -30,18 +30,11 @@ class Action : public Widget {
     virtual ~Action();
 
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-                                           uint16_t langIndx, QStatus status);
+                                           uint16_t langIndx, QStatus& status);
 
-    virtual void executeCallBack();     //TODO make abstract and remove from c
+    virtual void executeCallBack() = 0;
 
     QStatus addChildDialog(Dialog* childElement);
-
-    virtual QStatus registerObjects(BusAttachment* bus, LanguageSet const& languageSet,
-                                    qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot);
-
-  private:
-
-    Dialog* m_Dialog;
 };
 } //namespace services
 } //namespace ajn

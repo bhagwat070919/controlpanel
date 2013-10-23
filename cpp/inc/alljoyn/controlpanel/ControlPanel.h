@@ -25,14 +25,19 @@ namespace services {
 
 class ControlPanel {
   public:
-    ControlPanel(LanguageSet const& languageSet);
+
+    static ControlPanel* createControlPanel(LanguageSet* languageSet);
+
     virtual ~ControlPanel();
 
-    QStatus setRootContainer(Container* rootContainer);
+    QStatus setRootWidget(Container* rootContainer);
 
     QStatus registerObjects(BusAttachment* bus, qcc::String const& unitName);
 
   private:
+
+    ControlPanel(LanguageSet const& languageSet);
+
     LanguageSet const& m_LanguageSet;
 
     Container* m_RootContainer;
@@ -41,7 +46,7 @@ class ControlPanel {
 
     BusObject* m_NotificationActionBusObject;
 
-    qcc::String const& TAG;
+    static qcc::String const& TAG;
 };
 
 } /* namespace services */

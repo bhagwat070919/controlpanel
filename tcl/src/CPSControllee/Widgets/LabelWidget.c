@@ -45,16 +45,13 @@ AJ_Status marshalAllLabelProperties(BaseWidget* widget, AJ_Message* reply, uint1
 
     CPS_CHECK(AJ_MarshalContainer(reply, &labelGetAllArray, AJ_ARG_ARRAY));
 
-    CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_VERSION_NAME, PROPERTY_TYPE_VERSION_SIG,
-                                   widget, language, &marshalBaseVersion));
-
-    CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_LABEL_NAME, PROPERTY_TYPE_LABEL_SIG,
-                                   widget, language, &marshalLabelLabel));
-
     CPS_CHECK(marshalAllBaseProperties(widget, reply, language));
 
+    CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_LABEL_NAME, PROPERTY_TYPE_LABEL_SIG,
+                                   widget, language, (MarshalWidgetFptr)marshalLabelLabel));
+
     CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_OPTPARAMS_NAME, PROPERTY_TYPE_OPTPARAMS_SIG,
-                                   widget, language, &marshalOnlyBaseOptParam));
+                                   widget, language, marshalOnlyBaseOptParam));
 
     return AJ_MarshalCloseContainer(reply, &labelGetAllArray);
 }

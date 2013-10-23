@@ -24,7 +24,7 @@ using namespace services;
 using namespace cpsConsts;
 
 Property::Property(qcc::String name, PropertyType propertyType) : Widget(name, TAG_PROPERTY_WIDGET),
-    m_PropertyType(propertyType), m_GetUnitOfMeasure(0)
+    m_PropertyType(propertyType), m_GetUnitOfMeasure(0), m_ConstraintRange(0)
 {
 }
 
@@ -33,9 +33,141 @@ Property::~Property()
 }
 
 WidgetBusObject* Property::createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-                                                 uint16_t langIndx, QStatus status)
+                                                 uint16_t langIndx, QStatus& status)
 {
     return new PropertyBusObject(bus, objectPath, langIndx, status, this);
+}
+
+bool Property::validateGetValue(PropertyType propertyType)
+{
+    if (m_PropertyType != propertyType) {
+        GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+        if (logger)
+            logger->warn(TAG, "Could not set GetValue. Value Type is wrong");
+        return false;
+    }
+    return true;
+}
+
+QStatus Property::setGetValue(uint16_t (*getUint16Value)())
+{
+    if (!validateGetValue(UINT16_PROPERTY))
+        return ER_BUS_SET_WRONG_SIGNATURE;
+
+    m_Value.getUint16Value = getUint16Value;
+    return ER_OK;
+}
+
+QStatus Property::setGetValue(int16_t (*getInt16Value)())
+{
+    if (!validateGetValue(INT16_PROPERTY))
+        return ER_BUS_SET_WRONG_SIGNATURE;
+
+    m_Value.getInt16Value = getInt16Value;
+    return ER_OK;
+}
+
+QStatus Property::setGetValue(uint32_t (*getUint32Value)())
+{
+    if (!validateGetValue(UINT32_PROPERTY))
+        return ER_BUS_SET_WRONG_SIGNATURE;
+
+    m_Value.getUint32Value = getUint32Value;
+    return ER_OK;
+}
+
+QStatus Property::setGetValue(int32_t (*getInt32Value)())
+{
+    if (!validateGetValue(INT32_PROPERTY))
+        return ER_BUS_SET_WRONG_SIGNATURE;
+
+    m_Value.getInt32Value = getInt32Value;
+    return ER_OK;
+}
+
+QStatus Property::setGetValue(uint64_t (*getUint64Value)())
+{
+    if (!validateGetValue(UINT64_PROPERTY))
+        return ER_BUS_SET_WRONG_SIGNATURE;
+
+    m_Value.getUint64Value = getUint64Value;
+    return ER_OK;
+}
+
+QStatus Property::setGetValue(int64_t (*getInt64Value)())
+{
+    if (!validateGetValue(INT64_PROPERTY))
+        return ER_BUS_SET_WRONG_SIGNATURE;
+
+    m_Value.getInt64Value = getInt64Value;
+    return ER_OK;
+}
+
+QStatus Property::setGetValue(double (*getDoubleValue)())
+{
+    if (!validateGetValue(DOUBLE_PROPERTY))
+        return ER_BUS_SET_WRONG_SIGNATURE;
+
+    m_Value.getDoubleValue = getDoubleValue;
+    return ER_OK;
+}
+
+QStatus Property::setGetValue(const char* (*getCharValue)())
+{
+    if (!validateGetValue(STRING_PROPERTY))
+        return ER_BUS_SET_WRONG_SIGNATURE;
+
+    m_Value.getCharValue = getCharValue;
+    return ER_OK;
+}
+
+QStatus Property::setGetValue(bool (*getBoolValue)())
+{
+    if (!validateGetValue(BOOL_PROPERTY))
+        return ER_BUS_SET_WRONG_SIGNATURE;
+
+    m_Value.getBoolValue = getBoolValue;
+    return ER_OK;
+}
+
+GetStringFptr Property::getGetUnitOfMeasure() const
+{
+    return m_GetUnitOfMeasure;
+}
+
+void Property::setGetUnitOfMeasure(GetStringFptr getUnitOfMeasure)
+{
+    m_GetUnitOfMeasure = getUnitOfMeasure;
+}
+
+const std::vector<qcc::String>& Property::getUnitOfMeasure() const
+{
+    return m_UnitOfMeasure;
+}
+
+void Property::setUnitOfMeasure(const std::vector<qcc::String>& unitOfMeasure)
+{
+    m_UnitOfMeasure = unitOfMeasure;
+}
+
+const std::vector<ConstraintList>& Property::getConstraintList() const
+{
+    return m_ConstraintList;
+}
+
+void Property::setConstraintList(const std::vector<ConstraintList>& constraintList)
+{
+    m_ConstraintList = constraintList;
+}
+
+const ConstraintRange* Property::getConstraintRange() const
+{
+    return m_ConstraintRange;
+}
+
+void Property::setConstraintRange(ConstraintRange* constraintRange)
+{
+    m_ConstraintRange = constraintRange;
 }
 
 QStatus Property::getPropertyValueForArg(MsgArg& val, int16_t languageIndx)
@@ -43,47 +175,47 @@ QStatus Property::getPropertyValueForArg(MsgArg& val, int16_t languageIndx)
     QStatus status = ER_BUS_NO_SUCH_PROPERTY;
     switch (m_PropertyType) {
     case UINT16_PROPERTY:
-        status = val.Set("v", new MsgArg(AJPARAM_UINT16.c_str(), *m_Value.getUint16Value()));
+        status = val.Set("v", new MsgArg(AJPARAM_UINT16.c_str(), m_Value.getUint16Value()));
         break;
 
     case INT16_PROPERTY:
-        status = val.Set("v", new MsgArg(AJPARAM_INT16.c_str(), *m_Value.getInt16Value()));
+        status = val.Set("v", new MsgArg(AJPARAM_INT16.c_str(), m_Value.getInt16Value()));
         break;
 
     case UINT32_PROPERTY:
-        status = val.Set("v", new MsgArg(AJPARAM_UINT32.c_str(), *m_Value.getUint32Value()));
+        status = val.Set("v", new MsgArg(AJPARAM_UINT32.c_str(), m_Value.getUint32Value()));
         break;
 
     case INT32_PROPERTY:
-        status = val.Set("v", new MsgArg(AJPARAM_INT32.c_str(), *m_Value.getInt32Value()));
+        status = val.Set("v", new MsgArg(AJPARAM_INT32.c_str(), m_Value.getInt32Value()));
         break;
 
     case UINT64_PROPERTY:
-        status = val.Set("v", new MsgArg(AJPARAM_UINT64.c_str(), *m_Value.getUint64Value()));
+        status = val.Set("v", new MsgArg(AJPARAM_UINT64.c_str(), m_Value.getUint64Value()));
         break;
 
     case INT64_PROPERTY:
-        status = val.Set("v", new MsgArg(AJPARAM_INT64.c_str(), *m_Value.getInt64Value()));
+        status = val.Set("v", new MsgArg(AJPARAM_INT64.c_str(), m_Value.getInt64Value()));
         break;
 
     case DOUBLE_PROPERTY:
-        status = val.Set("v", new MsgArg(AJPARAM_DOUBLE.c_str(), *m_Value.getDoubleValue()));
+        status = val.Set("v", new MsgArg(AJPARAM_DOUBLE.c_str(), m_Value.getDoubleValue()));
         break;
 
     case STRING_PROPERTY:
-        status = val.Set("v", new MsgArg(AJPARAM_STR.c_str(), *m_Value.getCharValue()));
+        status = val.Set("v", new MsgArg(AJPARAM_STR.c_str(), m_Value.getCharValue()));
         break;
 
     case BOOL_PROPERTY:
-        status = val.Set("v", new MsgArg("b", *m_Value.getBoolValue()));
+        status = val.Set("v", new MsgArg("b", m_Value.getBoolValue()));
         break;
 
     case DATE_PROPERTY:      //TODO
-        status = val.Set("v", new MsgArg("s", *m_Value.getCharValue()));
+        status = val.Set("v", new MsgArg("s", m_Value.getCharValue()));
         break;
 
     case TIME_PROPERTY:      //TODO
-        status = val.Set("v", new MsgArg("s", *m_Value.getCharValue()));
+        status = val.Set("v", new MsgArg("s", m_Value.getCharValue()));
         break;
 
     case UNDEFINED:
@@ -95,101 +227,99 @@ QStatus Property::getPropertyValueForArg(MsgArg& val, int16_t languageIndx)
 QStatus Property::setPropertyValue(MsgArg& val, int16_t languageIndx)
 {
     QStatus status;
-    MsgArg variant;
-    CHECK_AND_RETURN(val.Get(AJPARAM_VAR.c_str(), &variant));
 
     switch (m_PropertyType) {
-        case UINT16_PROPERTY:
-        {
-            uint16_t value;
-            CHECK_AND_RETURN(variant.Get(AJPARAM_UINT16.c_str(), &value));
-            CHECK_AND_RETURN(setValue(value));
-            break;
-        }
+    case UINT16_PROPERTY:
+    {
+        uint16_t value;
+        CHECK_AND_RETURN(val.Get(AJPARAM_UINT16.c_str(), &value));
+        CHECK_AND_RETURN(setValue(value));
+        break;
+    }
 
-        case INT16_PROPERTY:
-        {
-            int16_t value;
-            CHECK_AND_RETURN(variant.Get(AJPARAM_INT16.c_str(), &value));
-            CHECK_AND_RETURN(setValue(value));
-            break;
-        }
+    case INT16_PROPERTY:
+    {
+        int16_t value;
+        CHECK_AND_RETURN(val.Get(AJPARAM_INT16.c_str(), &value));
+        CHECK_AND_RETURN(setValue(value));
+        break;
+    }
 
-        case UINT32_PROPERTY:
-        {
-            uint32_t value;
-            CHECK_AND_RETURN(variant.Get(AJPARAM_UINT32.c_str(), &value));
-            CHECK_AND_RETURN(setValue(value));
-            break;
-        }
+    case UINT32_PROPERTY:
+    {
+        uint32_t value;
+        CHECK_AND_RETURN(val.Get(AJPARAM_UINT32.c_str(), &value));
+        CHECK_AND_RETURN(setValue(value));
+        break;
+    }
 
-        case INT32_PROPERTY:
-        {
-            int32_t value;
-            CHECK_AND_RETURN(variant.Get(AJPARAM_INT32.c_str(), &value));
-            CHECK_AND_RETURN(setValue(value));
-            break;
-        }
+    case INT32_PROPERTY:
+    {
+        int32_t value;
+        CHECK_AND_RETURN(val.Get(AJPARAM_INT32.c_str(), &value));
+        CHECK_AND_RETURN(setValue(value));
+        break;
+    }
 
-        case UINT64_PROPERTY:
-        {
-            uint64_t value;
-            CHECK_AND_RETURN(variant.Get(AJPARAM_UINT64.c_str(), &value));
-            CHECK_AND_RETURN(setValue(value));
-            break;
-        }
+    case UINT64_PROPERTY:
+    {
+        uint64_t value;
+        CHECK_AND_RETURN(val.Get(AJPARAM_UINT64.c_str(), &value));
+        CHECK_AND_RETURN(setValue(value));
+        break;
+    }
 
-        case INT64_PROPERTY:
-        {
-            int64_t value;
-            CHECK_AND_RETURN(variant.Get(AJPARAM_INT64.c_str(), &value));
-            CHECK_AND_RETURN(setValue(value));
-            break;
-        }
+    case INT64_PROPERTY:
+    {
+        int64_t value;
+        CHECK_AND_RETURN(val.Get(AJPARAM_INT64.c_str(), &value));
+        CHECK_AND_RETURN(setValue(value));
+        break;
+    }
 
-        case DOUBLE_PROPERTY:
-        {
-            double value;
-            CHECK_AND_RETURN(variant.Get(AJPARAM_DOUBLE.c_str(), &value));
-            CHECK_AND_RETURN(setValue(value));
-            break;
-        }
+    case DOUBLE_PROPERTY:
+    {
+        double value;
+        CHECK_AND_RETURN(val.Get(AJPARAM_DOUBLE.c_str(), &value));
+        CHECK_AND_RETURN(setValue(value));
+        break;
+    }
 
-        case STRING_PROPERTY:
-        {
-            char* value;
-            CHECK_AND_RETURN(variant.Get(AJPARAM_STR.c_str(), &value));
-            CHECK_AND_RETURN(setValue(value));
-            break;
-        }
+    case STRING_PROPERTY:
+    {
+        char* value;
+        CHECK_AND_RETURN(val.Get(AJPARAM_STR.c_str(), &value));
+        CHECK_AND_RETURN(setValue(value));
+        break;
+    }
 
-        case BOOL_PROPERTY:
-        {
-            bool value;
-            CHECK_AND_RETURN(variant.Get(AJPARAM_BOOL.c_str(), &value));
-            CHECK_AND_RETURN(setValue(value));
-            break;
-        }
+    case BOOL_PROPERTY:
+    {
+        bool value;
+        CHECK_AND_RETURN(val.Get(AJPARAM_BOOL.c_str(), &value));
+        CHECK_AND_RETURN(setValue(value));
+        break;
+    }
 
-        case DATE_PROPERTY:      //TODO
-        {
-            uint16_t value;
-            CHECK_AND_RETURN(variant.Get(AJPARAM_UINT16.c_str(), &value));
-            CHECK_AND_RETURN(setValue(value));
-            break;
-        }
+    case DATE_PROPERTY:          //TODO
+    {
+        uint16_t value;
+        CHECK_AND_RETURN(val.Get(AJPARAM_UINT16.c_str(), &value));
+        CHECK_AND_RETURN(setValue(value));
+        break;
+    }
 
-        case TIME_PROPERTY:      //TODO
-        {
-            uint16_t value;
-            CHECK_AND_RETURN(variant.Get(AJPARAM_UINT16.c_str(), &value));
-            CHECK_AND_RETURN(setValue(value));
-            break;
-        }
+    case TIME_PROPERTY:          //TODO
+    {
+        uint16_t value;
+        CHECK_AND_RETURN(val.Get(AJPARAM_UINT16.c_str(), &value));
+        CHECK_AND_RETURN(setValue(value));
+        break;
+    }
 
-        default:
-            status = ER_BUS_NO_SUCH_PROPERTY;
-            break;
+    default:
+        status = ER_BUS_NO_SUCH_PROPERTY;
+        break;
     }
 
     if (status == ER_OK) {
@@ -254,7 +384,7 @@ QStatus Property::getOptParamsForArg(MsgArg& val, int16_t languageIndx)
         }
 
         if (status != ER_OK) {
-            delete constraintListArrayArg;
+            delete[] constraintListArrayArg;
             delete[] optParams;
             return status;
         }
@@ -272,10 +402,10 @@ QStatus Property::getOptParamsForArg(MsgArg& val, int16_t languageIndx)
         optParams[optParamIndx++].SetOwnershipFlags(MsgArg::OwnsArgs, true);
     }
 
-    if (m_ConstraintRange.isDefined()) {
+    if (m_ConstraintRange) {
 
         MsgArg* constraintRangeArg = new MsgArg();
-        status = m_ConstraintRange.getConstraintForArg(*constraintRangeArg, languageIndx, m_PropertyType);
+        status = m_ConstraintRange->getConstraintForArg(*constraintRangeArg, languageIndx, m_PropertyType);
 
         if (status != ER_OK) {
             delete constraintRangeArg;
@@ -343,7 +473,7 @@ QStatus Property::setValue(double value)
     return defaultErrorSetValue();
 }
 
-QStatus Property::setValue(char* value)
+QStatus Property::setValue(const char* value)
 {
     return defaultErrorSetValue();
 }

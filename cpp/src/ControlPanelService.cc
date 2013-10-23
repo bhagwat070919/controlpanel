@@ -19,6 +19,7 @@
 
 #include <alljoyn/PasswordManager.h>
 #include "alljoyn/controlpanel/ControlPanelService.h"
+#include "alljoyn/controlpanel/CPSLogger.h"
 #include "ControlPanelConstants.h"
 
 using namespace ajn;
@@ -42,8 +43,8 @@ ControlPanelService::ControlPanelService() :
     m_Bus(0), m_BusListener(0), m_ControlPanelControllee(0),
     logger(0), TAG(TAG_CONTROLPANELSERVICE)
 {
-    //NSLogger*nsLogger = new NSLogger();
-    //setLogger(nsLogger); TODO
+    CPSLogger* cpsLogger = new CPSLogger();
+    setLogger(cpsLogger);
 }
 
 ControlPanelService::~ControlPanelService()
@@ -158,7 +159,7 @@ GenericLogger* ControlPanelService::setLogger(GenericLogger* newLogger)
     if (logger) {
         setLogLevel(prevLogLevel);
         // reroute internal AJ logging to logger
-        //     NSLogger::RegisterCallBack(logger); TODO
+        CPSLogger::RegisterCallBack(logger);
     }
     return prevLogger;
 }

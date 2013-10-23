@@ -29,7 +29,7 @@ class Label : public Widget {
     virtual ~Label();
 
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-                                           uint16_t langIndx, QStatus status);
+                                           uint16_t langIndx, QStatus& status);
 
     virtual GetStringFptr getGetLabel() const;
 

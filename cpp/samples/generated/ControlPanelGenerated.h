@@ -18,6 +18,15 @@
 #define CONTROLPANELGENERATED_H_
 
 #include "alljoyn/controlpanel/ControlPanelControllee.h"
+#include "alljoyn/controlpanel/ControlPanelHints.h"
+#include "alljoyn/controlpanel/Container.h"
+#include "alljoyn/controlpanel/Label.h"
+#include "alljoyn/controlpanel/ActionWithDialog.h"
+#include "../generated/HeatProperty.h"
+#include "../generated/OvenAction.h"
+#include "../generated/LightConfirm.h"
+#include "../generated/AreYouSure.h"
+
 
 /**
  * Generated Class - do not change code
@@ -27,7 +36,22 @@ class ControlPanelGenerated {
 
     static QStatus PrepareWidgets(ajn::services::ControlPanelControllee*& controlPanelControllee);
 
-    static QStatus PrepareLanguageSets();
+    static void PrepareLanguageSets();
+
+    static bool languageSetsDone;
+
+  private:
+
+    static ajn::services::ControlPanel* rootContainerControlPanel;
+    static ajn::services::Container* rootContainer;
+    static ajn::services::Label* CurrentTemp;
+    static ajn::services::HeatProperty* heatProperty;
+    static ajn::services::OvenAction* ovenAction;
+    static ajn::services::ActionWithDialog* lightAction;
+    static ajn::services::LightConfirm* lightConfirm;
+    static ajn::services::NotificationAction* areYouSureNotificationAction;
+    static ajn::services::AreYouSure* areYouSure;
+
 };
 
 #endif /* CONTROLPANELGENERATED_H_ */

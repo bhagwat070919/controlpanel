@@ -20,12 +20,15 @@ srcs = cpsenv.Glob('*.cc')
 srcs += cpsenv.Glob('Widgets/*.cc')
 srcs += cpsenv.Glob('BusObjects/*.cc')
 
-shobjs = cpsenv.SharedObject(srcs)
-shlib = cpsenv.SharedLibrary('alljoyn_controlpanel', shobjs)
+libs = []
 
+# Static library
 objs = cpsenv.Object(srcs)
-lib = cpsenv.StaticLibrary('alljoyn_controlpanel', objs)
+libs.append(cpsenv.StaticLibrary('alljoyn_controlpanel', objs))
 
-libs = [shlib, lib]
+# Shared library
+if cpsenv.get('LIBTYPE', 'static') != 'static':
+    shobjs = cpsenv.SharedObject(srcs)
+    libs.append(cpsenv.SharedLibrary('alljoyn_controlpanel', shobjs))
 
 Return('libs')

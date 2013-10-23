@@ -74,16 +74,13 @@ AJ_Status marshalAllListPropertyProperties(BaseWidget* widget, AJ_Message* reply
 
     CPS_CHECK(AJ_MarshalContainer(reply, &listPropertyGetAllArray, AJ_ARG_ARRAY));
 
-    CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_VERSION_NAME, PROPERTY_TYPE_VERSION_SIG,
-                                   widget, language, &marshalBaseVersion));
-
     CPS_CHECK(marshalAllBaseProperties(widget, reply, language));
 
     CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_OPTPARAMS_NAME, PROPERTY_TYPE_OPTPARAMS_SIG,
-                                   widget, language, &marshalOnlyBaseOptParam));
+                                   widget, language, marshalOnlyBaseOptParam));
 
     CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_VALUE_NAME, LISTPROPERTY_VALUE_SIG,
-                                   widget, language, &marshalListPropertyValue));
+                                   widget, language, (MarshalWidgetFptr)marshalListPropertyValue));
 
     return AJ_MarshalCloseContainer(reply, &listPropertyGetAllArray);
 }
@@ -92,7 +89,8 @@ AJ_Status checkLock(ListPropertyWidget* widget, const char* lockerId)
 {
     AJ_Status status = AJ_ERR_FAILURE;
 
-    CPS_CHECK((lockerId == 0));
+    if (lockerId == 0)
+        return status;
 
     if (strcmp(widget->currentViewer, NOT_LOCKED) == 0) {   // not locked at all
         strncpy(widget->currentViewer, lockerId, SENDER_ID_LENGTH);
@@ -123,9 +121,10 @@ static void unLock(ListPropertyWidget* widget)
 AJ_Status addRecord(ListPropertyWidget* widget, const char* lockerId)
 {
     AJ_Status status = AJ_ERR_FAILURE;
+    if (widget->addRecord == 0)
+        return status;
 
     CPS_CHECK(checkLock(widget, lockerId));
-    CPS_CHECK((widget->addRecord == 0));
 
     return widget->addRecord() ? AJ_OK : AJ_ERR_FAILURE;
 }
@@ -133,9 +132,10 @@ AJ_Status addRecord(ListPropertyWidget* widget, const char* lockerId)
 AJ_Status viewRecord(ListPropertyWidget* widget, const char* lockerId, uint16_t recordId)
 {
     AJ_Status status = AJ_ERR_FAILURE;
+    if (widget->viewRecord == 0)
+        return status;
 
     CPS_CHECK(checkLock(widget, lockerId));
-    CPS_CHECK((widget->viewRecord == 0));
 
     return widget->viewRecord(recordId) ? AJ_OK : AJ_ERR_FAILURE;
 }
@@ -143,10 +143,10 @@ AJ_Status viewRecord(ListPropertyWidget* widget, const char* lockerId, uint16_t 
 AJ_Status updateRecord(ListPropertyWidget* widget, const char* lockerId, uint16_t recordId)
 {
     AJ_Status status = AJ_ERR_FAILURE;
+    if (widget->updateRecord == 0)
+        return status;
 
     CPS_CHECK(checkLock(widget, lockerId));
-    CPS_CHECK((widget->updateRecord == 0));
-
 
     return widget->updateRecord(recordId) ? AJ_OK : AJ_ERR_FAILURE;
 }
@@ -154,9 +154,10 @@ AJ_Status updateRecord(ListPropertyWidget* widget, const char* lockerId, uint16_
 AJ_Status deleteRecord(ListPropertyWidget* widget, const char* lockerId, uint16_t recordId)
 {
     AJ_Status status = AJ_ERR_FAILURE;
+    if (widget->deleteRecord == 0)
+        return status;
 
     CPS_CHECK(checkLock(widget, lockerId));
-    CPS_CHECK((widget->deleteRecord == 0));
 
     return widget->deleteRecord(recordId) ? AJ_OK : AJ_ERR_FAILURE;
 
@@ -166,8 +167,10 @@ AJ_Status confirmRecord(ListPropertyWidget* widget, const char* lockerId)
 {
     AJ_Status status = AJ_ERR_FAILURE;
 
+    if (widget->confirmRecord == 0)
+        return status;
+
     CPS_CHECK(checkLock(widget, lockerId));
-    CPS_CHECK((widget->confirmRecord == 0));
 
     uint8_t success = widget->confirmRecord();
     unLock(widget);
@@ -179,8 +182,10 @@ AJ_Status cancelRecord(ListPropertyWidget* widget, const char* lockerId)
 {
     AJ_Status status = AJ_ERR_FAILURE;
 
+    if (widget->cancelRecord == 0)
+        return status;
+
     CPS_CHECK(checkLock(widget, lockerId));
-    CPS_CHECK((widget->cancelRecord == 0));
 
     uint8_t success = widget->cancelRecord();
     unLock(widget);

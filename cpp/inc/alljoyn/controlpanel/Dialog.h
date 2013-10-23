@@ -29,7 +29,7 @@ class Dialog : public RootWidget {
     virtual ~Dialog();
 
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-                                           uint16_t langIndx, QStatus status);
+                                           uint16_t langIndx, QStatus& status);
 
     virtual void executeAction1CallBack();
     virtual void executeAction2CallBack();
@@ -68,7 +68,9 @@ class Dialog : public RootWidget {
     const std::vector<qcc::String>& getLabelAction3() const;
     void setLabelAction3(const std::vector<qcc::String>& labelAction3);
 
-  private:
+  protected:
+
+    void executeActionNotDefined();
 
     std::vector<qcc::String> m_Message;
     GetStringFptr m_GetMessage;

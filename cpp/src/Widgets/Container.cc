@@ -49,13 +49,15 @@ QStatus Container::addChildElement(Widget* childElement)
     if (!childElement)
         return ER_BAD_ARG_1;
 
-    std::cout << "Child name is: " << childElement->getWidgetName().c_str() << std::endl;
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+    if (logger)
+        logger->debug(TAG, "Adding childElement named: " + childElement->getWidgetName());
     m_ChildElements.push_back(childElement);
     return ER_OK;
 }
 
 WidgetBusObject* Container::createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-                                                  uint16_t langIndx, QStatus status)
+                                                  uint16_t langIndx, QStatus& status)
 {
     return new ContainerBusObject(bus, objectPath, langIndx, status, this);
 }

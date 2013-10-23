@@ -26,14 +26,14 @@ namespace ajn {
 namespace services {
 
 typedef union {
-    uint16_t* uint16Value;
-    int16_t* int16Value;
-    uint32_t* uint32Value;
-    int32_t* int32Value;
-    uint64_t* uint64Value;
-    int64_t* int64Value;
-    double* doubleValue;
-    char** charValue;
+    uint16_t uint16Value;
+    int16_t int16Value;
+    uint32_t uint32Value;
+    int32_t int32Value;
+    uint64_t uint64Value;
+    int64_t int64Value;
+    double doubleValue;
+    const char* charValue;
 } ConstraintValue;
 
 /**
@@ -47,14 +47,14 @@ class ConstraintList {
     ConstraintList();
     virtual ~ConstraintList();
 
-    void setConstraintValue(uint16_t* value);
-    void setConstraintValue(int16_t* value);
-    void setConstraintValue(uint32_t* value);
-    void setConstraintValue(int32_t* value);
-    void setConstraintValue(uint64_t* value);
-    void setConstraintValue(int64_t* value);
-    void setConstraintValue(double* value);
-    void setConstraintValue(char** value);
+    void setConstraintValue(uint16_t value);
+    void setConstraintValue(int16_t value);
+    void setConstraintValue(uint32_t value);
+    void setConstraintValue(int32_t value);
+    void setConstraintValue(uint64_t value);
+    void setConstraintValue(int64_t value);
+    void setConstraintValue(double value);
+    void setConstraintValue(qcc::String value);
 
     PropertyType getPropertyType() const;
 
@@ -79,7 +79,9 @@ class ConstraintList {
 
     GetStringFptr m_GetDisplay;
 
-    qcc::String const& TAG;
+    qcc::String m_ConstraintValueString;
+
+    qcc::String TAG;
 };
 
 } /* namespace services */

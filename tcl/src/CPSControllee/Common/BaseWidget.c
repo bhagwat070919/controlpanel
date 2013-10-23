@@ -131,8 +131,12 @@ AJ_Status marshalBaseOptParam(BaseWidget* widget, AJ_Message* reply, uint16_t la
 
 AJ_Status marshalAllBaseProperties(BaseWidget* widget, AJ_Message* reply, uint16_t language)
 {
+    AJ_Status status;
+    CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_VERSION_NAME, PROPERTY_TYPE_VERSION_SIG,
+                                   widget, language, marshalBaseVersion));
+
     return AddPropertyForGetAll(reply, PROPERTY_TYPE_STATES_NAME, PROPERTY_TYPE_STATES_SIG,
-                                widget, language, &marshalBaseStates);
+                                widget, language, marshalBaseStates);
 }
 
 AJ_Status marshalAllOnlyBaseProperties(BaseWidget* widget, AJ_Message* reply, uint16_t language)
@@ -142,13 +146,10 @@ AJ_Status marshalAllOnlyBaseProperties(BaseWidget* widget, AJ_Message* reply, ui
 
     CPS_CHECK(AJ_MarshalContainer(reply, &widgetGetAllArray, AJ_ARG_ARRAY));
 
-    CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_VERSION_NAME, PROPERTY_TYPE_VERSION_SIG,
-                                   widget, language, &marshalBaseVersion));
-
     CPS_CHECK(marshalAllBaseProperties(widget, reply, language));
 
     CPS_CHECK(AddPropertyForGetAll(reply, PROPERTY_TYPE_OPTPARAMS_NAME, PROPERTY_TYPE_OPTPARAMS_SIG,
-                                   widget, language, &marshalOnlyBaseOptParam));
+                                   widget, language, marshalOnlyBaseOptParam));
 
     return AJ_MarshalCloseContainer(reply, &widgetGetAllArray);
 }

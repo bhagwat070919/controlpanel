@@ -25,10 +25,22 @@ namespace ajn {
 namespace services {
 using namespace cpsConsts;
 
+qcc::String const& ControlPanel::TAG = TAG_CONTROLPANEL;
+
+ControlPanel* ControlPanel::createControlPanel(LanguageSet* languageSet)
+{
+    if (!languageSet) {
+        GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
+        if (logger)
+            logger->warn(TAG, "Could not create ControlPanel. LanguageSet is NULL");
+        return NULL;
+    }
+    return new ControlPanel(*languageSet);
+}
+
 ControlPanel::ControlPanel(LanguageSet const& languageSet) :
     m_LanguageSet(languageSet), m_RootContainer(0),
-    m_ControlPanelBusObject(0),     m_NotificationActionBusObject(0),
-    TAG(TAG_CONTROLPANEL)
+    m_ControlPanelBusObject(0),     m_NotificationActionBusObject(0)
 {
 
 }
@@ -36,7 +48,7 @@ ControlPanel::ControlPanel(LanguageSet const& languageSet) :
 ControlPanel::~ControlPanel() {
 }
 
-QStatus ControlPanel::setRootContainer(Container* rootContainer)
+QStatus ControlPanel::setRootWidget(Container* rootContainer)
 {
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
 

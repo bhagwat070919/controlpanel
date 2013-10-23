@@ -27,15 +27,15 @@ namespace ajn {
 namespace services {
 
 typedef union {
-    uint16_t* (*getUint16Value)();
-    int16_t* (*getInt16Value)();
-    uint32_t* (*getUint32Value)();
-    int32_t* (*getInt32Value)();
-    uint64_t* (*getUint64Value)();
-    int64_t* (*getInt64Value)();
-    double* (*getDoubleValue)();
-    char** (*getCharValue)();
-    bool* (*getBoolValue)(); //TODO not sure
+    uint16_t (*getUint16Value)();
+    int16_t (*getInt16Value)();
+    uint32_t (*getUint32Value)();
+    int32_t (*getInt32Value)();
+    uint64_t (*getUint64Value)();
+    int64_t (*getInt64Value)();
+    double (*getDoubleValue)();
+    const char* (*getCharValue)();
+    bool (*getBoolValue)(); //TODO not sure
     //CPSDate* (*getDateValue)(); //TODO not sure
     //CPSTime* (*getTimeValue)(); //TODO not sure
 } PropertyValue;
@@ -46,7 +46,37 @@ class Property : public Widget {
     virtual ~Property();
 
     WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-                                           uint16_t langIndx, QStatus status);
+                                           uint16_t langIndx, QStatus& status);
+
+    QStatus setGetValue(uint16_t (*getUint16Value)());
+
+    QStatus setGetValue(int16_t (*getInt16Value)());
+
+    QStatus setGetValue(uint32_t (*getUint32Value)());
+
+    QStatus setGetValue(int32_t (*getInt32Value)());
+
+    QStatus setGetValue(uint64_t (*getUint64Value)());
+
+    QStatus setGetValue(int64_t (*getInt64Value)());
+
+    QStatus setGetValue(double (*getDoubleValue)());
+
+    QStatus setGetValue(const char* (*getCharValue)());
+
+    QStatus setGetValue(bool (*getBoolValue)());
+
+    GetStringFptr getGetUnitOfMeasure() const;
+    void setGetUnitOfMeasure(GetStringFptr getGetUnitOfMeasure);
+
+    const std::vector<qcc::String>& getUnitOfMeasure() const;
+    void setUnitOfMeasure(const std::vector<qcc::String>& label);
+
+    const std::vector<ConstraintList>& getConstraintList() const;
+    void setConstraintList(const std::vector<ConstraintList>& constraintList);
+
+    const ConstraintRange* getConstraintRange() const;
+    void setConstraintRange(ConstraintRange* constraintRange);
 
     QStatus getPropertyValueForArg(MsgArg& val, int16_t languageIndx);
 
@@ -67,7 +97,9 @@ class Property : public Widget {
 
     std::vector<ConstraintList> m_ConstraintList;
 
-    ConstraintRange m_ConstraintRange;
+    ConstraintRange* m_ConstraintRange;
+
+    bool validateGetValue(PropertyType propertyType);
 
     virtual QStatus setValue(bool value);
 
@@ -85,7 +117,7 @@ class Property : public Widget {
 
     virtual QStatus setValue(double value);
 
-    virtual QStatus setValue(char* value);
+    virtual QStatus setValue(const char* value);
 
     QStatus defaultErrorSetValue();
 };

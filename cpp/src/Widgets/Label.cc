@@ -60,7 +60,7 @@ QStatus Label::getLabelForArg(MsgArg& val, int16_t languageIndx)
 }
 
 WidgetBusObject* Label::createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-                                              uint16_t langIndx, QStatus status)
+                                              uint16_t langIndx, QStatus& status)
 {
     return new LabelBusObject(bus, objectPath, langIndx, status, this);
 }

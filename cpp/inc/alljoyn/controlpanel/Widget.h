@@ -98,7 +98,7 @@ class Widget {
                                     qcc::String const& objectPathPrefix, qcc::String const& objectPathSuffix, bool isRoot = false);
 
     virtual WidgetBusObject* createWidgetBusObject(BusAttachment* bus, qcc::String const& objectPath,
-                                                   uint16_t langIndx, QStatus status) = 0;
+                                                   uint16_t langIndx, QStatus& status) = 0;
 
     QStatus SendPropertyChangedSignal();
 

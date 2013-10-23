@@ -24,18 +24,13 @@ using namespace cpsConsts;
 
 ConstraintRange::ConstraintRange() : m_PropertyType(UNDEFINED), TAG(cpsConsts::TAG_CONSTRAINTRANGE)
 {
-    m_MinValue.defined = 0;
-    m_MaxValue.defined = 0;
-    m_IncrementValue.defined = 0;
+    m_MinValue.uint16Value = 0;
+    m_MaxValue.uint16Value = 0;
+    m_IncrementValue.uint16Value = 0;
 }
 
 ConstraintRange::~ConstraintRange()
 {
-}
-
-bool ConstraintRange::isDefined()
-{
-    return m_MinValue.defined && m_MaxValue.defined && m_IncrementValue.defined;
 }
 
 QStatus ConstraintRange::getConstraintForArg(MsgArg& val, int16_t languageIndx, PropertyType propertyType)
@@ -51,45 +46,45 @@ QStatus ConstraintRange::getConstraintForArg(MsgArg& val, int16_t languageIndx, 
 
     switch (m_PropertyType) {
     case UINT16_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT16.c_str(), *m_MinValue.uint16Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT16.c_str(), *m_MaxValue.uint16Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT16.c_str(), *m_IncrementValue.uint16Value));
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT16.c_str(), m_MinValue.uint16Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT16.c_str(), m_MaxValue.uint16Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT16.c_str(), m_IncrementValue.uint16Value));
         break;
 
     case INT16_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT16.c_str(), *m_MinValue.int16Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT16.c_str(), *m_MaxValue.int16Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT16.c_str(), *m_IncrementValue.int16Value));
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT16.c_str(), m_MinValue.int16Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT16.c_str(), m_MaxValue.int16Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT16.c_str(), m_IncrementValue.int16Value));
         break;
 
     case UINT32_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT32.c_str(), *m_MinValue.uint32Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT32.c_str(), *m_MaxValue.uint32Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT32.c_str(), *m_IncrementValue.uint32Value));
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT32.c_str(), m_MinValue.uint32Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT32.c_str(), m_MaxValue.uint32Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT32.c_str(), m_IncrementValue.uint32Value));
         break;
 
     case INT32_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT32.c_str(), *m_MinValue.int32Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT32.c_str(), *m_MaxValue.int32Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT32.c_str(), *m_IncrementValue.int32Value));
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT32.c_str(), m_MinValue.int32Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT32.c_str(), m_MaxValue.int32Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT32.c_str(), m_IncrementValue.int32Value));
         break;
 
     case UINT64_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT64.c_str(), *m_MinValue.uint64Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT64.c_str(), *m_MaxValue.uint64Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT64.c_str(), *m_IncrementValue.uint64Value));
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_UINT64.c_str(), m_MinValue.uint64Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_UINT64.c_str(), m_MaxValue.uint64Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_UINT64.c_str(), m_IncrementValue.uint64Value));
         break;
 
     case INT64_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT64.c_str(), *m_MinValue.int64Value));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT64.c_str(), *m_MaxValue.int64Value));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT64.c_str(), *m_IncrementValue.int64Value));
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_INT64.c_str(), m_MinValue.int64Value));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_INT64.c_str(), m_MaxValue.int64Value));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_INT64.c_str(), m_IncrementValue.int64Value));
         break;
 
     case DOUBLE_PROPERTY:
-        CHECK_AND_BREAK(minValue->Set(AJPARAM_DOUBLE.c_str(), *m_MinValue.doubleValue));
-        CHECK_AND_BREAK(maxValue->Set(AJPARAM_DOUBLE.c_str(), *m_MaxValue.doubleValue));
-        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_DOUBLE.c_str(), *m_IncrementValue.doubleValue));
+        CHECK_AND_BREAK(minValue->Set(AJPARAM_DOUBLE.c_str(), m_MinValue.doubleValue));
+        CHECK_AND_BREAK(maxValue->Set(AJPARAM_DOUBLE.c_str(), m_MaxValue.doubleValue));
+        CHECK_AND_BREAK(incrementValue->Set(AJPARAM_DOUBLE.c_str(), m_IncrementValue.doubleValue));
         break;
 
     default:
@@ -149,191 +144,191 @@ bool ConstraintRange::validateConstraintValue(PropertyType propertyType)
     return true;
 }
 
-bool ConstraintRange::setConstraintMin(uint16_t* minValue)
+QStatus ConstraintRange::setConstraintMin(uint16_t minValue)
 {
     if (!validateConstraintValue(UINT16_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MinValue.uint16Value = minValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMin(int16_t* minValue)
+QStatus ConstraintRange::setConstraintMin(int16_t minValue)
 {
     if (!validateConstraintValue(INT16_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MinValue.int16Value = minValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMin(uint32_t* minValue)
+QStatus ConstraintRange::setConstraintMin(uint32_t minValue)
 {
     if (!validateConstraintValue(UINT32_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MinValue.uint32Value = minValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMin(int32_t* minValue)
+QStatus ConstraintRange::setConstraintMin(int32_t minValue)
 {
     if (!validateConstraintValue(INT32_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MinValue.int32Value = minValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMin(uint64_t* minValue)
+QStatus ConstraintRange::setConstraintMin(uint64_t minValue)
 {
     if (!validateConstraintValue(UINT64_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MinValue.uint64Value = minValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMin(int64_t* minValue)
+QStatus ConstraintRange::setConstraintMin(int64_t minValue)
 {
     if (!validateConstraintValue(INT64_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MinValue.int64Value = minValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMin(double* minValue)
+QStatus ConstraintRange::setConstraintMin(double minValue)
 {
     if (!validateConstraintValue(DOUBLE_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MinValue.doubleValue = minValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMax(uint16_t* maxValue)
+QStatus ConstraintRange::setConstraintMax(uint16_t maxValue)
 {
     if (!validateConstraintValue(UINT16_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MaxValue.uint16Value = maxValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMax(int16_t* maxValue)
+QStatus ConstraintRange::setConstraintMax(int16_t maxValue)
 {
     if (!validateConstraintValue(INT16_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MaxValue.int16Value = maxValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMax(uint32_t* maxValue)
+QStatus ConstraintRange::setConstraintMax(uint32_t maxValue)
 {
     if (!validateConstraintValue(UINT32_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MaxValue.uint32Value = maxValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMax(int32_t* maxValue)
+QStatus ConstraintRange::setConstraintMax(int32_t maxValue)
 {
     if (!validateConstraintValue(INT32_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MaxValue.int32Value = maxValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMax(uint64_t* maxValue)
+QStatus ConstraintRange::setConstraintMax(uint64_t maxValue)
 {
     if (!validateConstraintValue(UINT64_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MaxValue.uint64Value = maxValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMax(int64_t* maxValue)
+QStatus ConstraintRange::setConstraintMax(int64_t maxValue)
 {
     if (!validateConstraintValue(INT64_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MaxValue.int64Value = maxValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintMax(double* maxValue)
+QStatus ConstraintRange::setConstraintMax(double maxValue)
 {
     if (!validateConstraintValue(DOUBLE_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_MaxValue.doubleValue = maxValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintIncrement(uint16_t* incrementValue)
+QStatus ConstraintRange::setConstraintIncrement(uint16_t incrementValue)
 {
     if (!validateConstraintValue(UINT16_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_IncrementValue.uint16Value = incrementValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintIncrement(int16_t* incrementValue)
+QStatus ConstraintRange::setConstraintIncrement(int16_t incrementValue)
 {
     if (!validateConstraintValue(INT16_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_IncrementValue.int16Value = incrementValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintIncrement(uint32_t* incrementValue)
+QStatus ConstraintRange::setConstraintIncrement(uint32_t incrementValue)
 {
     if (!validateConstraintValue(UINT32_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_IncrementValue.uint32Value = incrementValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintIncrement(int32_t* incrementValue)
+QStatus ConstraintRange::setConstraintIncrement(int32_t incrementValue)
 {
     if (!validateConstraintValue(INT32_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_IncrementValue.int32Value = incrementValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintIncrement(uint64_t* incrementValue)
+QStatus ConstraintRange::setConstraintIncrement(uint64_t incrementValue)
 {
     if (!validateConstraintValue(UINT64_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_IncrementValue.uint64Value = incrementValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintIncrement(int64_t* incrementValue)
+QStatus ConstraintRange::setConstraintIncrement(int64_t incrementValue)
 {
     if (!validateConstraintValue(INT64_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_IncrementValue.int64Value = incrementValue;
-    return true;
+    return ER_OK;
 }
 
-bool ConstraintRange::setConstraintIncrement(double* incrementValue)
+QStatus ConstraintRange::setConstraintIncrement(double incrementValue)
 {
     if (!validateConstraintValue(DOUBLE_PROPERTY))
-        return false;
+        return ER_BUS_SET_WRONG_SIGNATURE;
 
     m_IncrementValue.doubleValue = incrementValue;
-    return true;
+    return ER_OK;
 }

@@ -21,6 +21,7 @@
 #include "aj_msg.h"
 
 #include "alljoyn/controlpanel/Definitions.h"
+#include "alljoyn/controlpanel/Common/BaseWidget.h"
 
 #define CPS_CHECK(s) if ((status = s)) return status;
 #define CPS_CHECK_OR_BREAK(s) if ((status = s)) break;
@@ -87,7 +88,7 @@ AJ_Status AddBasicOptionalParam(AJ_Message* reply, uint16_t key, const char* sig
  * @return status
  */
 AJ_Status AddPropertyForGetAll(AJ_Message* reply, char* key, const char* sig,
-                               void* widget, uint16_t lang, void* functionPtr);
+                               BaseWidget* widget, uint16_t lang, MarshalWidgetFptr functionPtr);
 
 /**
  * Helper functions. Receives sig value and void* and does the marshalling
