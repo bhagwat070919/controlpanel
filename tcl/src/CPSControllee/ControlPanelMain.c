@@ -14,9 +14,9 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Definitions.h"
-#include "alljoyn.h"
-#include "alljoyn/controlpanel/ControlPanel.h"
+#include <alljoyn/controlpanel/Definitions.h>
+#include <alljoyn.h>
+#include <alljoyn/controlpanel/ControlPanel.h>
 #include <aj_link_timeout.h>
 
 #define UUID_LENGTH 16
@@ -63,8 +63,9 @@ AJ_Status ControlPanel_ConnectedHandler(AJ_BusAttachment* bus)
          * TODO This is a temporary hack to work around buggy select implementations
          */
         if (status == AJ_ERR_TIMEOUT) {
-            if (AJ_GetElapsedTime(&timer, TRUE) < AJ_UNMARSHAL_TIMEOUT) {
-                AJ_Printf("Spurious timeout error - continuing\n");
+            int elapsed = AJ_GetElapsedTime(&timer, TRUE);
+            if (elapsed < AJ_UNMARSHAL_TIMEOUT) {
+                AJ_Printf("Spurious timeout error (elapsed=%d < AJ_UNMARSHAL_TIMEOUT=%d) - continuing\n", elapsed, AJ_UNMARSHAL_TIMEOUT);
                 status = AJ_OK;
                 continue;
             }

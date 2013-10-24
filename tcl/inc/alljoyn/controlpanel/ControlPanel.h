@@ -19,9 +19,10 @@
 
 #include "ControlPanelInterfaces.h"
 #include "ControlPanelResponses.h"
-#include "alljoyn.h"
+#include <alljoyn.h>
 
 #ifdef CONTROLPANEL_SERVICE
+#include <Apps_Common.h>
 #include "ControlPanelGenerated.h"
 #else
 #include "ControlPanelClientGenerated.h"

@@ -17,12 +17,12 @@
 #ifndef CONTROL_GENERATED_H_
 #define CONTROL_GENERATED_H_
 
-#include "alljoyn.h"
-#include "aj_msg.h"
+#include <alljoyn.h>
+#include <aj_msg.h>
 
-#include "alljoyn/controlpanel/Definitions.h"
+#include <alljoyn/controlpanel/Definitions.h>
 #ifdef CONTROLPANEL_SERVICE
-#include "Services_Handlers.h"
+#include <alljoyn/services_common/Services_Common.h>
 #else
 #define NUM_PRE_CONTROLPANEL_OBJECTS 0
 #endif

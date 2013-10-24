@@ -19,6 +19,11 @@
 #include "ControlPanelClient.h"
 #include "alljoyn.h"
 
+#define CPSC_CONNECT_TIMEOUT     (1000 * 60)
+#define CPSC_CONNECT_PAUSE       (1000 * 10)
+#define CPSC_UNMARSHAL_TIMEOUT   (1000 * 5)
+#define CPSC_SLEEP_TIME          (1000 * 2)
+
 #ifndef COMBINED_SERVICES
 AJ_BusAttachment busAttachment;
 uint8_t isBusConnected = FALSE;
@@ -128,8 +133,8 @@ AJ_Status CPS_StartService(AJ_BusAttachment* bus, const char* busAddress, uint32
 
         status = AJ_Connect(bus, busAddress, timeout);
         if (status != AJ_OK) {
-            AJ_Printf("Failed to connect to bus '%s', sleeping for %d seconds...\n", busAddress, CONNECT_PAUSE / 1000);
-            AJ_Sleep(CONNECT_PAUSE);
+            AJ_Printf("Failed to connect to bus '%s', sleeping for %d seconds...\n", busAddress, CPSC_CONNECT_PAUSE / 1000);
+            AJ_Sleep(CPSC_CONNECT_PAUSE);
             continue;
         }
 
@@ -162,7 +167,7 @@ void CPS_IdleConnectedHandler(AJ_BusAttachment*bus)
     AJ_Message msg;
 
     status = AJ_MarshalMethodCall(&busAttachment, &msg, testsToRun[runningTestNum].msgId,
-                                  0, CPSsessionId, 0, CONNECT_TIMEOUT);
+                                  0, CPSsessionId, 0, CPSC_CONNECT_TIMEOUT);
 
     uint16_t numParam;
     for (numParam = 0; numParam < testsToRun[runningTestNum].numParams; numParam++) {
@@ -263,10 +268,10 @@ int AJ_Main(void)
         AJ_Message msg;
 
         if (!isBusConnected) {
-            status = CPS_StartService(&busAttachment, busAddress, CONNECT_TIMEOUT, isBusConnected);
+            status = CPS_StartService(&busAttachment, busAddress, CPSC_CONNECT_TIMEOUT, isBusConnected);
         }
 
-        status = AJ_UnmarshalMsg(&busAttachment, &msg, UNMARSHAL_TIMEOUT);
+        status = AJ_UnmarshalMsg(&busAttachment, &msg, CPSC_UNMARSHAL_TIMEOUT);
 
         if (AJ_ERR_TIMEOUT == status) { // nothing on bus, do our own thing
             CPS_IdleConnectedHandler(&busAttachment);
@@ -302,7 +307,7 @@ int AJ_Main(void)
             isBusConnected = FALSE;
 
             /* Sleep a little while before trying to reconnect. */
-            AJ_Sleep(SLEEP_TIME);
+            AJ_Sleep(CPSC_SLEEP_TIME);
         }
     }
     AJ_Printf("Control Panel Sample exiting with status 0x%04x.\n", status);
