@@ -134,8 +134,8 @@ class Generator:
             subprocArgs = "rm -f {0}/*.cc {0}/*.h".format(self.path)
             rc = subprocess.call(subprocArgs, shell=True)
             if rc != 0 :
-                print "\nERROR - Could not delete the current generated files"
-                sys.exit(1)
+                print >> sys.stderr, "\nERROR - Could not delete the current generated files"
+                sys.exit(4)
         else :
             print "\nStopping the generating process"
             sys.exit(0)   

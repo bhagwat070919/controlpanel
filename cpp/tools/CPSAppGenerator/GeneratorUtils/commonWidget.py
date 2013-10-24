@@ -68,8 +68,8 @@ class Widget:
             self.generated.initCode += "    {0}->setGetEnabled({1});\n".format(self.name, enabled)
         else :
             if enabled != "true" and enabled != "false" :
-                print "ERROR - The value {0} is not supported for enabled in {1}. Exiting".format(enabled, self.name)
-                sys.exit(0)	
+                print >> sys.stderr, "ERROR - The value {0} is not supported for enabled in {1}. Exiting".format(enabled, self.name)
+                sys.exit(3)	
             self.generated.initCode += "    {0}->setEnabled({1});\n".format(self.name, enabled)
 
     def setBgColor (self) :
@@ -112,8 +112,8 @@ class Widget:
         if root._has("value"):
             values = as_list(root.value)
             if len(values) != len(self.languageSet) :
-                print "ERROR - Missing a {1} or too many {1}s defined for {0}. Exiting".format(self.name, fieldName)
-                sys.exit(1)
+                print >> sys.stderr, "ERROR - Missing a {1} or too many {1}s defined for {0}. Exiting".format(self.name, fieldName)
+                sys.exit(3)
 
             if len(vectorName) :
                 vectorName = self.name + vectorName + "Vec"
@@ -124,8 +124,8 @@ class Widget:
             for lang in self.languageSet :
                 value = filter(lambda x: x.attr["language"] == lang, values)
                 if len(value) !=  1:
-                    print "ERROR - No {0} is defined or multiple {0}s are defined for language: {1} in {2}. Exiting".format(fieldName, lang, self.name)
-                    sys.exit(0)
+                    print >> sys.stderr, "ERROR - No {0} is defined or multiple {0}s are defined for language: {1} in {2}. Exiting".format(fieldName, lang, self.name)
+                    sys.exit(3)
                 if value[0].attr['type'] == 'constant':
                     self.generated.initCode += """    {0}.push_back({1});\n""".format(vectorName, value[0])                        
                 else:

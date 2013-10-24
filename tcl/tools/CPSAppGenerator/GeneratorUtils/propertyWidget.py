@@ -137,11 +137,11 @@ class Property (common.Widget):
                 self.signature = "d"
                 self.varType = "double"
             else :
-                print "ERROR - dataType of property Unknown. Exiting"
-                sys.exit(0)
+                print >> sys.stderr, "ERROR - dataType of property Unknown. Exiting"
+                sys.exit(3)
         else :
-            print "ERROR - Element Type of property Unknown. Exiting"
-            sys.exit(0)
+            print >> sys.stderr, "ERROR - Element Type of property Unknown. Exiting"
+            sys.exit(3)
 
 
 

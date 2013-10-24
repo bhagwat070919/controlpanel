@@ -38,8 +38,8 @@ class Property (common.Widget):
             self.generated.initCode += "    {0}->setGetWritable({1});\n".format(self.name, writable)
         else :
             if writable != "true" and writable != "false" :
-                print "ERROR - The value {0} is not supported for writable in {1}. Exiting".format(writable, self.name)
-                sys.exit(0)	
+                print >> sys.stderr, "ERROR - The value {0} is not supported for writable in {1}. Exiting".format(writable, self.name)
+                sys.exit(3)	
             self.generated.initCode += "    {0}->setWritable({1});\n".format(self.name, writable)
 
     def generateSetAndGetCode (self) :
@@ -165,11 +165,11 @@ class Property (common.Widget):
                 self.propType = "DOUBLE_PROPERTY"
                 self.varType = "double"
             else :
-                print "ERROR - dataType of property Unknown. Exiting"
-                sys.exit(0)
+                print >> sys.stderr, "ERROR - dataType of property Unknown. Exiting"
+                sys.exit(3)
         else :
-            print "ERROR - Element Type of property Unknown. Exiting"
-            sys.exit(0)
+            print >> sys.stderr, "ERROR - Element Type of property Unknown. Exiting"
+            sys.exit(3)
 
 
 

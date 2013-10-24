@@ -135,8 +135,8 @@ class Widget:
         else :
             enabledText = enabled.upper()
             if enabledText != "TRUE" and enabledText != "FALSE" :
-                print "ERROR - The value {0} is not supported for enabled in {1}. Exiting".format(enabled, self.name)
-                sys.exit(0)	
+                print >> sys.stderr, "ERROR - The value {0} is not supported for enabled in {1}. Exiting".format(enabled, self.name)
+                sys.exit(2)	
             self.generated.initFunction += "    setBaseEnabled(&{0}.base, {1});\n".format(self.name, enabledText)
 
     def setWritable (self) :
@@ -146,8 +146,8 @@ class Widget:
         else :
             writableText = writable.upper()
             if writableText != "TRUE" and writableText != "FALSE" :
-                print "ERROR - The value {0} is not supported for writable in {1}. Exiting".format(writable, self.name)
-                sys.exit(0)	
+                print >> sys.stderr, "ERROR - The value {0} is not supported for writable in {1}. Exiting".format(writable, self.name)
+                sys.exit(2)	
             self.generated.initFunction += "    setBaseWritable(&{0}.base, {1});\n".format(self.name, writableText)
 
     def setBgColor (self) :
@@ -209,8 +209,8 @@ class Widget:
         if root._has("value"):
             values = as_list(root.value)
             if len(values) != len(self.languageSet) :
-                print "ERROR - Missing a {1} or too many {1}s defined for {0}. Exiting".format(self.name, fieldName)
-                sys.exit(1)
+                print >> sys.stderr, "ERROR - Missing a {1} or too many {1}s defined for {0}. Exiting".format(self.name, fieldName)
+                sys.exit(3)
 
             self.generated.initFunction += "    {0}.{1} = {0}{2};\n".format(self.name, variableName, defineName)
 
@@ -218,8 +218,8 @@ class Widget:
             for lang in self.languageSet :
                 value = filter(lambda x: x.attr["language"] == lang, values)
                 if len(value) !=  1:
-                    print "ERROR - No {0} is defined or multiple {0}s are defined for language: {1} in {2}. Exiting".format(fieldName, lang, self.name)
-                    sys.exit(0)
+                    print >> sys.stderr, "ERROR - No {0} is defined or multiple {0}s are defined for language: {1} in {2}. Exiting".format(fieldName, lang, self.name)
+                    sys.exit(3)
                 if value[0].attr['type'] == 'constant':
                     fieldDefineStr += "{0}, ".format(value[0])                        
                 else:

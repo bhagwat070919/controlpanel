@@ -64,8 +64,8 @@ class Container (common.Widget):
 #                listProp = lpw.ListProperty(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
 #                listProp.generate()
             else :
-                print "ERROR - This type is not supported. Exiting " + elementType
-                sys.exit(0)
+                print >> sys.stderr, "ERROR - This type is not supported. Exiting " + elementType
+                sys.exit(2)
 
 
 

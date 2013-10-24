@@ -36,10 +36,11 @@ PropertyBusObject::PropertyBusObject(BusAttachment* bus, String const& objectPat
         return;
     }
 
-    InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(AJ_PROPERTY_INTERFACE.c_str());
+    String interfaceName = widget->getIsSecured() ? AJ_SECURED_PROPERTY_INTERFACE : AJ_PROPERTY_INTERFACE;
+    InterfaceDescription* intf = (InterfaceDescription*) bus->GetInterface(interfaceName.c_str());
     if (!intf) {
         do {
-            CHECK_AND_BREAK(bus->CreateInterface(AJ_PROPERTY_INTERFACE.c_str(), intf));
+            CHECK_AND_BREAK(bus->CreateInterface(interfaceName.c_str(), intf, widget->getIsSecured()));
             CHECK_AND_BREAK(addDefaultInterfaceVariables(intf));
             CHECK_AND_BREAK(intf->AddProperty(AJ_PROPERTY_VALUE.c_str(), AJPARAM_VAR.c_str(), PROP_ACCESS_RW));
             CHECK_AND_BREAK(intf->AddSignal(AJ_SIGNAL_VALUE_CHANGED.c_str(), AJPARAM_VAR.c_str(), AJ_PROPERTY_VALUE.c_str(), 0));

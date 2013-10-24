@@ -28,19 +28,24 @@ import commonWidget as common
 import httpControl as http
 import cpvalidate
 
+## ERROR CODES ##
+## 1 : missing command line arguments
+## 2 : Did not pass xsd validation
+## 3 : Did not pass logical validation
+
 ### Start by validating the input and the xml ###
 
 if len(sys.argv) < 2 :
-    print "ERROR - Please provide the xml file as input"
-    sys.exit(0)
+    print >> sys.stderr, "ERROR - Please provide the xml file as input"
+    sys.exit(1)
 
 xmlfile = sys.argv[1]
 cpFile = scriptDir + "/cp.xsd"
 subprocArgs = "xmllint --noout --schema {0} {1}".format(cpFile, xmlfile)
 rc = subprocess.call(subprocArgs, shell=True)
 if rc != 0 :
-    print "\nERROR - xml validation did not pass"
-    sys.exit(1)
+    print >> sys.stderr, "\nERROR - xml validation did not pass"
+    sys.exit(2)
 
 path = "."
 if len(sys.argv) >= 3 :
@@ -54,7 +59,7 @@ if len(sys.argv) >= 4 :
 o = xml2objects.ObjectBuilder(xmlfile)
 	
 if not cpvalidate.validate_all(o.root):
-	sys.exit(1)
+    sys.exit(3)
 
 generated = gen.Generator(scriptDir, path, testFilePath)
 generated.initializeFiles()
@@ -89,5 +94,5 @@ if hasattr(o.root.controlPanelDevice, "notificationActions") :
 ### Finish up merging all the different components ###
 generated.replaceInFiles()
 generated.writeFiles()
-sys.exit(1)
+sys.exit(0)
 

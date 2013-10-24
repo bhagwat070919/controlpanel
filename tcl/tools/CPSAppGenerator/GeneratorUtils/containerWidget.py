@@ -58,8 +58,8 @@ class Container (common.Widget):
                 label = lw.Label(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
                 label.generate()
             else :
-                print "ERROR - This type is not supported. Exiting " + elementType
-                sys.exit(0)
+                print >> sys.stderr, "ERROR - This type is not supported. Exiting " + elementType
+                sys.exit(3)
 
 
 

@@ -25,6 +25,10 @@
 #define UNICODE_HI_IN_HEBREW "\xd7\xa9\xd7\x9c\xd7\x95\xd7\x9d\x00"
 #define UNICODE_HI_IN_CHINESE "\xe5\x97\xa8"
 
+/* For Consistency with C++ code */
+#define getboolVar getuint32Var
+#define setboolVar setuint32Var
+
 void addDismissSignal(ExecuteActionContext* context, int32_t dismissSignal);
 
 uint8_t getEnabledFunc();

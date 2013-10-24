@@ -35,8 +35,8 @@ static qcc::String StringVar = "Initial String";
 static qcc::String sampleString = "This is a test";
 static qcc::String sampleUrlString = "www.ControlPanelTest.com";
 
-static ajn::services::CPSDate date(13, 6, 2006);
-static ajn::services::CPSTime time(18, 30, 25);
+static ajn::services::CPSDate dateVar(13, 6, 2006);
+static ajn::services::CPSTime timeVar(18, 30, 25);
 
 bool getboolVar()
 {
@@ -150,26 +150,26 @@ const char* getUrlString()
 
 const ajn::services::CPSDate& getDateProperty()
 {
-    return date;
+    return dateVar;
 }
 
 void setDateProperty(const ajn::services::CPSDate& datePropertyValue)
 {
-    date.setDay(datePropertyValue.getDay());
-    date.setMonth(datePropertyValue.getMonth());
-    date.setYear(datePropertyValue.getYear());
+    dateVar.setDay(datePropertyValue.getDay());
+    dateVar.setMonth(datePropertyValue.getMonth());
+    dateVar.setYear(datePropertyValue.getYear());
 }
 
 const ajn::services::CPSTime& getTimeProperty()
 {
-    return time;
+    return timeVar;
 }
 
 void setTimeProperty(const ajn::services::CPSTime& timePropertyValue)
 {
-    time.setHour(timePropertyValue.getHour());
-    time.setMinute(timePropertyValue.getMinute());
-    time.setSecond(timePropertyValue.getSecond());
+    timeVar.setHour(timePropertyValue.getHour());
+    timeVar.setMinute(timePropertyValue.getMinute());
+    timeVar.setSecond(timePropertyValue.getSecond());
 }
 
 /**

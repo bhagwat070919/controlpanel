@@ -19,7 +19,10 @@ INITIAL_DIR=`pwd` # Save current dir
 cd `dirname $0`       # Go to script dir
 
 python generateCPSApp.py $1 ../../samples/CPSControlleeSample/ ../CPSControlleeTester/
+retval=$?
 
 cd ${INITIAL_DIR}
+
+exit $retval
 
 
