@@ -147,7 +147,7 @@ public class ControlPanelAdapter
 			containerLayout = new LinearLayout(uiContext);
 			containerLayout.setOrientation(LinearLayout.VERTICAL);
 			containerLayout.setGravity(Gravity.LEFT);
-			LinearLayout.LayoutParams vLinearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+			LinearLayout.LayoutParams vLinearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			vLinearLayoutParams.setMargins(10, 10, 10, 10);
 			layoutParams = vLinearLayoutParams;
 			// set the inner label
@@ -165,12 +165,10 @@ public class ControlPanelAdapter
 		Log.d(TAG, "Initialized Layout of class: " +containerLayout.getClass().getSimpleName());
 
 		Log.d(TAG,"Container bgColor:  " + container.getBgColor());
-		if (container.getBgColor() != null)
-			containerLayout.setBackgroundColor(container.getBgColor());
+//		if (container.getBgColor() != null)
+//			containerLayout.setBackgroundColor(container.getBgColor());
 
-		Log.d(TAG,"Container is enabled: " + container.isEnabled() );
-		containerLayout.setEnabled(container.isEnabled());
-
+		
 		// recursively layout the items
 		List<UIElement> elements = container.getElements();
 		Log.d(TAG, String.format("Laying out %d elements", elements.size()));
@@ -185,9 +183,17 @@ public class ControlPanelAdapter
 				containerLayout.addView(createDividerView(), layoutParams);
 			}
 		}//for :: elements
+		
 
 		LinearLayout.LayoutParams linearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		scrollView.addView(containerLayout, linearLayoutParams);
+		
+		boolean enabled = container.isEnabled();
+		Log.d(TAG,"Container is enabled: '" + enabled + "'");
+		if ( !enabled ) {
+			enableViewGroup(scrollView, false);  // Only if container is created as disabled, its children should be disabled
+		}
+		
 		uiElementToView.put(container.getObjectPath(), scrollView);
 		return scrollView;
 	}
@@ -336,12 +342,15 @@ public class ControlPanelAdapter
 	public View createActionView(final ActionWidget action) {
 
 		List<ActionWidgetHintsType> hints = action.getHints();
-		String label = action.getLabel();
-		Integer bgColor = action.getBgColor();
-		Log.d(TAG, "Create Action: " + label + " BGColor: " + bgColor + " actionMeta: " + hints);
+		String label      = action.getLabel();
+		Integer bgColor   = action.getBgColor();
+		boolean isEnabled = action.isEnabled();
+		
+		Log.d(TAG, "Create Action: " + label + " BGColor: " + bgColor + " actionMeta: " + hints + " isEnable: '" + isEnabled + "'");
 
 		Button actionButton = new Button(uiContext);
 		actionButton.setText(label);
+		actionButton.setEnabled(isEnabled);
 //		if (bgColor != null) {
 // Unfortunately button loses its pressed behavior when background is set.
 // actionButton.setBackgroundColor(bgColor);
@@ -419,8 +428,8 @@ public class ControlPanelAdapter
 
 		TextView labelView =  new TextView(uiContext);
 		labelView.setText(label);
-		if (bgColor != null)
-			labelView.setBackgroundColor(bgColor);
+//		if (bgColor != null)
+//			labelView.setBackgroundColor(bgColor);
 
 		uiElementToView.put(labelWidget.getObjectPath(), labelView);
 		return labelView;
@@ -566,13 +575,16 @@ public class ControlPanelAdapter
 		nameTextView.setPadding(10, 0, 0, 0);
 		nameTextView.setText(propertyWidget.getLabel());
 		final Spinner spinner = new Spinner(uiContext);
-		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
-		spinner.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
-		LinearLayout.LayoutParams vLinearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				
+		LinearLayout.LayoutParams vLinearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		layout.addView(nameTextView, vLinearLayoutParams);
 		layout.addView(spinner, vLinearLayoutParams);
 		spinner.setTag(PROPERTY_VALUE);
 
+		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
+		//spinner.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
+		enableViewGroup(layout, propertyWidget.isEnabled() && propertyWidget.isWritable());
+		
 		// set the data model
 		final ArrayAdapter<LabelValuePair> adapter = new ArrayAdapter<LabelValuePair>(uiContext, android.R.layout.simple_spinner_item);
 		int selection = 0;
@@ -696,13 +708,12 @@ public class ControlPanelAdapter
 		nameTextView.setPadding(10, 0, 0, 0);
 		nameTextView.setText(propertyWidget.getLabel());
 		RadioGroup radioGroup = new RadioGroup(uiContext);
-		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
-		radioGroup.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
+		
 		LinearLayout.LayoutParams vLinearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		layout.addView(nameTextView, vLinearLayoutParams);
 		layout.addView(radioGroup, vLinearLayoutParams);
 		radioGroup.setTag(PROPERTY_VALUE);
-
+		
 		final List<ConstrainToValues<?>> listOfConstraint = propertyWidget.getListOfConstraint();
 		if ( listOfConstraint != null ) {
 			for (ConstrainToValues<?> valueCons : listOfConstraint) {
@@ -724,7 +735,10 @@ public class ControlPanelAdapter
 			}
 		}//LOV constraints
 
-		radioGroup.setBackgroundColor(propertyWidget.getBgColor());
+		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
+		enableViewGroup(layout, propertyWidget.isEnabled() && propertyWidget.isWritable());
+		
+//		radioGroup.setBackgroundColor(propertyWidget.getBgColor());
 
 		final int initialCheckedId = radioGroup.getCheckedRadioButtonId();
 
@@ -794,16 +808,16 @@ public class ControlPanelAdapter
 		}
 
 		CheckBox checkbox = new CheckBox(uiContext);
-		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
+		 Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled() + " CurrentValue: '" + currentValue + "'");
 
 		// initialize meta data
 		checkbox.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
-		if (propertyWidget.getBgColor() != null)
-			checkbox.setBackgroundColor(propertyWidget.getBgColor());
+//		if (propertyWidget.getBgColor() != null)
+//			checkbox.setBackgroundColor(propertyWidget.getBgColor());
 
 		// initialize data
 		if (currentValue instanceof Boolean) {
-			checkbox.setSelected((Boolean) currentValue);
+			checkbox.setChecked((Boolean) currentValue);
 		}
 		checkbox.setText(propertyWidget.getLabel());
 
@@ -842,16 +856,40 @@ public class ControlPanelAdapter
 	// =====================================================================================================================
 
 	private View createTextView(final PropertyWidget propertyWidget) {
-		String label = propertyWidget.getLabel();
+		String label    = propertyWidget.getLabel();
 		Integer bgColor = propertyWidget.getBgColor();
-		Log.d(TAG, "Creating Label: \"" + label + "\" BGColor: " + bgColor);
+		Log.d(TAG, "Creating TextView: \"" + label + "\" BGColor: " + bgColor);
 
-		TextView labelView = new TextView(uiContext);
-		labelView.setText(label);
-		if (bgColor != null)
-			labelView.setBackgroundColor(bgColor);
-
-		return labelView;
+		final LinearLayout layout = new LinearLayout(uiContext);
+		layout.setOrientation(LinearLayout.HORIZONTAL);
+				
+		final TextView nameTextView = new TextView(uiContext);
+		nameTextView.setText(label);
+		layout.addView(nameTextView);
+		
+		final TextView valueTextView = new TextView(uiContext);
+		valueTextView.setTag(PROPERTY_VALUE);
+		
+		LinearLayout.LayoutParams hLinearLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		hLinearLayoutParams.setMargins(10, 0, 0, 0);
+		layout.addView(valueTextView, hLinearLayoutParams);
+		
+//		if (bgColor != null)
+//			labelView.setBackgroundColor(bgColor);
+		
+		// set the current value
+		Object currentValue = null;
+		try {
+			currentValue = propertyWidget.getCurrentValue();
+		} catch (ControlPanelException e) {
+			Log.e(TAG, "property.getCurrentValue() failed, initializing property without current value", e);
+		}
+		if (currentValue != null) {
+			Log.d(TAG, "Setting property value to: " + currentValue.toString());
+			valueTextView.setText(currentValue.toString());
+		}
+		
+		return layout;
 	}//createTextView
 
 	// =====================================================================================================================
@@ -873,13 +911,16 @@ public class ControlPanelAdapter
 		hLinearLayoutParams.setMargins(10, 0, 0, 0);
 		layout.addView(valueEditText, hLinearLayoutParams);
 
-		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
 
 		// initialize meta data
-		if (propertyWidget.getBgColor() != null)
-			valueEditText.setBackgroundColor(propertyWidget.getBgColor());
-		valueEditText.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
-
+//		if (propertyWidget.getBgColor() != null)
+//			valueEditText.setBackgroundColor(propertyWidget.getBgColor());
+		
+		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
+		enableViewGroup(layout, propertyWidget.isEnabled() && propertyWidget.isWritable());
+//		valueEditText.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
+//		nameTextView.setEnabled(true);
+		
 		// set the current value
 		String currentValue = null;
 		try {
@@ -952,12 +993,13 @@ public class ControlPanelAdapter
 		hLinearLayoutParams.setMargins(10, 0, 0, 0);
 		layout.addView(valueEditText, hLinearLayoutParams);
 
-		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
 
 		// initialize meta data
-		if (propertyWidget.getBgColor() != null)
-			valueEditText.setBackgroundColor(propertyWidget.getBgColor());
-		valueEditText.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
+//		if (propertyWidget.getBgColor() != null)
+//			valueEditText.setBackgroundColor(propertyWidget.getBgColor());
+		
+		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
+		enableViewGroup(layout, propertyWidget.isEnabled() && propertyWidget.isWritable());
 
 		// set the current value
 		Object currentValue = null;
@@ -1083,12 +1125,13 @@ public class ControlPanelAdapter
 		hLinearLayoutParams.setMargins(10, 0, 0, 0);
 		layout.addView(valueButton, hLinearLayoutParams);
 		
-		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
 
 		// initialize meta data
-		if (propertyWidget.getBgColor() != null)
-			valueButton.setBackgroundColor(propertyWidget.getBgColor());
-		valueButton.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
+//		if (propertyWidget.getBgColor() != null)
+//			valueButton.setBackgroundColor(propertyWidget.getBgColor());
+		
+		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
+		enableViewGroup(layout, propertyWidget.isEnabled() && propertyWidget.isWritable());
 
 		// set the current value
 		Object currentValue = null;
@@ -1189,12 +1232,13 @@ public class ControlPanelAdapter
 		hLinearLayoutParams.setMargins(10, 0, 0, 0);
 		layout.addView(valueButton, hLinearLayoutParams);
 
-		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
 
 		// initialize meta data
-		if (propertyWidget.getBgColor() != null)
-			valueButton.setBackgroundColor(propertyWidget.getBgColor());
-		valueButton.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
+//		if (propertyWidget.getBgColor() != null)
+//			valueButton.setBackgroundColor(propertyWidget.getBgColor());
+		
+		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
+		enableViewGroup(layout, propertyWidget.isEnabled() && propertyWidget.isWritable());
 
 		// set the current value
 		Object currentValue = null;
@@ -1299,12 +1343,14 @@ public class ControlPanelAdapter
 		hLinearLayoutParams.setMargins(10, 0, 0, 0);
 		layout.addView(valueTextView, hLinearLayoutParams);
 
-		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
 
 		// initialize meta data
-		if (propertyWidget.getBgColor() != null)
-			valueTextView.setBackgroundColor(propertyWidget.getBgColor());
-		valueTextView.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
+//		if (propertyWidget.getBgColor() != null)
+//			valueTextView.setBackgroundColor(propertyWidget.getBgColor());
+		
+		
+		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
+		enableViewGroup(layout, propertyWidget.isEnabled() && propertyWidget.isWritable());
 
 		RangeConstraint<?> propertyRangeConstraint = propertyWidget.getPropertyRangeConstraint();
 		if (propertyRangeConstraint == null) {
@@ -1376,13 +1422,13 @@ public class ControlPanelAdapter
 		hLinearLayoutParams.setMargins(10, 0, 0, 0);
 		layout.addView(valueTextView, hLinearLayoutParams);
 
-		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
-
 		// initialize meta data
-		if (propertyWidget.getBgColor() != null)
-			valueTextView.setBackgroundColor(propertyWidget.getBgColor());
-		valueTextView.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
-
+//		if (propertyWidget.getBgColor() != null)
+//			valueTextView.setBackgroundColor(propertyWidget.getBgColor());
+		
+		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
+		enableViewGroup(layout, propertyWidget.isEnabled() && propertyWidget.isWritable());
+		
 		// set the current value
 		Object currentValue = null;
 		try {
@@ -1426,11 +1472,11 @@ public class ControlPanelAdapter
 		layout.addView(innerLayout, vLinearLayoutParams);
 		layout.addView(slider, vLinearLayoutParams);
 		
-		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
-
 		// initialize meta data
-		valueTextView.setBackgroundColor(propertyWidget.getBgColor());
-		valueTextView.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
+//		valueTextView.setBackgroundColor(propertyWidget.getBgColor());
+		
+		Log.d(TAG, "Property isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
+		enableViewGroup(layout, propertyWidget.isEnabled() && propertyWidget.isWritable()) ;
 
 		String unitOfMeasure = propertyWidget.getUnitOfMeasure();
 		Log.d(TAG, "Setting property units of measure to: " + unitOfMeasure);
@@ -1446,7 +1492,7 @@ public class ControlPanelAdapter
 
 		RangeConstraint<?> propertyRangeConstraint = propertyWidget.getPropertyRangeConstraint();
 		if (propertyRangeConstraint == null) {
-			Log.e(TAG, "Found null property-range. Disabling Number Picker. Returning a plain label.");
+			Log.e(TAG, "Found null property-range. Disabling Slider. Returning a plain label.");
 			return new TextView(uiContext);
 		}
 
@@ -1456,35 +1502,50 @@ public class ControlPanelAdapter
 			ValueType.SHORT.equals(valueType) ? ((Short)currentValue) :
 				ValueType.INT.equals(valueType) ? ((Integer)currentValue) : 0);
 
-		// unused. Android sliders always start from 0
-		//final int min = (Integer) propertyRangeConstraint.getMin();
-		Object maxT = propertyRangeConstraint.getMax();
-		final int max = 
+		// !!! Android sliders always start from 0 !!!
+		Object minT   = propertyRangeConstraint.getMin();
+		final int min = ValueType.SHORT.equals(valueType) ? ((Short)minT) :
+			     ValueType.INT.equals(valueType) ? ((Integer)minT) : 0;
+		
+		
+		Object maxT   = propertyRangeConstraint.getMax();
+		int max       = 
 				ValueType.SHORT.equals(valueType) ? ((Short)maxT) :
-					ValueType.INT.equals(valueType) ? ((Integer)maxT) : 0;	
-		Object incrementT = propertyRangeConstraint.getIncrement();
+					ValueType.INT.equals(valueType) ? ((Integer)maxT) : 0;
+					
+		Object incrementT   = propertyRangeConstraint.getIncrement();
 		final int increment = 
 				ValueType.SHORT.equals(valueType) ? ((Short)incrementT) :
 					ValueType.INT.equals(valueType) ? ((Integer)incrementT) : 0;	
 
+		//because the minimum value in android always starts from 0, we move the max value to persist the min,max range
+		max -= min;
+		
 		slider.setMax(max);
 		slider.setKeyProgressIncrement(increment);
-		Log.d(TAG, "Setting property value to: " + String.valueOf(currentValue));
-		slider.setProgress(initialValue);
+		
+		final int initialValueTrans = initialValue - min;
+		Log.d(TAG, "Setting property value to: " + String.valueOf(initialValue) + " Slider value: '" + initialValueTrans + "'");
+		slider.setProgress(initialValueTrans);
 		valueTextView.setText(String.valueOf(initialValue));
 
 		slider.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
-			int currentProgress = initialValue;
+			int currentProgress = initialValueTrans;
+			final int listenMin = min;
+			
 			@Override
 			public void onStopTrackingTouch(final SeekBar seekBar) {
-
+				
 				// set the property in a background task
 				SetPropertyAsyncTask asyncTask = new SetPropertyAsyncTask() {
 
 					@Override
 					protected void onFailure(ControlPanelException e) {
 						seekBar.setProgress(currentProgress);
+						
+						valueTextView.setText(currentProgress + listenMin);		
+						
 						if (exceptionHandler != null) {
 							// An exception was thrown. Restore old value.
 							exceptionHandler.handleControlPanelException(e);
@@ -1496,18 +1557,21 @@ public class ControlPanelAdapter
 						// All went well. Store the new value.
 						currentProgress = seekBar.getProgress();
 					}
-					
 				};
-				asyncTask.execute(propertyWidget, seekBar.getProgress());
-			}
+				
+				int progress      = seekBar.getProgress();
+				int valueToUpdate = progress + listenMin;
+				Log.d(TAG, "The slider progress: '" + progress + "' valueToUpdate: '" + valueToUpdate + "'");
+				asyncTask.execute(propertyWidget, valueToUpdate);
+			}//onStopTrackingTouch
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {}
 
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				valueTextView.setText(String.valueOf(progress));									}
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				valueTextView.setText(String.valueOf(progress + listenMin));								
+			}
 		});
 
 		return layout;
@@ -1548,6 +1612,7 @@ public class ControlPanelAdapter
 			break;
 		}//switch :: elementType
 	}
+	
 
 	// =====================================================================================================================
 
@@ -1575,11 +1640,18 @@ public class ControlPanelAdapter
 
 		boolean enabled = container.isEnabled();
 		Log.d(TAG,"Refreshing ContainerWidget bgColor:  " + container.getBgColor() + " enabled: "+ enabled);
-		if (container.getBgColor() != null)
-			containerLayout.setBackgroundColor(container.getBgColor());
+//		if (container.getBgColor() != null)
+//			containerLayout.setBackgroundColor(container.getBgColor());
 
-		containerLayout.setEnabled(enabled);
+		if ( enabled && !containerLayout.isEnabled() ) {
+			enableViewGroup(containerLayout, true);
+		}
+		else if ( !enabled &&  containerLayout.isEnabled() ) {
+			enableViewGroup(containerLayout, false);
+		}
+		
 	}
+	
 
 	// =====================================================================================================================
 
@@ -1616,6 +1688,7 @@ public class ControlPanelAdapter
 //		}
 
 	}//onActionMetaDataChange
+	
 
 	// =====================================================================================================================
 
@@ -1643,6 +1716,7 @@ public class ControlPanelAdapter
 			alertDialog.dismiss();
 		}
 	}//onAlertDialogMetaDataChange
+	
 
 	// =====================================================================================================================
 
@@ -1666,12 +1740,47 @@ public class ControlPanelAdapter
 		}
 
 		Log.d(TAG, "Refreshing the view of property '" + propertyWidget.getLabel() + "' isWritable? " + propertyWidget.isWritable() + ", isEnabled? " + propertyWidget.isEnabled());
-		propertyView.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
-		if (!(propertyView instanceof Spinner)) {
-			if (propertyWidget.getBgColor() != null)
-				propertyView.setBackgroundColor(propertyWidget.getBgColor());
+		
+		//Set enable/disable property
+		if ( propertyView instanceof ViewGroup ) {
+			enableViewGroup(propertyView, propertyWidget.isEnabled() && propertyWidget.isWritable());
+		}//if :: ViewGroup
+		else {
+			propertyView.setEnabled(propertyWidget.isEnabled() && propertyWidget.isWritable());
 		}
+			
+//		if (!(propertyView instanceof Spinner)) {
+//			if (propertyWidget.getBgColor() != null)
+//				propertyView.setBackgroundColor(propertyWidget.getBgColor());
+//		}
 	}
+	
+
+	/**
+	 * Iteration over the given {@link ViewGroup} and set it enable/disable state
+	 * @param propertyView {@link ViewGroup} to set its enable/disable state
+	 * @param enable
+	 */
+	private void enableViewGroup(View propertyView, boolean enable) {
+		if ( !(propertyView  instanceof ViewGroup) ) {
+			Log.w(TAG, "The given propertyView is no intanceof ViewGroup");
+			return;
+		}
+				
+		ViewGroup viewGroup = (ViewGroup) propertyView;
+		for(int i=0; i < viewGroup.getChildCount(); ++i) {
+			
+			View element = viewGroup.getChildAt(i);
+			if ( element  instanceof ViewGroup ) {
+				enableViewGroup(element, enable);
+			}
+			if (PROPERTY_EDITOR.equals(element.getTag())) {
+				element.setEnabled(enable);
+			}
+		}// for :: viewGroup
+		
+		viewGroup.setEnabled(enable);
+	}//enableViewGroup
 
 	// =====================================================================================================================
 
@@ -1705,6 +1814,7 @@ public class ControlPanelAdapter
 			break;
 		}//switch :: elementType
 	}
+	
 
 	// =====================================================================================================================
 
@@ -1808,6 +1918,7 @@ public class ControlPanelAdapter
 
 	// =====================================================================================================================
 
+	
 	private void onSliderValueChange(View propertyView, PropertyWidget propertyWidget, Object newValue2) {
 		ViewGroup layout = (ViewGroup) propertyView;
 		final TextView valueTextView = (TextView) layout.findViewWithTag(PROPERTY_VALUE);
@@ -1831,9 +1942,20 @@ public class ControlPanelAdapter
 		}			
 
 		// set value
+		RangeConstraint<?> rangeCons = propertyWidget.getPropertyRangeConstraint();
+		if ( rangeCons == null ) {
+			Log.e(TAG, "Found null property-range nothing to do with it...");
+			return;
+		}
+		
+		Object minT   = rangeCons.getMin();
+		final int min = ValueType.SHORT.equals(valueType) ? ((Short)minT) :
+			     ValueType.INT.equals(valueType) ? ((Integer)minT) : 0;
+
 		valueTextView.setText(String.valueOf(newValue));
-		slider.setProgress(newValue);
+		slider.setProgress(newValue - min);
 	}
+	
 
 	// =====================================================================================================================
 
@@ -1850,16 +1972,22 @@ public class ControlPanelAdapter
 			Log.e(TAG, "property.getCurrentValue() failed, cannot update property with value: " + newValue);
 		}
 	}
+	
 
 	// =====================================================================================================================
 
-	private void onTextViewValueChange(View propertyView, PropertyWidget propertyWidget, Object newValue) {	
-		String label = newValue.toString();
-		Log.d(TAG, "Refreshing the TextView of property " + label);
+	private void onTextViewValueChange(View propertyView, PropertyWidget propertyWidget, Object newValue) {
+		String label = propertyWidget.getLabel();
+		Log.d(TAG, "Refreshing the TextView of property '" + label + "'");
 
-		// set the text of the label
-		TextView labelView = (TextView) propertyView;
-		labelView.setText(label);
+		// extract the text view
+		final ViewGroup layout = (ViewGroup) propertyView;
+		final TextView valueTextView = (TextView) layout.findViewWithTag(PROPERTY_VALUE);
+		
+		// set the current value
+		String newValueStr = newValue.toString();
+		Log.d(TAG, "Setting property value to: '" + newValueStr + "'");
+		valueTextView.setText(newValueStr);
 	}
 
 	// =====================================================================================================================
@@ -1876,6 +2004,7 @@ public class ControlPanelAdapter
 		valueTextView.setText(newValue.toString());
 
 	}
+	
 
 	// =====================================================================================================================
 
@@ -1890,6 +2019,7 @@ public class ControlPanelAdapter
 		Log.d(TAG, "Setting property value to: " + newValue.toString());
 		valueEditText.setText(newValue.toString());
 	}
+	
 
 	// =====================================================================================================================
 
@@ -1910,6 +2040,7 @@ public class ControlPanelAdapter
 			Log.e(TAG, "property.getValueType() is not TIME, cannot update property with new value: " + newValue);
 		}
 	}
+	
 
 	// =====================================================================================================================
 
@@ -1930,6 +2061,7 @@ public class ControlPanelAdapter
 			Log.e(TAG, "property.getValueType() is not DATE,  cannot update property with current value: " + newValue);
 		} 
 	}
+	
 
 	// =====================================================================================================================
 
@@ -1944,6 +2076,7 @@ public class ControlPanelAdapter
 		Log.d(TAG, "Setting property value to: " + newValue.toString());
 		valueEditText.setText(newValue.toString());
 	}
+	
 
 	// =====================================================================================================================
 
@@ -1968,6 +2101,7 @@ public class ControlPanelAdapter
 		spinner.setSelection(selection);
 		adapter.notifyDataSetChanged();
 	}
+	
 
 	// =====================================================================================================================
 
@@ -1998,6 +2132,7 @@ public class ControlPanelAdapter
 			}
 		}//LOV constraints
 	}
+	
 
 	// =====================================================================================================================
 

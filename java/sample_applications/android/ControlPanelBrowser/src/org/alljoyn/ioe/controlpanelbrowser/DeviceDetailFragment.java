@@ -234,7 +234,7 @@ public class DeviceDetailFragment extends Fragment {
 						public void run()
 						{
 							if (rootView != null) {
-								RelativeLayout body = (RelativeLayout) rootView.findViewById(R.id.control_panel);
+								LinearLayout body = (LinearLayout) rootView.findViewById(R.id.control_panel);
 								body.removeAllViews();
 								body.addView(adapterView);
 							}
@@ -267,7 +267,7 @@ public class DeviceDetailFragment extends Fragment {
 					public void run()
 					{
 						if (rootView != null) {
-							RelativeLayout body = (RelativeLayout) rootView.findViewById(R.id.control_panel);
+							LinearLayout body = (LinearLayout) rootView.findViewById(R.id.control_panel);
 							body.removeAllViews();
 							body.addView(returnView);
 						}
