@@ -16,8 +16,8 @@
 
 #include "HttpControlBusObject.h"
 #include "../ControlPanelConstants.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
-#include "alljoyn/controlpanel/HttpControl.h"
+#include <alljoyn/controlpanel/ControlPanelService.h>
+#include <alljoyn/controlpanel/HttpControl.h>
 
 namespace ajn {
 namespace services {
@@ -51,14 +51,14 @@ HttpControlBusObject::HttpControlBusObject(BusAttachment* bus, String const& obj
     }
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create interface");
+            logger->warn(TAG, "Could not create interface");
         return;
     }
 
     status = AddInterface(*intf);
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not add interface");
+            logger->warn(TAG, "Could not add interface");
         return;
     }
 
@@ -121,7 +121,10 @@ void HttpControlBusObject::HttpControlGetUrl(const ajn::InterfaceDescription::Me
     if (ER_OK != status) {
         if (logger)
             logger->warn(TAG, "Did not reply successfully");
+    } else {
+        logger->info(TAG, "Replied to GetUrl successfully");
     }
+
 }
 
 } /* namespace services */

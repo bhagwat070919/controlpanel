@@ -17,7 +17,7 @@
 #ifndef LANGUAGESETS_H_
 #define LANGUAGESETS_H_
 
-#include "alljoyn/controlpanel/LanguageSet.h"
+#include <alljoyn/controlpanel/LanguageSet.h>
 #include <map>
 
 namespace ajn {

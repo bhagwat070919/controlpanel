@@ -17,7 +17,7 @@
 #include <algorithm>
 #include <sstream>
 
-#include "alljoyn/controlpanel/ControlPanelService.h"
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include "ControlPanelConstants.h"
 
 namespace ajn {
@@ -47,7 +47,7 @@ ControlPanelService::ControlPanelService() :
 
 ControlPanelService::~ControlPanelService()
 {
-    if (logger) logger->debug(TAG, "Shutting down");
+    if (logger) logger->info(TAG, "Shutting down");
 
     if (m_BusListener) {
         if (m_Bus)
@@ -67,6 +67,9 @@ uint16_t ControlPanelService::getVersion()
 
 QStatus ControlPanelService::initControllee(BusAttachment* bus, ControlPanelControllee* controlPanelControllee)
 {
+    if (logger)
+        logger->debug(TAG, "Initializing Controllee");
+
     if (!bus) {
         if (logger)
             logger->warn(TAG, "Bus cannot be NULL");
@@ -126,7 +129,14 @@ QStatus ControlPanelService::initControllee(BusAttachment* bus, ControlPanelCont
     SessionPort servicePort = CONTROLPANELSERVICE_PORT;
     SessionOpts sessionOpts(SessionOpts::TRAFFIC_MESSAGES, true, SessionOpts::PROXIMITY_ANY, TRANSPORT_ANY);
 
-    return m_Bus->BindSessionPort(servicePort, sessionOpts, *m_BusListener);
+    status = m_Bus->BindSessionPort(servicePort, sessionOpts, *m_BusListener);
+    if (status != ER_OK) {
+        if (logger)
+            logger->warn(TAG, "Could not bind Session Port successfully");
+        return status;
+    }
+    logger->info(TAG, "Initialized Controllee successfully");
+    return status;
 }
 
 QStatus ControlPanelService::shutdownControllee()

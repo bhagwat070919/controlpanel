@@ -15,8 +15,8 @@
  ******************************************************************************/
 
 #include "PinKeyXListener.h"
-#include "alljoyn/controlpanel/GenericLogger.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
+#include <alljoyn/controlpanel/GenericLogger.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 
 #define TAG "PinKeyXListener"
 

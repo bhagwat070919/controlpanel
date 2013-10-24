@@ -17,9 +17,9 @@
 #ifndef CONTROLPANELBUSOBJECT_H_
 #define CONTROLPANELBUSOBJECT_H_
 
-#include "alljoyn/BusAttachment.h"
-#include "alljoyn/BusObject.h"
-#include "alljoyn/InterfaceDescription.h"
+#include <alljoyn/BusAttachment.h>
+#include <alljoyn/BusObject.h>
+#include <alljoyn/InterfaceDescription.h>
 
 namespace ajn {
 namespace services {

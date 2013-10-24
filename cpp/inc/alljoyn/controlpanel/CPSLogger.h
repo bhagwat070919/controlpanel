@@ -17,7 +17,7 @@
 #ifndef CPSLOGGER_H_
 #define CPSLOGGER_H_
 
-#include "alljoyn/controlpanel/GenericLogger.h"
+#include <alljoyn/controlpanel/GenericLogger.h>
 #include <alljoyn/Status.h>
 #include <qcc/Debug.h>
 

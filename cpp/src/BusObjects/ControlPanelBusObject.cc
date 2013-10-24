@@ -16,7 +16,7 @@
 
 #include "ControlPanelBusObject.h"
 #include "../ControlPanelConstants.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
+#include <alljoyn/controlpanel/ControlPanelService.h>
 
 using namespace qcc;
 namespace ajn {
@@ -43,14 +43,14 @@ ControlPanelBusObject::ControlPanelBusObject(BusAttachment* bus, String const& o
     }
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create interface");
+            logger->warn(TAG, "Could not create interface");
         return;
     }
 
     status = AddInterface(*intf);
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not add interface");
+            logger->warn(TAG, "Could not add interface");
         return;
     }
     if (logger)

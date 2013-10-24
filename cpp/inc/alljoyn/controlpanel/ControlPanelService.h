@@ -17,11 +17,11 @@
 #ifndef CONTROLPANELSERVICE_H_
 #define CONTROLPANELSERVICE_H_
 
-#include "alljoyn/BusAttachment.h"
-#include "alljoyn/controlpanel/GenericLogger.h"
-#include "alljoyn/controlpanel/ControlPanelControllee.h"
-#include "alljoyn/controlpanel/ControlPanelBusListener.h"
-#include "alljoyn/controlpanel/CPSLogger.h"
+#include <alljoyn/BusAttachment.h>
+#include <alljoyn/controlpanel/GenericLogger.h>
+#include <alljoyn/controlpanel/ControlPanelControllee.h>
+#include <alljoyn/controlpanel/ControlPanelBusListener.h>
+#include <alljoyn/controlpanel/CPSLogger.h>
 
 namespace ajn {
 namespace services {

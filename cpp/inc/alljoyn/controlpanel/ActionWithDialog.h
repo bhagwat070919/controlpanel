@@ -17,8 +17,8 @@
 #ifndef ACTIONWITHDIALOG_H_
 #define ACTIONWITHDIALOG_H_
 
-#include "alljoyn/controlpanel/Widget.h"
-#include "alljoyn/controlpanel/Dialog.h"
+#include <alljoyn/controlpanel/Widget.h>
+#include <alljoyn/controlpanel/Dialog.h>
 
 namespace ajn {
 namespace services {

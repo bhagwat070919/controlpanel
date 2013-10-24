@@ -25,6 +25,9 @@ env.Append(CPPPATH = '$DISTDIR/controlpanel/inc');
 if not env.has_key('_ALLJOYN_ABOUT_') and os.path.exists('../about/SConscript'):
     env.SConscript('../about/SConscript')
 
+if not env.has_key('_ALLJOYN_NOTIFICATION_') and os.path.exists('../notification/SConscript'):
+    env.SConscript('../notification/SConscript')
+
 if 'cpp' in env['bindings'] and not env.has_key('_ALLJOYNCORE_') and os.path.exists('../../alljoyn_core/SConscript'):
    env.SConscript('../../alljoyn_core/SConscript')
 

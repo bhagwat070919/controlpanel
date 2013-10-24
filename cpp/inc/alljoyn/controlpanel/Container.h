@@ -17,7 +17,7 @@
 #ifndef CONTAINER_H_
 #define CONTAINER_H_
 
-#include "alljoyn/controlpanel/RootWidget.h"
+#include <alljoyn/controlpanel/RootWidget.h>
 
 namespace ajn {
 namespace services {

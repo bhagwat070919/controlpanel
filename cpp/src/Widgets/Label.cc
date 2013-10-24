@@ -14,7 +14,7 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Label.h"
+#include <alljoyn/controlpanel/Label.h>
 #include "../ControlPanelConstants.h"
 #include "../BusObjects/LabelBusObject.h"
 

@@ -14,8 +14,8 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/RootWidget.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
+#include <alljoyn/controlpanel/RootWidget.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include "../BusObjects/NotificationActionBusObject.h"
 
 namespace ajn {

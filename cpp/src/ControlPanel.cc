@@ -14,12 +14,12 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/ControlPanel.h"
+#include <alljoyn/controlpanel/ControlPanel.h>
+#include <alljoyn/about/AboutServiceApi.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include "ControlPanelConstants.h"
-#include "alljoyn/about/AboutServiceApi.h"
 #include "BusObjects/ControlPanelBusObject.h"
 #include "BusObjects/NotificationActionBusObject.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
 
 namespace ajn {
 namespace services {

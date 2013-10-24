@@ -17,10 +17,10 @@
 #ifndef WIDGETBUSOBJECT_H_
 #define WIDGETBUSOBJECT_H_
 
-#include "alljoyn/BusAttachment.h"
-#include "alljoyn/BusObject.h"
-#include "alljoyn/InterfaceDescription.h"
-#include "alljoyn/controlpanel/Widget.h"
+#include <alljoyn/BusAttachment.h>
+#include <alljoyn/BusObject.h>
+#include <alljoyn/InterfaceDescription.h>
+#include <alljoyn/controlpanel/Widget.h>
 
 namespace ajn {
 namespace services {

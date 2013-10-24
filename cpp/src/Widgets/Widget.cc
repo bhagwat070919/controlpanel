@@ -14,8 +14,8 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/ControlPanelService.h"
-#include "alljoyn/controlpanel/Widget.h"
+#include <alljoyn/controlpanel/ControlPanelService.h>
+#include <alljoyn/controlpanel/Widget.h>
 #include "../ControlPanelConstants.h"
 #include "../BusObjects/WidgetBusObject.h"
 

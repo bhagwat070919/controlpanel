@@ -14,7 +14,7 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Action.h"
+#include <alljoyn/controlpanel/Action.h>
 #include "../BusObjects/ActionBusObject.h"
 #include "../ControlPanelConstants.h"
 

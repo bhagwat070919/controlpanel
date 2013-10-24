@@ -14,9 +14,9 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Dialog.h"
+#include <alljoyn/controlpanel/Dialog.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include "../ControlPanelConstants.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
 #include "../BusObjects/DialogBusObject.h"
 
 namespace ajn {

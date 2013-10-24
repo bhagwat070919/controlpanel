@@ -17,7 +17,7 @@
 #ifndef AREYOUSURE_H_
 #define AREYOUSURE_H_
 
-#include "alljoyn/controlpanel/Dialog.h"
+#include <alljoyn/controlpanel/Dialog.h>
 
 namespace ajn {
 namespace services {

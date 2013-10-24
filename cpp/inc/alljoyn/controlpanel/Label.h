@@ -17,7 +17,7 @@
 #ifndef LABEL_H_
 #define LABEL_H_
 
-#include "alljoyn/controlpanel/Widget.h"
+#include <alljoyn/controlpanel/Widget.h>
 #include <map>
 
 namespace ajn {

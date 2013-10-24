@@ -17,7 +17,7 @@
 #ifndef HTTPCONTROL_H_
 #define HTTPCONTROL_H_
 
-#include "alljoyn/BusObject.h"
+#include <alljoyn/BusObject.h>
 
 namespace ajn {
 namespace services {

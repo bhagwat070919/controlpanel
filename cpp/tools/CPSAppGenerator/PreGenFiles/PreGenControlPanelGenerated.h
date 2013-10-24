@@ -17,11 +17,11 @@
 #ifndef CONTROLPANELGENERATED_H_
 #define CONTROLPANELGENERATED_H_
 
-#include "alljoyn/controlpanel/ControlPanelControllee.h"
-#include "alljoyn/controlpanel/ControlPanelHints.h"
-#include "alljoyn/controlpanel/Container.h"
-#include "alljoyn/controlpanel/Label.h"
-#include "alljoyn/controlpanel/ActionWithDialog.h"
+#include <alljoyn/controlpanel/ControlPanelControllee.h>
+#include <alljoyn/controlpanel/ControlPanelHints.h>
+#include <alljoyn/controlpanel/Container.h>
+#include <alljoyn/controlpanel/Label.h>
+#include <alljoyn/controlpanel/ActionWithDialog.h>
 //NEW_WIDGET_CLASSES_HERE
 
 /**

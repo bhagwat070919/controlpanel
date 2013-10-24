@@ -17,7 +17,7 @@
 #ifndef CAPITAL_NAME_HERE_H_
 #define CAPITAL_NAME_HERE_H_
 
-#include "alljoyn/controlpanel/Property.h"
+#include <alljoyn/controlpanel/Property.h>
 
 namespace ajn {
 namespace services {

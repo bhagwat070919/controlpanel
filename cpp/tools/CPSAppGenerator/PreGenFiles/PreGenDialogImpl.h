@@ -17,7 +17,7 @@
 #ifndef CAPITAL_NAME_HERE_H_
 #define CAPITAL_NAME_HERE_H_
 
-#include "alljoyn/controlpanel/Dialog.h"
+#include <alljoyn/controlpanel/Dialog.h>
 
 namespace ajn {
 namespace services {

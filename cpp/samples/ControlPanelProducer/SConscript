@@ -12,13 +12,14 @@
 #    See the license for the specific language governing permissions and
 #    limitations under the license.
 
-Import('env')
+Import('env', 'cobjs', 'genobjs', 'providedobjs')
 
 srcs = env.Glob('*.cc')
 objs = env.Object(srcs)
-
-env.VariantDir('AppCommon', '$APP_COMMON_DIR/cpp/samples_common/', duplicate = 0)
-cobjs = env.SConscript('AppCommon/SConscript', {'env': env})
 objs.extend(cobjs)
-    
-Return('objs')
+objs.extend(genobjs)
+objs.extend(providedobjs)
+
+prog = env.Program('ControlPanelProducer', objs)
+
+Return('prog')

@@ -18,6 +18,7 @@
 #include <sstream>
 #include <cstdio>
 #include <signal.h>
+#include <alljoyn/notification/NotificationService.h>
 #include <alljoyn/controlpanel/ControlPanelService.h>
 #include <alljoyn/controlpanel/ControlPanelControllee.h>
 #include <alljoyn/controlpanel/GenericLogger.h>
@@ -39,6 +40,9 @@ ControlPanelService* controlPanelService = 0;
 ControlPanelControllee* controlPanelControllee = 0;
 PinKeyXListener* pinKeyXListener = 0;
 
+NotificationService* prodService = 0;
+NotificationSender* sender = 0;
+
 void exitApp(int32_t signum)
 {
     std::cout << "Program Finished" << std::endl;
@@ -46,7 +50,11 @@ void exitApp(int32_t signum)
     CommonSampleUtil::aboutServiceDestroy(bus, controlpanelBusListener);
     if (controlPanelService)
         controlPanelService->shutdownControllee();
+    if (prodService)
+        prodService->shutdown();
     ControlPanelGenerated::Shutdown();
+    if (sender)
+        delete sender;
     if (controlPanelControllee)
         delete controlPanelControllee;
     if (controlpanelBusListener)
@@ -81,6 +89,10 @@ int32_t main()
     controlPanelService = ControlPanelService::getInstance();
     controlPanelService->setLogLevel(Log::LogLevel::LEVEL_INFO);
 
+    // Initialize Service object and Sender Object
+    prodService = NotificationService::getInstance();
+    prodService->setLogLevel(Log::LogLevel::LEVEL_DEBUG);
+
     pinKeyXListener = new PinKeyXListener();
 
     bus = CommonSampleUtil::prepareBusAttachment(pinKeyXListener);
@@ -100,7 +112,7 @@ int32_t main()
         exitApp(1);
     }
 
-    status = ControlPanelGenerated::PrepareWidgets(controlPanelControllee);
+    status = ControlPanelGenerated::PrepareWidgets(controlPanelControllee); //TODO send ptr to ptr?
     if (status != ER_OK) {
         std::cout << "Could not prepare Widgets." << std::endl;
         exitApp(1);
@@ -112,6 +124,12 @@ int32_t main()
         exitApp(1);
     }
 
+    sender = prodService->initSend(bus, propertyStoreImpl);
+    if (!sender) {
+        std::cout << "Could not initialize Sender - exiting application" << std::endl;
+        exitApp(1);
+    }
+
     status = CommonSampleUtil::aboutServiceAnnounce();
     if (status != ER_OK) {
         std::cout << "Could not announce." << std::endl;
@@ -119,7 +137,34 @@ int32_t main()
     }
 
     std::cout << "Sent announce, waiting for Contollers" << std::endl;
-    while (1) {
-        sleep(1);
+    std::cout << "Enter in the ControlPanelService object path or press 'enter' to use default:" << std::endl;
+
+    std::string input;
+    qcc::String controlPanelServiceObjectPath;
+    qcc::String defaultControlPanelServiceObjectPath = "/ControlPanel/MyDevice/areYouSure";
+
+    getline(std::cin, input);
+    while (!std::cin.eof()) {
+        controlPanelServiceObjectPath = input.length() ? input.c_str() : defaultControlPanelServiceObjectPath;
+
+        NotificationMessageType messageType = INFO;
+        NotificationText textToSend("defaultLang", "Sending CPS ObjectPath");
+        std::vector<NotificationText> vecMessages;
+        vecMessages.push_back(textToSend);
+        Notification notification(messageType, vecMessages);
+        notification.setControlPanelServiceObjectPath(controlPanelServiceObjectPath.c_str());
+
+        status = sender->send(notification, 7200);
+        if (status != ER_OK) {
+            std::cout << "Notification was not sent successfully" << std::endl;
+        } else {
+            std::cout << "Notification sent successfully" << std::endl;
+        }
+
+        std::cout << "Enter in the ControlPanelService object path or press 'enter' to use default:" << std::endl;
+        getline(std::cin, input);
     }
+    std::cout << "Exiting in 10 seconds" << std::endl;
+    sleep(10);
+    exitApp(0);
 }

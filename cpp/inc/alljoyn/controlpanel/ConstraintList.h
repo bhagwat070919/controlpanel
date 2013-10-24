@@ -17,9 +17,9 @@
 #ifndef CONSTRAINTLIST_H_
 #define CONSTRAINTLIST_H_
 
-#include "alljoyn/BusAttachment.h"
-#include "alljoyn/controlpanel/Widget.h"
-#include "alljoyn/controlpanel/PropertyType.h"
+#include <alljoyn/BusAttachment.h>
+#include <alljoyn/controlpanel/Widget.h>
+#include <alljoyn/controlpanel/PropertyType.h>
 #include <vector>
 
 namespace ajn {

@@ -17,7 +17,7 @@
 #ifndef OVENACTION_H_
 #define OVENACTION_H_
 
-#include "alljoyn/controlpanel/Action.h"
+#include <alljoyn/controlpanel/Action.h>
 
 namespace ajn {
 namespace services {

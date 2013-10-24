@@ -17,9 +17,9 @@
 #ifndef CONTROLPANELBUSLISTENER_H_
 #define CONTROLPANELBUSLISTENER_H_
 
-#include "alljoyn/BusListener.h"
-#include "alljoyn/SessionPortListener.h"
-#include "alljoyn/controlpanel/GenericLogger.h"
+#include <alljoyn/BusListener.h>
+#include <alljoyn/SessionPortListener.h>
+#include <alljoyn/controlpanel/GenericLogger.h>
 #include <vector>
 
 namespace ajn {

@@ -16,8 +16,8 @@
 
 #include <qcc/platform.h>
 #include <stdio.h>
-#include "alljoyn/controlpanel/CPSDate.h"
-#include "alljoyn/controlpanel/CPSTime.h"
+#include <alljoyn/controlpanel/CPSDate.h>
+#include <alljoyn/controlpanel/CPSTime.h>
 
 #define AJ_Printf(fmat, ...) \
     do { printf(fmat, ## __VA_ARGS__); } while (0)

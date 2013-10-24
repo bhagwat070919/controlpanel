@@ -17,7 +17,7 @@
 #ifndef DIALOG_H_
 #define DIALOG_H_
 
-#include "alljoyn/controlpanel/RootWidget.h"
+#include <alljoyn/controlpanel/RootWidget.h>
 
 namespace ajn {
 namespace services {

@@ -17,7 +17,7 @@
 #ifndef PINKEYXLISTENER_H_
 #define PINKEYXLISTENER_H_
 
-#include "alljoyn/AuthListener.h"
+#include <alljoyn/AuthListener.h>
 
 class PinKeyXListener : public ajn::AuthListener {
     bool RequestCredentials(const char* authMechanism, const char* authPeer,

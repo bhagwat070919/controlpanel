@@ -16,8 +16,8 @@
 
 #include "DialogBusObject.h"
 #include "../ControlPanelConstants.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
-#include "alljoyn/controlpanel/Dialog.h"
+#include <alljoyn/controlpanel/ControlPanelService.h>
+#include <alljoyn/controlpanel/Dialog.h>
 
 namespace ajn {
 namespace services {
@@ -31,7 +31,7 @@ DialogBusObject::DialogBusObject(BusAttachment* bus, String const& objectPath, u
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create the BusObject");
+            logger->warn(TAG, "Could not create the BusObject");
         return;
     }
 
@@ -55,14 +55,14 @@ DialogBusObject::DialogBusObject(BusAttachment* bus, String const& objectPath, u
     }
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create interface");
+            logger->warn(TAG, "Could not create interface");
         return;
     }
 
     status = AddInterface(*intf);
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not add interface");
+            logger->warn(TAG, "Could not add interface");
         return;
     }
 
@@ -131,19 +131,19 @@ void DialogBusObject::DialogExecute(const ajn::InterfaceDescription::Member* mem
         MsgArg replyArg;
         status = MethodReply(msg, &replyArg, 0);
         if (logger)
-            logger->debug(TAG, "Execute Action 1 completed successfully");
+            logger->info(TAG, "Execute Action 1 completed successfully");
     } else if (member->name.compare(AJ_METHOD_ACTION2) == 0 &&
                ((Dialog*)m_Widget)->executeAction2CallBack()) {
         MsgArg replyArg;
         status = MethodReply(msg, &replyArg, 0);
         if (logger)
-            logger->debug(TAG, "Execute Action 2 completed successfully");
+            logger->info(TAG, "Execute Action 2 completed successfully");
     } else if (member->name.compare(AJ_METHOD_ACTION3) == 0 &&
                ((Dialog*)m_Widget)->executeAction3CallBack()) {
         MsgArg replyArg;
         status = MethodReply(msg, &replyArg, 0);
         if (logger)
-            logger->debug(TAG, "Execute Action 3 completed successfully");
+            logger->info(TAG, "Execute Action 3 completed successfully");
     } else {
         if (logger)
             logger->warn(TAG, "Unknown Execute Action was called, or action did not complete successfully");

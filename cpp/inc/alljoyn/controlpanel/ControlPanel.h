@@ -17,8 +17,8 @@
 #ifndef CONTROLPANEL_H_
 #define CONTROLPANEL_H_
 
-#include "alljoyn/BusObject.h"
-#include "alljoyn/controlpanel/Container.h"
+#include <alljoyn/BusObject.h>
+#include <alljoyn/controlpanel/Container.h>
 
 namespace ajn {
 namespace services {

@@ -17,7 +17,7 @@
 #ifndef CPSDATE_H_
 #define CPSDATE_H_
 
-#include "qcc/platform.h"
+#include <qcc/platform.h>
 
 namespace ajn {
 namespace services {

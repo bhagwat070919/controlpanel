@@ -14,11 +14,11 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/HttpControl.h"
+#include <alljoyn/controlpanel/HttpControl.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
+#include <alljoyn/about/AboutServiceApi.h>
 #include "../ControlPanelConstants.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
 #include "../BusObjects/HttpControlBusObject.h"
-#include "alljoyn/about/AboutServiceApi.h"
 
 namespace ajn {
 namespace services {

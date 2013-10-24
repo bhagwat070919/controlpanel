@@ -14,9 +14,9 @@
  *    limitations under the license.
  ******************************************************************************/
 
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include "NotificationActionBusObject.h"
 #include "../ControlPanelConstants.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
 
 namespace ajn {
 namespace services {
@@ -44,14 +44,14 @@ NotificationActionBusObject::NotificationActionBusObject(BusAttachment* bus, Str
     }
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create interface");
+            logger->warn(TAG, "Could not create interface");
         return;
     }
 
     status = AddInterface(*intf);
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not add interface");
+            logger->warn(TAG, "Could not add interface");
         return;
     }
 

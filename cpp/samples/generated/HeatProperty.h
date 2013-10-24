@@ -17,7 +17,7 @@
 #ifndef HEATPROPERTY_H_
 #define HEATPROPERTY_H_
 
-#include "alljoyn/controlpanel/Property.h"
+#include <alljoyn/controlpanel/Property.h>
 
 namespace ajn {
 namespace services {

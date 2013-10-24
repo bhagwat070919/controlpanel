@@ -20,7 +20,7 @@
 namespace ajn {
 namespace services {
 
-#include "qcc/platform.h"
+#include <qcc/platform.h>
 
 /**
  * A class to allow sending of a Time as a Property

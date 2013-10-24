@@ -16,8 +16,8 @@
 
 #include "ActionBusObject.h"
 #include "../ControlPanelConstants.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
-#include "alljoyn/controlpanel/Action.h"
+#include <alljoyn/controlpanel/ControlPanelService.h>
+#include <alljoyn/controlpanel/Action.h>
 
 namespace ajn {
 namespace services {
@@ -31,7 +31,7 @@ ActionBusObject::ActionBusObject(BusAttachment* bus, String const& objectPath, u
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create the BusObject");
+            logger->warn(TAG, "Could not create the BusObject");
         return;
     }
 
@@ -48,14 +48,14 @@ ActionBusObject::ActionBusObject(BusAttachment* bus, String const& objectPath, u
     }
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create interface");
+            logger->warn(TAG, "Could not create interface");
         return;
     }
 
     status = AddInterface(*intf);
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not add interface");
+            logger->warn(TAG, "Could not add interface");
         return;
     }
 
@@ -88,7 +88,7 @@ void ActionBusObject::ActionExecute(const ajn::InterfaceDescription::Member* mem
         MsgArg replyArg;
         status = MethodReply(msg, &replyArg, 0);
         if (logger)
-            logger->debug(TAG, "Execute completed successfully");
+            logger->info(TAG, "Execute completed successfully");
     } else {
         status = MethodReply(msg, AJ_ERROR_UNKNOWN.c_str(), AJ_ERROR_UNKNOWN_MESSAGE.c_str());
         if (logger)

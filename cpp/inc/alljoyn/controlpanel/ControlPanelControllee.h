@@ -17,9 +17,9 @@
 #ifndef CONTROLPANELCONTROLLEE_H_
 #define CONTROLPANELCONTROLLEE_H_
 
-#include "alljoyn/controlpanel/ControlPanel.h"
-#include "alljoyn/controlpanel/NotificationAction.h"
-#include "alljoyn/controlpanel/HttpControl.h"
+#include <alljoyn/controlpanel/ControlPanel.h>
+#include <alljoyn/controlpanel/NotificationAction.h>
+#include <alljoyn/controlpanel/HttpControl.h>
 
 namespace ajn {
 namespace services {

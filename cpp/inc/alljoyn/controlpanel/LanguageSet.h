@@ -17,7 +17,7 @@
 #ifndef LANGUAGESET_H_
 #define LANGUAGESET_H_
 
-#include "qcc/String.h"
+#include <qcc/String.h>
 #include <vector>
 
 namespace ajn {

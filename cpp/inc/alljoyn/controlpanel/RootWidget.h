@@ -17,7 +17,7 @@
 #ifndef ROOTWIDGET_H_
 #define ROOTWIDGET_H_
 
-#include "alljoyn/controlpanel/Widget.h"
+#include <alljoyn/controlpanel/Widget.h>
 
 namespace ajn {
 namespace services {

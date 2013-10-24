@@ -14,7 +14,7 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/LanguageSets.h"
+#include <alljoyn/controlpanel/LanguageSets.h>
 
 namespace ajn {
 namespace services {

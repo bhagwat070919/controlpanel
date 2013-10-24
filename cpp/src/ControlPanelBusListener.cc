@@ -14,7 +14,7 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/ControlPanelBusListener.h"
+#include <alljoyn/controlpanel/ControlPanelBusListener.h>
 #include <iostream>
 #include <algorithm>
 

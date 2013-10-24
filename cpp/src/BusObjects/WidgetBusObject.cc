@@ -14,8 +14,8 @@
  *    limitations under the license.
  ******************************************************************************/
 
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include "WidgetBusObject.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
 #include "../ControlPanelConstants.h"
 
 namespace ajn {

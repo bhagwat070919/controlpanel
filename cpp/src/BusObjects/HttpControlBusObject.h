@@ -17,10 +17,10 @@
 #ifndef HTTPCONTROLBUSOBJECT_H_
 #define HTTPCONTROLBUSOBJECT_H_
 
-#include "alljoyn/BusAttachment.h"
-#include "alljoyn/BusObject.h"
-#include "alljoyn/InterfaceDescription.h"
-#include "alljoyn/controlpanel/HttpControl.h"
+#include <alljoyn/BusAttachment.h>
+#include <alljoyn/BusObject.h>
+#include <alljoyn/InterfaceDescription.h>
+#include <alljoyn/controlpanel/HttpControl.h>
 
 namespace ajn {
 namespace services {

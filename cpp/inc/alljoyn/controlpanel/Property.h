@@ -17,12 +17,12 @@
 #ifndef PROPERTY_H_
 #define PROPERTY_H_
 
-#include "alljoyn/controlpanel/Widget.h"
-#include "alljoyn/controlpanel/PropertyType.h"
-#include "alljoyn/controlpanel/ConstraintList.h"
-#include "alljoyn/controlpanel/ConstraintRange.h"
-#include "alljoyn/controlpanel/CPSDate.h"
-#include "alljoyn/controlpanel/CPSTime.h"
+#include <alljoyn/controlpanel/Widget.h>
+#include <alljoyn/controlpanel/PropertyType.h>
+#include <alljoyn/controlpanel/ConstraintList.h>
+#include <alljoyn/controlpanel/ConstraintRange.h>
+#include <alljoyn/controlpanel/CPSDate.h>
+#include <alljoyn/controlpanel/CPSTime.h>
 #include <map>
 
 namespace ajn {

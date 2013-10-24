@@ -17,7 +17,7 @@
 #ifndef GENERICLOGGER_H_
 #define GENERICLOGGER_H_
 
-#include "qcc/String.h"
+#include <qcc/String.h>
 
 namespace ajn {
 namespace services {

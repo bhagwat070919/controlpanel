@@ -14,7 +14,7 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/CPSTime.h"
+#include <alljoyn/controlpanel/CPSTime.h>
 
 namespace ajn {
 namespace services {

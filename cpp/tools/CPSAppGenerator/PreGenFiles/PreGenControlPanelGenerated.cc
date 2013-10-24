@@ -15,8 +15,8 @@
  ******************************************************************************/
 
 #include "ControlPanelGenerated.h"
-#include "alljoyn/controlpanel/LanguageSets.h"
-#include "alljoyn/controlpanel/Label.h"
+#include <alljoyn/controlpanel/LanguageSets.h>
+#include <alljoyn/controlpanel/Label.h>
 //INCLUDES_GO_HERE
 
 

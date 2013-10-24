@@ -17,8 +17,8 @@
 #ifndef CONSTRAINTRANGE_H_
 #define CONSTRAINTRANGE_H_
 
-#include "alljoyn/controlpanel/PropertyType.h"
-#include "alljoyn/controlpanel/Widget.h"
+#include <alljoyn/controlpanel/PropertyType.h>
+#include <alljoyn/controlpanel/Widget.h>
 
 namespace ajn {
 namespace services {

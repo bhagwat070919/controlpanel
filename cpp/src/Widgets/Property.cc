@@ -14,8 +14,8 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Property.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
+#include <alljoyn/controlpanel/Property.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include "../ControlPanelConstants.h"
 #include "../BusObjects/PropertyBusObject.h"
 
@@ -342,6 +342,7 @@ QStatus Property::fillOptParamsArg(MsgArg& val, uint16_t languageIndx)
 QStatus Property::setPropertyValue(MsgArg& val, uint16_t languageIndx)
 {
     QStatus status;
+    GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
 
     switch (m_PropertyType) {
     case UINT16_PROPERTY:
@@ -425,7 +426,6 @@ QStatus Property::setPropertyValue(MsgArg& val, uint16_t languageIndx)
         CHECK_AND_RETURN(val.Get(AJPARAM_DATE_OR_TIME.c_str(), &type, &day, &month, &year));
 
         if (type != DATE_PROPERTY_TYPE) {
-            GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
             if (logger)
                 logger->warn(TAG, "Did not receive the DateProperty type as expected");
             return ER_BUS_SIGNATURE_MISMATCH;
@@ -445,7 +445,6 @@ QStatus Property::setPropertyValue(MsgArg& val, uint16_t languageIndx)
         CHECK_AND_RETURN(val.Get(AJPARAM_DATE_OR_TIME.c_str(), &type, &hour, &minute, &second));
 
         if (type != TIME_PROPERTY_TYPE) {
-            GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
             if (logger)
                 logger->warn(TAG, "Did not receive the TimeProperty type as expected");
             return ER_BUS_SIGNATURE_MISMATCH;
@@ -462,6 +461,7 @@ QStatus Property::setPropertyValue(MsgArg& val, uint16_t languageIndx)
     }
 
     if (status == ER_OK) {
+        logger->info(TAG, "Set property succeeded - sending ValueChanged signal:\n");
         status = SendValueChangedSignal();
     }
 

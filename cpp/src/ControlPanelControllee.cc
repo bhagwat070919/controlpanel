@@ -14,8 +14,8 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/ControlPanelControllee.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
+#include <alljoyn/controlpanel/ControlPanelControllee.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include "ControlPanelConstants.h"
 
 namespace ajn {

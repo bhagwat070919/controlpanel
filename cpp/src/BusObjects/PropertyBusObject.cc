@@ -16,8 +16,8 @@
 
 #include "PropertyBusObject.h"
 #include "../ControlPanelConstants.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
-#include "alljoyn/controlpanel/Property.h"
+#include <alljoyn/controlpanel/ControlPanelService.h>
+#include <alljoyn/controlpanel/Property.h>
 
 namespace ajn {
 namespace services {
@@ -32,7 +32,7 @@ PropertyBusObject::PropertyBusObject(BusAttachment* bus, String const& objectPat
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create the BusObject");
+            logger->warn(TAG, "Could not create the BusObject");
         return;
     }
 
@@ -48,14 +48,14 @@ PropertyBusObject::PropertyBusObject(BusAttachment* bus, String const& objectPat
     }
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create interface");
+            logger->warn(TAG, "Could not create interface");
         return;
     }
 
     status = AddInterface(*intf);
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not add interface");
+            logger->warn(TAG, "Could not add interface");
         return;
     }
 

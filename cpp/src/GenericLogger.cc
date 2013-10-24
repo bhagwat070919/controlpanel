@@ -14,7 +14,7 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/GenericLogger.h"
+#include <alljoyn/controlpanel/GenericLogger.h>
 
 namespace ajn {
 namespace services {

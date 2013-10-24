@@ -14,8 +14,8 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/CPSLogger.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
+#include <alljoyn/controlpanel/CPSLogger.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include <qcc/Log.h>
 
 namespace ajn {

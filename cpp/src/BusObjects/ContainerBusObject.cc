@@ -16,7 +16,7 @@
 
 #include "ContainerBusObject.h"
 #include "../ControlPanelConstants.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
+#include <alljoyn/controlpanel/ControlPanelService.h>
 
 namespace ajn {
 namespace services {
@@ -30,7 +30,7 @@ ContainerBusObject::ContainerBusObject(BusAttachment* bus, String const& objectP
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create the BusObject");
+            logger->warn(TAG, "Could not create the BusObject");
         return;
     }
 
@@ -45,14 +45,14 @@ ContainerBusObject::ContainerBusObject(BusAttachment* bus, String const& objectP
     }
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create interface");
+            logger->warn(TAG, "Could not create interface");
         return;
     }
 
     status = AddInterface(*intf);
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not add interface");
+            logger->warn(TAG, "Could not add interface");
         return;
     }
 

@@ -14,8 +14,8 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Container.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
+#include <alljoyn/controlpanel/Container.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include "../ControlPanelConstants.h"
 #include "../BusObjects/ContainerBusObject.h"
 #include "../BusObjects/NotificationActionBusObject.h"
@@ -109,7 +109,7 @@ QStatus Container::addChildWidget(Widget* childWidget)
 
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (logger)
-        logger->debug(TAG, "Adding childWidget named: " + childWidget->getWidgetName());
+        logger->info(TAG, "Adding childWidget named: " + childWidget->getWidgetName());
     m_ChildWidgets.push_back(childWidget);
     return ER_OK;
 }

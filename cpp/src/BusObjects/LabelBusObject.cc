@@ -16,8 +16,8 @@
 
 #include "LabelBusObject.h"
 #include "../ControlPanelConstants.h"
-#include "alljoyn/controlpanel/ControlPanelService.h"
-#include "alljoyn/controlpanel/Label.h"
+#include <alljoyn/controlpanel/ControlPanelService.h>
+#include <alljoyn/controlpanel/Label.h>
 
 namespace ajn {
 namespace services {
@@ -31,7 +31,7 @@ LabelBusObject::LabelBusObject(BusAttachment* bus, String const& objectPath, uin
     GenericLogger* logger = ControlPanelService::getInstance()->getLogger();
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create the BusObject");
+            logger->warn(TAG, "Could not create the BusObject");
         return;
     }
 
@@ -46,14 +46,14 @@ LabelBusObject::LabelBusObject(BusAttachment* bus, String const& objectPath, uin
     }
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not create interface");
+            logger->warn(TAG, "Could not create interface");
         return;
     }
 
     status = AddInterface(*intf);
     if (status != ER_OK) {
         if (logger)
-            logger->debug(TAG, "Could not add interface");
+            logger->warn(TAG, "Could not add interface");
         return;
     }
 

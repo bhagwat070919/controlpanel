@@ -17,8 +17,8 @@
 #ifndef NOTIFICATIONACTION_H_
 #define NOTIFICATIONACTION_H_
 
-#include "alljoyn/controlpanel/RootWidget.h"
-#include "alljoyn/BusObject.h"
+#include <alljoyn/controlpanel/RootWidget.h>
+#include <alljoyn/BusObject.h>
 
 namespace ajn {
 namespace services {
