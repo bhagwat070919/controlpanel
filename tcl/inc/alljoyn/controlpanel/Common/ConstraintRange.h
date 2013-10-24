@@ -17,8 +17,8 @@
 #ifndef CONSTRAINTRANGE_H_
 #define CONSTRAINTRANGE_H_
 
-#include "alljoyn/controlpanel/Definitions.h"
-#include "alljoyn.h"
+#include <alljoyn/controlpanel/Definitions.h>
+#include <alljoyn.h>
 
 typedef struct {
     const char* const* signature;

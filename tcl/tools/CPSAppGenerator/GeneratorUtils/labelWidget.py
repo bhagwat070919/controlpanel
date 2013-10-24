@@ -30,14 +30,14 @@ class Label (common.Widget):
 
     def generateIdentify(self, capName, language) :
         common.Widget.generateIdentify(self, capName, language)
-        self.generated.identify += """\t\tcase {0}_LABEL_PROPERTY :
-            *widgetType = WIDGET_TYPE_LABEL;
-            *propType = PROPERTY_TYPE_LABEL;
-            *language = {2};
-            return &{1};\n""".format(capName, self.name, language)
+        self.generated.identify += """    case {0}_LABEL_PROPERTY:
+        *widgetType = WIDGET_TYPE_LABEL;
+        *propType = PROPERTY_TYPE_LABEL;
+        *language = {2};
+        return &{1};\n\n""".format(capName, self.name, language)
 
     def generateMandatoryVariables (self) :
-        self.generated.initFunction  += "\tinitializeLabelWidget(&{0});\n".format(self.name)
+        self.generated.initFunction  += "    initializeLabelWidget(&{0});\n".format(self.name)
         self.setNumLanguages()
         self.setEnabled()
         self.setLabel(1)

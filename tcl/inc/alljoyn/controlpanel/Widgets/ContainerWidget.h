@@ -17,7 +17,7 @@
 #ifndef CONTAINERWIDGET_H_
 #define CONTAINERWIDGET_H_
 
-#include "alljoyn/controlpanel/Common/BaseWidget.h"
+#include <alljoyn/controlpanel/Common/BaseWidget.h>
 
 /////////////////////////*     ContainerWidget     *//////////////////////////////////////
 

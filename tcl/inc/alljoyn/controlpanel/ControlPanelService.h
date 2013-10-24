@@ -17,7 +17,25 @@
 #ifndef CONTROLPANELRESPONSES_H_
 #define CONTROLPANELRESPONSES_H_
 
-#include "alljoyn.h"
+#include <alljoyn/controlpanel/ControlPanelInterfaces.h>
+#include <alljoyn/controlpanel/Definitions.h>
+
+#ifdef CONTROLPANEL_SERVICE
+#include <alljoyn/services_common/Services_Common.h>
+#include <ControlPanelGenerated.h>
+#else
+#define NUM_PRE_CONTROLPANEL_OBJECTS 0
+#include <ControlPanelClientGenerated.h>
+#endif
+
+/**
+ * Message Id's based on Interfaces defined in service
+ */
+#define CONTROLPANEL_APPOBJECTS  \
+    CONTROLPANELAPPOBJECTS
+
+#define CONTROLPANEL_ANNOUNCEOBJECTS \
+    CONTROLPANELANNOUNCEOBJECTS
 
 /**
  * "boolean" that reflects whether the bus is connected or not
@@ -32,12 +50,9 @@ extern uint8_t isBusConnected;
 extern AJ_BusAttachment busAttachment;
 
 /**
- * Respond with an error Message
- * @param msg
- * @param error
- * @return
+ * Port used for controlpanelservice
  */
-AJ_Status ReturnErrorMessage(AJ_Message* msg, const char* error);
+extern const uint16_t CPSPort;
 
 /**
  * Marshal and send the url for the controlPanel
@@ -45,7 +60,7 @@ AJ_Status ReturnErrorMessage(AJ_Message* msg, const char* error);
  * @param msgId
  * @return
  */
-AJ_Status SendRootUrl(AJ_Message* msg, uint32_t msgId);
+AJ_Status CpsSendRootUrl(AJ_Message* msg, uint32_t msgId);
 
 /**
  * Marshal and send a specific property for a Widget
@@ -54,7 +69,7 @@ AJ_Status SendRootUrl(AJ_Message* msg, uint32_t msgId);
  * @param context
  * @return
  */
-AJ_Status GetWidgetProperty(AJ_Message* replyMsg, uint32_t propId, void* context);
+AJ_Status CpsGetWidgetProperty(AJ_Message* replyMsg, uint32_t propId, void* context);
 
 /**
  * Marshal and send all properties for a Widget
@@ -62,7 +77,7 @@ AJ_Status GetWidgetProperty(AJ_Message* replyMsg, uint32_t propId, void* context
  * @param msgId
  * @return
  */
-AJ_Status GetAllWidgetProperties(AJ_Message* msg, uint32_t msgId);
+AJ_Status CpsGetAllWidgetProperties(AJ_Message* msg, uint32_t msgId);
 
 /**
  * Marshal and send the version property for the Root Interfaces
@@ -71,7 +86,7 @@ AJ_Status GetAllWidgetProperties(AJ_Message* msg, uint32_t msgId);
  * @param context
  * @return status
  */
-AJ_Status GetRootProperty(AJ_Message* replyMsg, uint32_t propId, void* context);
+AJ_Status CpsGetRootProperty(AJ_Message* replyMsg, uint32_t propId, void* context);
 
 /**
  * Marshal and send all properties for a Root Interface
@@ -79,16 +94,7 @@ AJ_Status GetRootProperty(AJ_Message* replyMsg, uint32_t propId, void* context);
  * @param msgId
  * @return status
  */
-AJ_Status GetAllRootProperties(AJ_Message* msg, uint32_t msgId);
-
-/**
- * Execute one of the ListProperty Methods
- * @param msg
- * @param msgId
- * @param signalId
- * @return status
- */
-AJ_Status ExecuteListPropertyMethod(AJ_Message* msg, uint32_t msgId, int32_t* signalId);
+AJ_Status CpsGetAllRootProperties(AJ_Message* msg, uint32_t msgId);
 
 /**
  * Send Signal if a property of a widget has changed.
@@ -97,7 +103,7 @@ AJ_Status ExecuteListPropertyMethod(AJ_Message* msg, uint32_t msgId, int32_t* si
  * @param sessionId
  * @return status
  */
-AJ_Status SendPropertyChangedSignal(AJ_BusAttachment* bus, uint32_t propSignal, uint32_t sessionId);
+AJ_Status CpsSendPropertyChangedSignal(AJ_BusAttachment* bus, uint32_t propSignal, uint32_t sessionId);
 
 /**
  * Send a signal to dismiss the displayed NotificationAction
@@ -106,7 +112,7 @@ AJ_Status SendPropertyChangedSignal(AJ_BusAttachment* bus, uint32_t propSignal, 
  * @param sessionId
  * @return status
  */
-AJ_Status SendDismissSignal(AJ_BusAttachment* bus, uint32_t propSignal, uint32_t sessionId);
+AJ_Status CpsSendDismissSignal(AJ_BusAttachment* bus, uint32_t propSignal, uint32_t sessionId);
 
 /**
  * Function used to identify what kind of request we're dealing with. Defined in Generated code.

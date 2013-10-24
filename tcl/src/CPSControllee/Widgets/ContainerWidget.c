@@ -14,7 +14,7 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Widgets/ContainerWidget.h"
+#include <alljoyn/controlpanel/Widgets/ContainerWidget.h>
 
 void initializeContainerWidget(ContainerWidget* widget)
 {

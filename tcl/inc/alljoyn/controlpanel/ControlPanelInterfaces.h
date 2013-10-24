@@ -13,17 +13,11 @@
  *    See the license for the specific language governing permissions and
  *    limitations under the license.
  ******************************************************************************/
-/*
- * ControlPanelInterfaces.h
- *
- *  Created on: May 26, 2013
- */
 
 #ifndef CONTROLPANELINTERFACES_H_
 #define CONTROLPANELINTERFACES_H_
 
-#include "alljoyn.h"
-#include "aj_msg.h"
+#include <alljoyn.h>
 
 /**
  * The Description of the root Interfaces, ControlPanel and NotificationAction
@@ -64,11 +58,5 @@ extern const AJ_InterfaceDescription SecuredDialogInterfaces[];
  * The Description of the HttpControlInterfaces
  */
 extern const AJ_InterfaceDescription HttpControlInterfaces[];
-
-/**
- * The Description of the ListPropertyInterface
- */
-extern const AJ_InterfaceDescription ListPropertyInterfaces[];
-extern const AJ_InterfaceDescription SecuredListPropertyInterfaces[];
 
 #endif /* CONTROLPANELINTERFACES_H_ */

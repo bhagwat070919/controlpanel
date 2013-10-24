@@ -34,7 +34,7 @@
                             <hint>textlabel</hint>
                         </hints>            
                     </labelProperty>
-                    <scalarProperty dbusType="UINT16">
+                    <scalarProperty dataType="UINT16">
                         <name>heatProperty</name>
                         <getCode>getuint16Var</getCode>
                         <setCode>setuint16Var(%s)</setCode>

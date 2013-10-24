@@ -19,7 +19,7 @@
                     <hint>vertical_linear</hint>
                 </hints>
                 <elements>
-                    <scalarProperty dbusType="INT32">
+                    <scalarProperty dataType="INT32">
                         <name>fanSpeedProperty</name>
                         <getCode>getint32Var</getCode>
                         <setCode>setint32Var(%s)</setCode>
@@ -46,7 +46,7 @@
                             <hint>horizontal_linear</hint>
                         </hints>
                         <elements>
-                            <scalarProperty dbusType="UINT16">
+                            <scalarProperty dataType="UINT16">
                                 <name>heatProperty</name>
                                 <getCode>getuint16Var</getCode>
                                 <setCode>setuint16Var(%s)</setCode>

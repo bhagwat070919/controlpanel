@@ -13,13 +13,8 @@
  *    See the license for the specific language governing permissions and
  *    limitations under the license.
  ******************************************************************************/
-/*
- * ControlPanelInterfaces.c
- *
- *  Created on: May 26, 2013
- */
 
-#include "alljoyn/controlpanel/ControlPanelInterfaces.h"
+#include <alljoyn/controlpanel/ControlPanelInterfaces.h>
 
 /**
  * Properties for interfaces
@@ -28,7 +23,6 @@ static const char Version[] = "@Version>q";
 static const char States[] = "@States>u";
 static const char OptParams[] = "@OptParams>a{qv}";
 static const char Value[] = "@Value=v";
-static const char ValueForListProp[] = "@Value=a(qs)";
 static const char Message[] = "@Message>s";
 static const char NumActions[] = "@NumActions>q";
 static const char PropertiesChanged[] = "!MetadataChanged";
@@ -300,69 +294,3 @@ const AJ_InterfaceDescription SecuredDialogInterfaces[] =
     SecuredDialogInterface,
     NULL
 };
-
-/**
- * ListProperty Interfaces
- */
-static const char ListPropertyInterfaceName[] = "org.alljoyn.ControlPanel.ListProperty";
-static const char SecuredListPropertyInterfaceName[] = "$org.alljoyn.ControlPanel.SecuredListProperty";
-static const char ListPropAdd[] = "?Add";
-static const char ListPropDelete[] = "?Delete <q";
-static const char ListPropView[] = "?View <q";
-static const char ListPropUpdate[] = "?Update <q";
-static const char ListPropConfirm[] = "?Confirm";
-static const char ListPropCancel[] = "?Cancel";
-static const char ListPropValueChanged[] = "!ValueChanged";
-
-
-static const char* ListPropertyInterface[] =
-{
-    ListPropertyInterfaceName,             /* The first entry is the interface name. */
-    Version,                               /* The Version of the ListProperty */
-    States,                                /* The States of the ListProperty */
-    OptParams,                             /* The OptParams of the ListProperty */
-    PropertiesChanged,                     /* One of the Properties changed*/
-    ValueForListProp,                      /* The Value of the ListProperty */
-    ListPropValueChanged,                  /* A signal to announce to Listproperty's value has changed */
-    ListPropAdd,                           /* A method to add a ListProperty */
-    ListPropDelete,                        /* A method to delete a ListProperty */
-    ListPropView,                          /* A method to view a ListProperty */
-    ListPropUpdate,                        /* A method to update a ListProperty */
-    ListPropConfirm,                       /* A method to confirm an action for a ListProperty */
-    ListPropCancel,                        /* A method to cancel an action for a ListProperty */
-    NULL
-};
-
-static const char* SecuredListPropertyInterface[] =
-{
-    SecuredListPropertyInterfaceName,      /* The first entry is the interface name. */
-    Version,                               /* The Version of the ListProperty */
-    States,                                /* The States of the ListProperty */
-    OptParams,                             /* The OptParams of the ListProperty */
-    PropertiesChanged,                     /* One of the Properties changed*/
-    ValueForListProp,                      /* The Value of the ListProperty */
-    ListPropValueChanged,                  /* A signal to announce to Listproperty's value has changed */
-    ListPropAdd,                           /* A method to add a ListProperty */
-    ListPropDelete,                        /* A method to delete a ListProperty */
-    ListPropView,                          /* A method to view a ListProperty */
-    ListPropUpdate,                        /* A method to update a ListProperty */
-    ListPropConfirm,                       /* A method to confirm an action for a ListProperty */
-    ListPropCancel,                        /* A method to cancel an action for a ListProperty */
-    NULL
-};
-
-const AJ_InterfaceDescription ListPropertyInterfaces[] =
-{
-    AJ_PropertiesIface,
-    ListPropertyInterface,
-    NULL
-};
-
-
-const AJ_InterfaceDescription SecuredListPropertyInterfaces[] =
-{
-    AJ_PropertiesIface,
-    SecuredListPropertyInterface,
-    NULL
-};
-

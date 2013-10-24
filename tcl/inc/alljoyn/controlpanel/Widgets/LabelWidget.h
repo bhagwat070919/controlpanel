@@ -17,7 +17,7 @@
 #ifndef LABELWIDGET_H_
 #define LABELWIDGET_H_
 
-#include "alljoyn/controlpanel/Common/BaseWidget.h"
+#include <alljoyn/controlpanel/Common/BaseWidget.h>
 
 /////////////////////////*     LabelWidget     *//////////////////////////////////////
 

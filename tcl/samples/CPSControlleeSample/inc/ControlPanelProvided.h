@@ -17,8 +17,9 @@
 #ifndef CONTROLPANELPROVIDED_H_
 #define CONTROLPANELPROVIDED_H_
 
-#include "alljoyn.h"
-#include "alljoyn/controlpanel/Common/DateTimeUtil.h"
+#include <alljoyn.h>
+#include <alljoyn/controlpanel/Common/DateTimeUtil.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include "ControlPanelGenerated.h"
 
 #define UNICODE_HI_IN_HEBREW "\xd7\xa9\xd7\x9c\xd7\x95\xd7\x9d\x00"

@@ -142,30 +142,30 @@ class Property (common.Widget):
             self.varType = "const CPSTime&"
             self.propType = "TIME_PROPERTY"
         elif propertyType == "scalarProperty" :
-            dbusType = self.element.attr["dbusType"]
-       	    if dbusType == "INT16":
+            dataType = self.element.attr["dataType"]
+       	    if dataType == "INT16":
                 self.propType = "INT16_PROPERTY"
                 self.varType = "int16_t"
-            elif dbusType == "UINT16":
+            elif dataType == "UINT16":
                 self.propType = "UINT16_PROPERTY"
                 self.varType = "uint16_t"
-            elif dbusType == "INT32":
+            elif dataType == "INT32":
                 self.propType = "INT32_PROPERTY"
                 self.varType = "int32_t"
-	    elif dbusType == "UINT32":
+	    elif dataType == "UINT32":
                 self.propType = "UINT32_PROPERTY"
                 self.varType = "uint32_t"
-            elif dbusType == "INT64":
+            elif dataType == "INT64":
                 self.propType = "INT64_PROPERTY"
                 self.varType = "int64_t"
-            elif dbusType == "UINT64":
+            elif dataType == "UINT64":
                 self.propType = "UINT64_PROPERTY"
                 self.varType = "uint64_t"
-	    elif dbusType == "DOUBLE":
+	    elif dataType == "DOUBLE":
                 self.propType = "DOUBLE_PROPERTY"
                 self.varType = "double"
             else :
-                print "ERROR - dbusType of property Unknown. Exiting"
+                print "ERROR - dataType of property Unknown. Exiting"
                 sys.exit(0)
         else :
             print "ERROR - Element Type of property Unknown. Exiting"

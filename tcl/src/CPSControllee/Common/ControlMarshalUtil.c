@@ -14,8 +14,8 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Common/ControlMarshalUtil.h"
-#include "alljoyn/controlpanel/Common/BaseWidget.h"
+#include <alljoyn/controlpanel/Common/ControlMarshalUtil.h>
+#include <alljoyn/controlpanel/Common/BaseWidget.h>
 
 #define ROOT_INTERFACE_VERSION 1
 

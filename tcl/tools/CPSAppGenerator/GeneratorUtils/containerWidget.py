@@ -14,7 +14,6 @@
 #
 import sys
 import propertyWidget as pw
-import listPropertyWidget as lpw
 import actionWidget as aw
 import labelWidget as lw
 import commonWidget as common
@@ -58,9 +57,6 @@ class Container (common.Widget):
             elif elementType == "labelProperty" :
                 label = lw.Label(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
                 label.generate()
-            elif elementType == "listProperty" :
-                listProp = lpw.ListProperty(self.generated, element, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)
-                listProp.generate()
             else :
                 print "ERROR - This type is not supported. Exiting " + elementType
                 sys.exit(0)

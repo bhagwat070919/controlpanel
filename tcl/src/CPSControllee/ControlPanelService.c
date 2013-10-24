@@ -14,22 +14,23 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/ControlPanel.h"
-#include "alljoyn/controlpanel/ControlPanelResponses.h"
-#include "alljoyn/controlpanel/Widgets/PropertyWidget.h"
-#include "alljoyn/controlpanel/Widgets/LabelWidget.h"
-#include "alljoyn/controlpanel/Widgets/DialogWidget.h"
-#include "alljoyn/controlpanel/Common/HttpControl.h"
-#include "alljoyn/controlpanel/Common/ControlMarshalUtil.h"
+#include <alljoyn/controlpanel/ControlPanelService.h>
+#include <alljoyn/controlpanel/Widgets/PropertyWidget.h>
+#include <alljoyn/controlpanel/Widgets/LabelWidget.h>
+#include <alljoyn/controlpanel/Widgets/DialogWidget.h>
+#include <alljoyn/controlpanel/Common/HttpControl.h>
+#include <alljoyn/controlpanel/Common/ControlMarshalUtil.h>
 
-AJ_Status ReturnErrorMessage(AJ_Message* msg, const char* error)
+const uint16_t CPSPort = 1000;
+
+static AJ_Status ReturnErrorMessage(AJ_Message* msg, const char* error)
 {
     AJ_Message reply;
     AJ_MarshalErrorMsg(msg, &reply, error);
     return AJ_DeliverMsg(&reply);
 }
 
-AJ_Status SendRootUrl(AJ_Message* msg, uint32_t msgId)
+AJ_Status CpsSendRootUrl(AJ_Message* msg, uint32_t msgId)
 {
     AJ_Message reply;
     AJ_MarshalReplyMsg(msg, &reply);
@@ -48,7 +49,7 @@ AJ_Status SendRootUrl(AJ_Message* msg, uint32_t msgId)
     return AJ_DeliverMsg(&reply);
 }
 
-AJ_Status GetWidgetProperty(AJ_Message* replyMsg, uint32_t propId, void* context)
+AJ_Status CpsGetWidgetProperty(AJ_Message* replyMsg, uint32_t propId, void* context)
 {
     AJ_Status status = AJ_ERR_UNEXPECTED;
 
@@ -77,11 +78,7 @@ AJ_Status GetWidgetProperty(AJ_Message* replyMsg, uint32_t propId, void* context
         break;
 
     case PROPERTY_TYPE_VALUE:
-        if (widgetType == WIDGET_TYPE_PROPERTY)
-            return marshalPropertyValue(((PropertyWidget*)widget), replyMsg, language);
-        else if (widgetType == WIDGET_TYPE_LISTPROPERTY)
-            return marshalListPropertyValue(((ListPropertyWidget*)widget), replyMsg, language);
-        break;
+        return marshalPropertyValue(((PropertyWidget*)widget), replyMsg, language);
 
     case PROPERTY_TYPE_LABEL:
         return marshalLabelLabel(((LabelWidget*)widget), replyMsg, language);
@@ -95,7 +92,7 @@ AJ_Status GetWidgetProperty(AJ_Message* replyMsg, uint32_t propId, void* context
     return status;
 }
 
-AJ_Status GetRootProperty(AJ_Message* replyMsg, uint32_t propId, void* context)
+AJ_Status CpsGetRootProperty(AJ_Message* replyMsg, uint32_t propId, void* context)
 {
     AJ_Status status = AJ_ERR_UNEXPECTED;
 
@@ -106,7 +103,7 @@ AJ_Status GetRootProperty(AJ_Message* replyMsg, uint32_t propId, void* context)
     return MarshalVersionRootProperties(replyMsg);
 }
 
-AJ_Status GetAllRootProperties(AJ_Message* msg, uint32_t msgId)
+AJ_Status CpsGetAllRootProperties(AJ_Message* msg, uint32_t msgId)
 {
     AJ_Message reply;
     AJ_Status status = AJ_ERR_UNEXPECTED;
@@ -124,7 +121,7 @@ AJ_Status GetAllRootProperties(AJ_Message* msg, uint32_t msgId)
     return AJ_DeliverMsg(&reply);
 }
 
-AJ_Status GetAllWidgetProperties(AJ_Message* msg, uint32_t msgId)
+AJ_Status CpsGetAllWidgetProperties(AJ_Message* msg, uint32_t msgId)
 {
     AJ_Message reply;
     AJ_Status status = AJ_ERR_UNEXPECTED;
@@ -146,58 +143,7 @@ AJ_Status GetAllWidgetProperties(AJ_Message* msg, uint32_t msgId)
     return AJ_DeliverMsg(&reply);
 }
 
-AJ_Status ExecuteListPropertyMethod(AJ_Message* msg, uint32_t msgId, int32_t* signalId)
-{
-    AJ_Message reply;
-    AJ_Status status = AJ_ERR_UNEXPECTED;
-
-    AJ_MarshalReplyMsg(msg, &reply);
-
-    uint16_t widgetType = 0;
-    uint16_t methodType = 0;
-    uint16_t language = 0;
-    uint16_t recordId = 0;
-
-    ListPropertyWidget* widget = identifyMsgOrPropId(msgId, &widgetType, &methodType, &language);
-    if (widget == 0)
-        return ReturnErrorMessage(msg, AJ_ErrServiceUnknown);
-
-    switch (methodType) {
-    case METHOD_TYPE_ADD:
-        status = addRecord(widget, msg->sender);
-        break;
-
-    case METHOD_TYPE_DELETE:
-        CPS_CHECK_OR_BREAK(AJ_UnmarshalArgs(msg, "q", &recordId));
-        status = deleteRecord(widget, msg->sender, recordId);
-        break;
-
-    case METHOD_TYPE_VIEW:
-        CPS_CHECK_OR_BREAK(AJ_UnmarshalArgs(msg, "q", &recordId));
-        status = viewRecord(widget, msg->sender, recordId);
-        break;
-
-    case METHOD_TYPE_UPDATE:
-        CPS_CHECK_OR_BREAK(AJ_UnmarshalArgs(msg, "q", &recordId));
-        status = updateRecord(widget, msg->sender, recordId);
-        break;
-
-    case METHOD_TYPE_CONFIRM:
-        status = confirmRecord(widget, msg->sender);
-        *signalId = msgId - 5;
-        break;
-
-    case METHOD_TYPE_CANCEL:
-        status = cancelRecord(widget, msg->sender);
-        break;
-    }
-    if (status)
-        return ReturnErrorMessage(msg, AJ_ErrServiceUnknown);
-
-    return AJ_DeliverMsg(&reply);
-}
-
-AJ_Status SendPropertyChangedSignal(AJ_BusAttachment* bus, uint32_t propSignal, uint32_t sessionId)
+AJ_Status CpsSendPropertyChangedSignal(AJ_BusAttachment* bus, uint32_t propSignal, uint32_t sessionId)
 {
     AJ_Status status;
     AJ_Message msg;
@@ -221,7 +167,7 @@ AJ_Status SendPropertyChangedSignal(AJ_BusAttachment* bus, uint32_t propSignal, 
     return AJ_DeliverMsg(&msg);
 }
 
-AJ_Status SendDismissSignal(AJ_BusAttachment* bus, uint32_t propSignal, uint32_t sessionId)
+AJ_Status CpsSendDismissSignal(AJ_BusAttachment* bus, uint32_t propSignal, uint32_t sessionId)
 {
     AJ_Status status;
     AJ_Message msg;

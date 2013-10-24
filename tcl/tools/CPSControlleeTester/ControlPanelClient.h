@@ -22,8 +22,7 @@
 #endif
 
 #include "ControlPanelClientGenerated.h"
-#include "alljoyn/controlpanel/ControlPanelResponses.h"
-#include "alljoyn/controlpanel/ControlPanelInterfaces.h"
+#include "alljoyn/controlpanel/ControlPanelService.h"
 #include "alljoyn/controlpanel/Definitions.h"
 #include "aj_debug.h"
 

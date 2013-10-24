@@ -17,8 +17,7 @@
 #ifndef DATETIMEUTIL_H_
 #define DATETIMEUTIL_H_
 
-#include "alljoyn.h"
-#include "aj_msg.h"
+#include <alljoyn.h>
 
 typedef struct {
     uint16_t mDay;

@@ -174,7 +174,7 @@
       </xs:element>
       <xs:element name="unitMeasure" type="gen:CodeOrValueStringWithLang" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="dbusType" use="required">
+    <xs:attribute name="dataType" use="required">
       <xs:simpleType>
         <xs:restriction base="gen:NonEmptyString">
           <xs:pattern value="INT16"/>

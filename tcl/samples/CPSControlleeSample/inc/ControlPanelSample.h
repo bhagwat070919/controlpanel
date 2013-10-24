@@ -17,35 +17,8 @@
 #ifndef CONTROLPANEL_H_
 #define CONTROLPANEL_H_
 
-#include "ControlPanelInterfaces.h"
-#include "ControlPanelResponses.h"
-#include <alljoyn.h>
-
-#ifdef CONTROLPANEL_SERVICE
 #include <Apps_Common.h>
 #include "ControlPanelGenerated.h"
-#else
-#include "ControlPanelClientGenerated.h"
-typedef enum {
-    SERVICE_STATUS_HANDLED,       //!< SERVICE_STATUS_HANDLED
-    SERVICE_STATUS_NOT_HANDLED    //!< SERVICE_STATUS_NOT_HANDLED
-} Service_Status;
-#endif
-
-/**
- * Message Id's based on Interfaces defined in service
- */
-
-#define CONTROLPANEL_APPOBJECTS  \
-    CONTROLPANELAPPOBJECTS
-
-#define CONTROLPANEL_ANNOUNCEOBJECTS \
-    CONTROLPANELANNOUNCEOBJECTS
-
-/**
- * Port used for controlpanelservice
- */
-extern const uint16_t CPSPort;
 
 /**
  * SessionId used in controlpanelservice

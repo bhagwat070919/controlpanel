@@ -14,8 +14,8 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Common/ConstraintRange.h"
-#include "alljoyn/controlpanel/Common/ControlMarshalUtil.h"
+#include <alljoyn/controlpanel/Common/ConstraintRange.h>
+#include <alljoyn/controlpanel/Common/ControlMarshalUtil.h>
 
 void initializeConstraintRange(ConstraintRange* constraints)
 {

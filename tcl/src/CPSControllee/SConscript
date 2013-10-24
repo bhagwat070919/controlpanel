@@ -15,8 +15,7 @@
 Import('cps_env')
 
 source_files = [
-    'ControlPanelInterfaces.c',
-    'ControlPanelResponses.c',
+    Glob('*.c'),
     Glob('Widgets/*.c'),
     Glob('Common/*.c'),
 ]

@@ -14,9 +14,9 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Widgets/LabelWidget.h"
-#include "alljoyn/controlpanel/Definitions.h"
-#include "alljoyn/controlpanel/Common/ControlMarshalUtil.h"
+#include <alljoyn/controlpanel/Widgets/LabelWidget.h>
+#include <alljoyn/controlpanel/Definitions.h>
+#include <alljoyn/controlpanel/Common/ControlMarshalUtil.h>
 
 void initializeLabelWidget(LabelWidget* widget)
 {

@@ -13,15 +13,10 @@
  *    See the license for the specific language governing permissions and
  *    limitations under the license.
  ******************************************************************************/
-/*
- * HttpControl.c
- *
- *  Created on: May 28, 2013
- */
 
-#include "alljoyn/controlpanel/Common/HttpControl.h"
-#include "alljoyn/controlpanel/Definitions.h"
-#include "alljoyn/controlpanel/Common/ControlMarshalUtil.h"
+#include <alljoyn/controlpanel/Common/HttpControl.h>
+#include <alljoyn/controlpanel/Definitions.h>
+#include <alljoyn/controlpanel/Common/ControlMarshalUtil.h>
 
 void initializeHttpControl(HttpControl* httpControl)
 {

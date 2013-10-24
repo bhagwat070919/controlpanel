@@ -17,11 +17,9 @@
 #ifndef PROPERTYWIDGET_H_
 #define PROPERTYWIDGET_H_
 
-#include "alljoyn/controlpanel/Common/BaseWidget.h"
-#include "alljoyn/controlpanel/Widgets/ListPropertyWidget.h"
-
-#include "alljoyn/controlpanel/Common/ConstraintList.h"
-#include "alljoyn/controlpanel/Common/ConstraintRange.h"
+#include <alljoyn/controlpanel/Common/BaseWidget.h>
+#include <alljoyn/controlpanel/Common/ConstraintList.h>
+#include <alljoyn/controlpanel/Common/ConstraintRange.h>
 
 typedef enum {
     SINGLE_VALUE_PROPERTY = 0,
@@ -52,8 +50,6 @@ typedef struct PropertyWidget {
 
     const char* signature;
     void* (*getValue)();
-
-    ListPropertyWidget* parentListProperty;
 
     PropertyOptParams optParams;
 

@@ -17,18 +17,16 @@
 #ifndef CONTROL_MARSHAL_UTIL_H_
 #define CONTROL_MARSHAL_UTIL_H_
 
-#include "alljoyn.h"
-#include "aj_msg.h"
-
-#include "alljoyn/controlpanel/Definitions.h"
-#include "alljoyn/controlpanel/Common/BaseWidget.h"
+#include <alljoyn.h>
+#include <alljoyn/controlpanel/Definitions.h>
+#include <alljoyn/controlpanel/Common/BaseWidget.h>
 
 #define CPS_CHECK(s) if ((status = s)) return status;
 #define CPS_CHECK_OR_BREAK(s) if ((status = s)) break;
 #define StartOptionalParams(reply, arg) AJ_MarshalContainer(reply, arg, AJ_ARG_ARRAY)
 
 /**
- * Add a layout Hint. Can be used for all kinds of MetaData (Property, ListProperty etc)
+ * Add a layout Hint. Can be used for all kinds of MetaData (Property, Action etc)
  * @param reply
  * @param hints
  * @param numHints

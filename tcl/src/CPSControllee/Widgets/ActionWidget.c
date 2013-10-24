@@ -14,7 +14,7 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Widgets/ActionWidget.h"
+#include <alljoyn/controlpanel/Widgets/ActionWidget.h>
 
 void initializeActionWidget(ActionWidget* widget)
 {

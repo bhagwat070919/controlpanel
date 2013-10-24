@@ -44,7 +44,7 @@ class Dialog (common.Widget):
         self.generated.actionCases += "case {0}_EXEC_ACTION2: \\\n".format(capName)
         self.generated.actionCases += "case {0}_EXEC_ACTION3: \\\n".format(capName)
 
-        self.executeCases += "\t\tcase {0}_EXEC_ACTION{1}:\n".format(capName, '{0}') 
+        self.executeCases += "    case {0}_EXEC_ACTION{1}:\n".format(capName, '{0}') 
 
     def generateTests(self, capName) : 
         common.Widget.generateTests(self, capName) 
@@ -64,7 +64,7 @@ class Dialog (common.Widget):
         self.generated.allReplies += "case AJ_REPLY_ID({0}_EXEC_ACTION3): \\\n".format(capName)
 
     def generateMandatoryVariables (self) :
-        self.generated.initFunction  += "\tinitializeDialogWidget(&{0});\n".format(self.name)
+        self.generated.initFunction  += "    initializeDialogWidget(&{0});\n".format(self.name)
         self.setNumLanguages()
         self.setEnabled()
         self.setMessage()
@@ -72,16 +72,16 @@ class Dialog (common.Widget):
         self.generated.initFunction += "\n"
 
     def setNumActions (self) :
-        self.generated.initFunction += "\t{0}.numActions = {1};\n".format(self.name, len(self.element.button))
+        self.generated.initFunction += "    {0}.numActions = {1};\n".format(self.name, len(self.element.button))
 
     def generateOnAction (self) :
 
         error = "AJ_MarshalErrorMsg(msg, &reply, AJ_ErrServiceUnknown);"
         for i in range(0, len(self.element.button)):
-            self.generated.executeAction += self.executeCases.format(str(i+1)) + "\t\t{\n"
-            self.generated.executeAction += """\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n""".format(self.element.button[i].executeCode, "}")
+            self.generated.executeAction += self.executeCases.format(str(i+1)) + "    {\n"
+            self.generated.executeAction += """        {0}\n    {1}\n    break;\n\n""".format(self.element.button[i].executeCode, "}")
             self.setLabelAction(i)
         for i in range(len(self.element.button), 3):    
-            self.generated.executeAction += self.executeCases.format(str(i+1)) + "\t\t{0}\n".format("{")    
-            self.generated.executeAction += """\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n""".format(error, "}")
+            self.generated.executeAction += self.executeCases.format(str(i+1)) + "    {0}\n".format("{")    
+            self.generated.executeAction += """        {0}\n    {1}\n    break;\n\n""".format(error, "}")
 

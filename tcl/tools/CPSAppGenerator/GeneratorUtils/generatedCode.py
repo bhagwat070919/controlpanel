@@ -34,7 +34,6 @@ class Generator:
         self.getRootValuesCases = ""
         self.getAllRootCases = ""
         self.actionCases = ""
-        self.listPropCases = ""
         self.httpCases = ""
         self.maxNumLang = 0
 
@@ -104,9 +103,9 @@ class Generator:
         self.getRootValuesCases += "case {0}_GET_VALUE: \\\n".format(capName)
         self.getAllRootCases += "case {0}_GET_ALL_VALUES: \\\n".format(capName)
         self.setValuesCases += "case {0}_SET_VALUE: \\\n".format(capName)
-        self.identifyRoot += """\t\tcase {0}_VERSION_PROPERTY :
-        case {0}_GET_ALL_VALUES : 
-            return TRUE;\n""".format(capName)
+        self.identifyRoot += """    case {0}_VERSION_PROPERTY:
+    case {0}_GET_ALL_VALUES:
+        return TRUE;\n\n""".format(capName)
 
         if rootElement._has("dismissable") and rootElement.dismissable :
             addNotificationAction(rootElement, 1)
@@ -133,10 +132,10 @@ class Generator:
         self.getRootValuesCases += "case {0}_GET_VALUE: \\\n".format(capName)
         self.getAllRootCases += "case {0}_GET_ALL_VALUES: \\\n".format(capName)
         self.setValuesCases += "case {0}_SET_VALUE: \\\n".format(capName)
-        self.identifyRoot += """\t\tcase {0}_VERSION_PROPERTY :
-        case {0}_GET_ALL_VALUES : 
-        case {0}_SIGNAL_DISMISS : 
-            return TRUE;\n""".format(capName)
+        self.identifyRoot += """    case {0}_VERSION_PROPERTY:
+    case {0}_GET_ALL_VALUES:
+    case {0}_SIGNAL_DISMISS:
+        return TRUE;\n\n""".format(capName)
 
 
     def initializeFiles(self) :
@@ -179,7 +178,6 @@ class Generator:
         self.headerFile = self.headerFile.replace("//SETVALUES_GO_HERE", self.setValuesCases)
         self.headerFile = self.headerFile.replace("//GETALLVALUES_GO_HERE", self.getAllCases)
         self.headerFile = self.headerFile.replace("//ACTION_GO_HERE", self.actionCases)
-        self.headerFile = self.headerFile.replace("//LISTPROPERTY_GO_HERE", self.listPropCases)
         self.headerFile = self.headerFile.replace("//GET_URL_GO_HERE", self.httpCases)
         self.headerFile = self.headerFile.replace("//GETVALUES_ROOT_GO_HERE", self.getRootValuesCases)
         self.headerFile = self.headerFile.replace("//GETALLVALUES_ROOT_GO_HERE", self.getAllRootCases)

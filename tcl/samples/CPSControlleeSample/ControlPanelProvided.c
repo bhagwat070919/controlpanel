@@ -14,7 +14,7 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "ControlPanelProvided.h"
+#include <ControlPanelProvided.h>
 
 static uint16_t uint16Var = 0;
 static int16_t int16Var = 0;

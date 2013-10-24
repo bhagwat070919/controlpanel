@@ -14,8 +14,8 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Common/DateTimeUtil.h"
-#include "alljoyn/controlpanel/Common/ControlMarshalUtil.h"
+#include <alljoyn/controlpanel/Common/DateTimeUtil.h>
+#include <alljoyn/controlpanel/Common/ControlMarshalUtil.h>
 
 AJ_Status marshalDatePropertyValue(DatePropertyValue* datePropertyValue, AJ_Message* reply)
 {

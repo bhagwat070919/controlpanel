@@ -13,17 +13,11 @@
  *    See the license for the specific language governing permissions and
  *    limitations under the license.
  ******************************************************************************/
-/*
- * BaseWidget.h
- *
- *  Created on: May 28, 2013
- */
 
 #ifndef BASEWIDGET_H_
 #define BASEWIDGET_H_
 
-#include "alljoyn.h"
-#include "aj_msg.h"
+#include <alljoyn.h>
 
 #ifndef UINT32_MAX
 #define UINT32_MAX      (4294967295U)

@@ -14,10 +14,9 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include <alljoyn/controlpanel/Definitions.h>
-#include <alljoyn.h>
-#include <alljoyn/controlpanel/ControlPanel.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 #include <aj_link_timeout.h>
+#include <ControlPanelSample.h>
 
 #define UUID_LENGTH 16
 
@@ -25,7 +24,6 @@
  * Static non consts.
  */
 
-const uint16_t CPSPort = 1000;
 uint32_t CPSsessionId = 0;
 
 void CPS_Init()
@@ -63,7 +61,7 @@ AJ_Status ControlPanel_ConnectedHandler(AJ_BusAttachment* bus)
          * TODO This is a temporary hack to work around buggy select implementations
          */
         if (status == AJ_ERR_TIMEOUT) {
-            int elapsed = AJ_GetElapsedTime(&timer, TRUE);
+            uint32_t elapsed = AJ_GetElapsedTime(&timer, TRUE);
             if (elapsed < AJ_UNMARSHAL_TIMEOUT) {
                 AJ_Printf("Spurious timeout error (elapsed=%d < AJ_UNMARSHAL_TIMEOUT=%d) - continuing\n", elapsed, AJ_UNMARSHAL_TIMEOUT);
                 status = AJ_OK;
@@ -101,7 +99,7 @@ AJ_Status ControlPanel_ConnectedHandler(AJ_BusAttachment* bus)
     return status;
 }
 
-uint8_t CPS_CheckSessionAccepted(uint16_t port, uint32_t sessionId, char*joiner)
+uint8_t CPS_CheckSessionAccepted(uint16_t port, uint32_t sessionId, char* joiner)
 {
     if (port != CPSPort)
         return FALSE;
@@ -115,19 +113,19 @@ Service_Status CPS_MessageProcessor(AJ_BusAttachment* bus, AJ_Message* msg, AJ_S
 
     switch (msg->msgId) {
         GET_WIDGET_VALUE_CASES
-        *msgStatus = AJ_BusPropGet(msg, GetWidgetProperty, NULL);
+        *msgStatus = AJ_BusPropGet(msg, CpsGetWidgetProperty, NULL);
         break;
 
         GET_WIDGET_ALL_VALUE_CASES
-        *msgStatus = GetAllWidgetProperties(msg, msg->msgId);
+        *msgStatus = CpsGetAllWidgetProperties(msg, msg->msgId);
         break;
 
         GET_ROOT_VALUE_CASES
-        *msgStatus = AJ_BusPropGet(msg, GetRootProperty, NULL);
+        *msgStatus = AJ_BusPropGet(msg, CpsGetRootProperty, NULL);
         break;
 
         GET_ROOT_ALL_VALUE_CASES
-        *msgStatus = GetAllRootProperties(msg, msg->msgId);
+        *msgStatus = CpsGetAllRootProperties(msg, msg->msgId);
         break;
 
         SET_VALUE_CASES
@@ -139,7 +137,7 @@ Service_Status CPS_MessageProcessor(AJ_BusAttachment* bus, AJ_Message* msg, AJ_S
             if (*msgStatus == AJ_OK && context.numSignals != 0) {
                 uint16_t indx;
                 for (indx = 0; indx < context.numSignals; indx++) {
-                    *msgStatus = SendPropertyChangedSignal(bus, context.signals[indx], CPSsessionId);
+                    *msgStatus = CpsSendPropertyChangedSignal(bus, context.signals[indx], CPSsessionId);
                 }
             }
         }
@@ -154,27 +152,16 @@ Service_Status CPS_MessageProcessor(AJ_BusAttachment* bus, AJ_Message* msg, AJ_S
                 uint16_t indx;
                 for (indx = 0; indx < context.numSignals; indx++) {
                     if (context.signals[indx].signalType == SIGNAL_TYPE_DATA_CHANGED)
-                        *msgStatus = SendPropertyChangedSignal(bus, context.signals[indx].signalId, CPSsessionId);
+                        *msgStatus = CpsSendPropertyChangedSignal(bus, context.signals[indx].signalId, CPSsessionId);
                     else if (context.signals[indx].signalType == SIGNAL_TYPE_DISMISS)
-                        *msgStatus = SendDismissSignal(bus, context.signals[indx].signalId, CPSsessionId);
+                        *msgStatus = CpsSendDismissSignal(bus, context.signals[indx].signalId, CPSsessionId);
                 }
             }
         }
         break;
 
-        LISTPROPERTY_CASES
-        {
-            int32_t signalId = 0;
-
-            *msgStatus = ExecuteListPropertyMethod(msg, msg->msgId, &signalId);
-
-            if (*msgStatus == AJ_OK && signalId != 0) {
-                *msgStatus = SendPropertyChangedSignal(bus, signalId, CPSsessionId);
-            }
-            break;
-        }
         GET_URL_CASES
-        *msgStatus = SendRootUrl(msg, msg->msgId);
+        *msgStatus = CpsSendRootUrl(msg, msg->msgId);
         break;
 
     case AJ_SIGNAL_SESSION_LOST:

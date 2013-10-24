@@ -14,8 +14,8 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Common/ConstraintList.h"
-#include "alljoyn/controlpanel/Common/ControlMarshalUtil.h"
+#include <alljoyn/controlpanel/Common/ConstraintList.h>
+#include <alljoyn/controlpanel/Common/ControlMarshalUtil.h>
 
 AJ_Status marshalConstraintList(ConstraintList* constraints, AJ_Message* reply, uint16_t numConstraints,
                                 const char* signature, uint16_t language)

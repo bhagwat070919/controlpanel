@@ -14,14 +14,14 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Widgets/ActionWidget.h"
-#include "alljoyn/controlpanel/Widgets/PropertyWidget.h"
-#include "alljoyn/controlpanel/Widgets/ContainerWidget.h"
-#include "alljoyn/controlpanel/Widgets/LabelWidget.h"
-#include "alljoyn/controlpanel/Widgets/DialogWidget.h"
-#include "alljoyn/controlpanel/Common/HttpControl.h"
-#include "alljoyn/controlpanel/Common/ConstraintList.h"
-#include "alljoyn/controlpanel/ControlPanel.h"
+#include <alljoyn/controlpanel/Widgets/ActionWidget.h>
+#include <alljoyn/controlpanel/Widgets/PropertyWidget.h>
+#include <alljoyn/controlpanel/Widgets/ContainerWidget.h>
+#include <alljoyn/controlpanel/Widgets/LabelWidget.h>
+#include <alljoyn/controlpanel/Widgets/DialogWidget.h>
+#include <alljoyn/controlpanel/Common/HttpControl.h>
+#include <alljoyn/controlpanel/Common/ConstraintList.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 //INCLUDES_GO_HERE
 
 //OBJECTPATH_DEF_GO_HERE
@@ -40,8 +40,7 @@ void WidgetsInit()
 void* identifyMsgOrPropId(uint32_t identifier, uint16_t* widgetType, uint16_t* propType, uint16_t* language)
 {
     switch (identifier) {
-//ADD_MAIN_CASE_HERE
-    default:
+//ADD_MAIN_CASE_HERE    default:
         return FALSE;
     }
 }
@@ -49,8 +48,7 @@ void* identifyMsgOrPropId(uint32_t identifier, uint16_t* widgetType, uint16_t* p
 void* identifyMsgOrPropIdForSignal(uint32_t identifier, uint8_t* isProperty)
 {
     switch (identifier) {
-//ADD_SIGNAL_CASE_HERE
-    default:
+//ADD_SIGNAL_CASE_HERE    default:
         return FALSE;
     }
 }
@@ -58,8 +56,7 @@ void* identifyMsgOrPropIdForSignal(uint32_t identifier, uint8_t* isProperty)
 uint8_t identifyRootMsgOrPropId(uint32_t identifier)
 {
     switch (identifier) {
-//ADD_ROOT_CASE_HERE
-    default:
+//ADD_ROOT_CASE_HERE    default:
         return FALSE;
     }
 }
@@ -92,5 +89,5 @@ AJ_Status ExecuteAction(AJ_Message* msg, uint32_t msgId, ExecuteActionContext* c
 
 void TestsInit(CPSTest* testsToRun)
 {
-    //INITTESTS_GO_HERE
+//INITTESTS_GO_HERE
 }

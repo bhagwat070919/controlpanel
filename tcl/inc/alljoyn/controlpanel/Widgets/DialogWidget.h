@@ -17,7 +17,7 @@
 #ifndef DIALOGWIDGET_H_
 #define DIALOGWIDGET_H_
 
-#include "alljoyn/controlpanel/Common/BaseWidget.h"
+#include <alljoyn/controlpanel/Common/BaseWidget.h>
 
 /////////////////////////* DialogWidget OptParams *//////////////////////////////////////
 

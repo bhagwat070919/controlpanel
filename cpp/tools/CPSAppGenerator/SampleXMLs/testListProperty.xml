@@ -56,7 +56,7 @@
                                 <hint>vertical_linear</hint>
                             </hints>
                             <elements>
-                                <scalarProperty dbusType="UINT16">
+                                <scalarProperty dataType="UINT16">
                                     <name>heatProperty</name>
                                     <getCode>getLPuint16Var</getCode>
                                     <setCode>setLPuint16Var(%s)</setCode>

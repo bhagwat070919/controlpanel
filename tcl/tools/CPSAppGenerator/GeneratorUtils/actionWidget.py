@@ -35,7 +35,7 @@ class Action (common.Widget):
         common.Widget.generateDefines(self, capName) 
         self.generated.defines += "#define {0}_EXEC                       AJ_APP_MESSAGE_ID({1} + NUM_PRECEDING_OBJECTS, 1, 4)\n".format(capName, self.generated.definesIndx)
         self.generated.actionCases += "case {0}_EXEC: \\\n".format(capName)
-        self.executeCases += "\t\tcase {0}_EXEC:\n".format(capName) 
+        self.executeCases += "    case {0}_EXEC:\n".format(capName) 
 
     def generateTests(self, capName) : 
         common.Widget.generateTests(self, capName) 
@@ -47,8 +47,8 @@ class Action (common.Widget):
     def generateOnAction (self) :
         onAction = self.element.onAction
         if hasattr(onAction, "executeCode") : 
-            self.generated.executeAction += self.executeCases + "\t\t{0}\n".format("{")    
-            self.generated.executeAction += "\t\t\t{0}\n\t\t{1}\n\t\tbreak;\n".format(onAction.executeCode, "}")
+            self.generated.executeAction += self.executeCases + "    {0}\n".format("{")    
+            self.generated.executeAction += "        {0}\n    {1}\n    break;\n\n".format(onAction.executeCode, "}")
         elif hasattr(onAction, "dialog") : 
             dialogElem = onAction.dialog
             dialog = dw.Dialog(self.generated, dialogElem, (self.parentObjectPath + self.objectPathSuffix), self.languageSetName)

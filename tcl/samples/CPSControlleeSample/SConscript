@@ -19,8 +19,7 @@ Import('cps_env')
 target_name = 'ControlPanelSample'
 
 source_files = [
-                Glob('*.c'),
-                '../../src/CPSControllee/ControlPanelMain.c',
+                Glob('*.c')
                 ]
 
 cps_env['CONTROLPANEL_DEFINE_STRING'] = 'CONTROLPANEL_SERVICE'

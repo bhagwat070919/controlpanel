@@ -17,7 +17,7 @@
 #ifndef ACTIONWIDGET_H_
 #define ACTIONWIDGET_H_
 
-#include "alljoyn/controlpanel/Common/BaseWidget.h"
+#include <alljoyn/controlpanel/Common/BaseWidget.h>
 
 /////////////////////////*     ActionWidget     *//////////////////////////////////////
 

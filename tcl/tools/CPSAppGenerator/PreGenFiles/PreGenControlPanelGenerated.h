@@ -18,14 +18,7 @@
 #define CONTROL_GENERATED_H_
 
 #include <alljoyn.h>
-#include <aj_msg.h>
 
-#include <alljoyn/controlpanel/Definitions.h>
-#ifdef CONTROLPANEL_SERVICE
-#include <alljoyn/services_common/Services_Common.h>
-#else
-#define NUM_PRE_CONTROLPANEL_OBJECTS 0
-#endif
 /**
  * Defines and objectPaths
  */
@@ -33,21 +26,26 @@
 
 #define UNIQUE_DEVICE_ID "//UNIQUEID_GO_HERE"
 
-#define GET_WIDGET_VALUE_CASES                  //GETVALUES_GO_HERE
+#define GET_WIDGET_VALUE_CASES \
+//GETVALUES_GO_HERE
 
-#define GET_WIDGET_ALL_VALUE_CASES                      //GETALLVALUES_GO_HERE
+#define GET_WIDGET_ALL_VALUE_CASES \
+//GETALLVALUES_GO_HERE
 
-#define GET_ROOT_VALUE_CASES                    //GETVALUES_ROOT_GO_HERE
+#define GET_ROOT_VALUE_CASES \
+//GETVALUES_ROOT_GO_HERE
 
-#define GET_ROOT_ALL_VALUE_CASES                        //GETALLVALUES_ROOT_GO_HERE
+#define GET_ROOT_ALL_VALUE_CASES \
+//GETALLVALUES_ROOT_GO_HERE
 
-#define SET_VALUE_CASES                         //SETVALUES_GO_HERE
+#define SET_VALUE_CASES \
+//SETVALUES_GO_HERE
 
-#define ACTION_CASES                    //ACTION_GO_HERE
+#define ACTION_CASES \
+//ACTION_GO_HERE
 
-#define LISTPROPERTY_CASES                  //LISTPROPERTY_GO_HERE
-
-#define GET_URL_CASES                  //GET_URL_GO_HERE
+#define GET_URL_CASES \
+//GET_URL_GO_HERE
 
 #define CONTROLPANELAPPOBJECTS //APPOBJECTS_GO_HERE
 

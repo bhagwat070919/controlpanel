@@ -14,9 +14,9 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Widgets/PropertyWidget.h"
-#include "alljoyn/controlpanel/Common/ControlMarshalUtil.h"
-#include "alljoyn/controlpanel/Common/DateTimeUtil.h"
+#include <alljoyn/controlpanel/Widgets/PropertyWidget.h>
+#include <alljoyn/controlpanel/Common/ControlMarshalUtil.h>
+#include <alljoyn/controlpanel/Common/DateTimeUtil.h>
 
 void initializePropertyWidget(PropertyWidget* widget)
 {
@@ -24,7 +24,6 @@ void initializePropertyWidget(PropertyWidget* widget)
     widget->signature = 0;
     widget->getValue = 0;
     widget->propertyType = SINGLE_VALUE_PROPERTY;
-    widget->parentListProperty = 0;
 
     initializePropertyOptParam(&widget->optParams);
     widget->optParams.constraintRange.signature = &widget->signature;
@@ -51,9 +50,6 @@ AJ_Status marshalPropertyValue(PropertyWidget* widget, AJ_Message* reply, uint16
 AJ_Status unmarshalPropertyValue(PropertyWidget* widget, AJ_Message* message, void* newValue, const char* lockerId)
 {
     AJ_Status status = AJ_ERR_UNEXPECTED;
-
-    if (widget->parentListProperty != 0)
-        CPS_CHECK(checkLock(widget->parentListProperty, lockerId));
 
     switch (widget->propertyType) {
     case SINGLE_VALUE_PROPERTY:

@@ -20,7 +20,7 @@
                     <hint>vertical_linear</hint>
                 </hints>
                 <elements>
-                    <scalarProperty dbusType="UINT16">
+                    <scalarProperty dataType="UINT16">
                         <name>program</name>
                         <getCode>getProgram</getCode>
                         <setCode>setProgram(%s)</setCode>
@@ -63,7 +63,7 @@
                             </constraintVals>
                         </constraintDefs>
                     </scalarProperty>
-                    <scalarProperty dbusType="UINT16">
+                    <scalarProperty dataType="UINT16">
                         <name>temperature</name>
                         <getCode>getTemperature</getCode>
                         <setCode>setTemperature(%s)</setCode>

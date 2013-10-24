@@ -167,7 +167,7 @@ void CPS_IdleConnectedHandler(AJ_BusAttachment*bus)
     AJ_Message msg;
 
     status = AJ_MarshalMethodCall(&busAttachment, &msg, testsToRun[runningTestNum].msgId,
-                                  0, CPSsessionId, 0, CPSC_CONNECT_TIMEOUT);
+                                  announceSender, CPSsessionId, 0, CPSC_CONNECT_TIMEOUT);
 
     uint16_t numParam;
     for (numParam = 0; numParam < testsToRun[runningTestNum].numParams; numParam++) {
@@ -184,7 +184,7 @@ void CPS_IdleConnectedHandler(AJ_BusAttachment*bus)
     AJ_Printf("MakeMethodCall() test number %i resulted in a status of %s.\n", lastTestRun + 1, AJ_StatusText(status));
 }
 
-Service_Status CPS_NotifySessionAccepted(uint32_t sessionId, const char*sender)
+Service_Status CPS_NotifySessionAccepted(uint32_t sessionId, const char* sender)
 {
     char dot = '.';
     uint16_t i;

@@ -17,8 +17,8 @@
 #ifndef CONSTRAINTLIST_H_
 #define CONSTRAINTLIST_H_
 
-#include "alljoyn/controlpanel/Definitions.h"
-#include "alljoyn.h"
+#include <alljoyn/controlpanel/Definitions.h>
+#include <alljoyn.h>
 
 typedef struct {
     const void* value;

@@ -14,14 +14,14 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Widgets/ActionWidget.h"
-#include "alljoyn/controlpanel/Widgets/PropertyWidget.h"
-#include "alljoyn/controlpanel/Widgets/ContainerWidget.h"
-#include "alljoyn/controlpanel/Widgets/LabelWidget.h"
-#include "alljoyn/controlpanel/Widgets/DialogWidget.h"
-#include "alljoyn/controlpanel/Common/HttpControl.h"
-#include "alljoyn/controlpanel/Common/ConstraintList.h"
-#include "alljoyn/controlpanel/ControlPanel.h"
+#include <alljoyn/controlpanel/Widgets/ActionWidget.h>
+#include <alljoyn/controlpanel/Widgets/PropertyWidget.h>
+#include <alljoyn/controlpanel/Widgets/ContainerWidget.h>
+#include <alljoyn/controlpanel/Widgets/LabelWidget.h>
+#include <alljoyn/controlpanel/Widgets/DialogWidget.h>
+#include <alljoyn/controlpanel/Common/HttpControl.h>
+#include <alljoyn/controlpanel/Common/ConstraintList.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
 
 
 const char rootContainerObjectPath[] = "/ControlPanel/MyDevice/rootContainer";
@@ -56,7 +56,6 @@ void WidgetsInit()
 void* identifyMsgOrPropId(uint32_t identifier, uint16_t* widgetType, uint16_t* propType, uint16_t* language)
 {
     switch (identifier) {
-
     default:
         return FALSE;
     }
@@ -65,7 +64,6 @@ void* identifyMsgOrPropId(uint32_t identifier, uint16_t* widgetType, uint16_t* p
 void* identifyMsgOrPropIdForSignal(uint32_t identifier, uint8_t* isProperty)
 {
     switch (identifier) {
-
     default:
         return FALSE;
     }
@@ -74,7 +72,6 @@ void* identifyMsgOrPropIdForSignal(uint32_t identifier, uint8_t* isProperty)
 uint8_t identifyRootMsgOrPropId(uint32_t identifier)
 {
     switch (identifier) {
-
     default:
         return FALSE;
     }

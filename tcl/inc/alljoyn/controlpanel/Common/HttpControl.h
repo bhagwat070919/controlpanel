@@ -13,16 +13,11 @@
  *    See the license for the specific language governing permissions and
  *    limitations under the license.
  ******************************************************************************/
-/*
- * HttpControl.h
- *
- *  Created on: May 28, 2013
- */
 
 #ifndef HTTPCONTROL_H_
 #define HTTPCONTROL_H_
 
-#include "alljoyn.h"
+#include <alljoyn.h>
 
 typedef struct {
     const char* url;

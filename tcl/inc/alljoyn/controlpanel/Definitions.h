@@ -27,7 +27,6 @@
 #define WIDGET_TYPE_LABEL 4
 #define WIDGET_TYPE_DIALOG 5
 #define WIDGET_TYPE_HTTP 6
-#define WIDGET_TYPE_LISTPROPERTY 7
 
 #define PROPERTY_TYPE_VERSION 0
 #define PROPERTY_TYPE_VERSION_SIG "q"
@@ -72,8 +71,6 @@
 
 #define TIME_PROPERTY 1
 #define TIME_PROPERTY_SIG "(q(qqq))"
-
-#define LISTPROPERTY_VALUE_SIG "a(qs)"
 
 /**
  * Base Optional Params and their signature
@@ -137,11 +134,6 @@
  * Dialog Hints
  */
 #define LABEL_HINT_TEXTLABEL 1
-
-/**
- * ListProperty Widget Hints
- */
-#define LIST_PROPERTY_WIDGET_HINT_DYNAMICSPINNER 1
 
 /**
  * Action Widget Hints

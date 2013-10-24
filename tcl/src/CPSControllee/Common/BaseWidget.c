@@ -14,9 +14,9 @@
  *    limitations under the license.
  ******************************************************************************/
 
-#include "alljoyn/controlpanel/Common/BaseWidget.h"
-#include "alljoyn/controlpanel/Definitions.h"
-#include "alljoyn/controlpanel/Common/ControlMarshalUtil.h"
+#include <alljoyn/controlpanel/Common/BaseWidget.h>
+#include <alljoyn/controlpanel/Definitions.h>
+#include <alljoyn/controlpanel/Common/ControlMarshalUtil.h>
 
 #define BASE_ENABLED 0x01
 #define BASE_WRITABLE 0x02
