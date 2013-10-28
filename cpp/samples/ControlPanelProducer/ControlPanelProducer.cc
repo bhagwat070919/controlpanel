@@ -22,7 +22,6 @@
 #include <alljoyn/controlpanel/ControlPanelService.h>
 #include <alljoyn/controlpanel/ControlPanelControllee.h>
 #include <alljoyn/controlpanel/GenericLogger.h>
-#include <PropertyStoreImpl.h>
 #include <PinKeyXListener.h>
 #include <CommonSampleUtil.h>
 #include <ControlPanelGenerated.h>
@@ -33,7 +32,7 @@ using namespace ajn;
 using namespace services;
 using namespace qcc;
 
-PropertyStoreImpl* propertyStoreImpl = 0;
+AboutPropertyStoreImpl* propertyStoreImpl = 0;
 CommonBusListener* controlpanelBusListener = 0;
 BusAttachment* bus = 0;
 ControlPanelService* controlPanelService = 0;
@@ -103,7 +102,12 @@ int32_t main()
 
     qcc::String device_id = "123456", device_name = "testdeviceName";
     qcc::String app_id = "2826752ae35c416a82bcef272c55eace", app_name = "testappName";
-    propertyStoreImpl = CommonSampleUtil::preparePropertyStore(app_id, app_name, device_id, device_name);
+    propertyStoreImpl = new AboutPropertyStoreImpl();
+    status = CommonSampleUtil::fillPropertyStore(propertyStoreImpl, app_id, app_name, device_id, device_name);
+    if (status != ER_OK) {
+        std::cout << "Could not fill PropertyStore." << std::endl;
+        exitApp(1);
+    }
 
     status = CommonSampleUtil::prepareAboutService(bus, propertyStoreImpl,
                                                    controlpanelBusListener, SERVICE_PORT);
