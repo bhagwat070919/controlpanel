@@ -346,50 +346,50 @@ uint8_t checkForUpdatesToSend()
                 snprintf(statusString, sizeof(statusText), "Heating to %d F", targetTemp);
                 snprintf(notificationString, sizeof(notificationText), "Target temperature changed, now heating to %d F \n", targetTemp);
                 sendANotification = 1;
-            } else if (targetTemp < currentTemperature)    {
+            } else if (targetTemp < currentTemperature) {
                 //cooling
                 snprintf(statusString, sizeof(statusText), "Cooling to %d F", targetTemp);
                 snprintf(notificationString, sizeof(notificationText), "Target temperature changed, now cooling to %d F \n", targetTemp);
                 sendANotification = 1;
-            } else   {
+            } else {
                 //target temp reached
                 snprintf(statusString, sizeof(statusText), "Target temp reached");
                 snprintf(notificationString, sizeof(notificationText), "Target temperature of %d F reached \n", targetTemp);
                 sendANotification = 1;
             }
-        } else if (currentMode == 1)    {
+        } else if (currentMode == 1) {
             // cooling mode
             if (targetTemp < currentTemperature) {
                 //cooling
                 snprintf(statusString, sizeof(statusText), "Cooling to %d F", targetTemp);
                 snprintf(notificationString, sizeof(notificationText), "Target temperature changed, now cooling to %d F \n", targetTemp);
                 sendANotification = 1;
-            } else if (targetTemp == currentTemperature)    {
+            } else if (targetTemp == currentTemperature) {
                 //target temp reached
                 snprintf(statusString, sizeof(statusText), "Target temp reached");
                 snprintf(notificationString, sizeof(notificationText), "Target temperature of %d F reached \n", targetTemp);
                 sendANotification = 1;
-            } else   {
+            } else {
                 // user set target temp higher than current temp, do nothing
                 snprintf(statusString, sizeof(statusText), "Idle");
             }
-        } else if (currentMode == 2)    {
+        } else if (currentMode == 2) {
             // heating mode
             if (targetTemp > currentTemperature) {
                 //heating
                 snprintf(statusString, sizeof(statusText), "Heating to %d F", targetTemp);
                 snprintf(notificationString, sizeof(notificationText), "Target temperature changed, now heating to %d F \n", targetTemp);
                 sendANotification = 1;
-            } else if (targetTemp == currentTemperature)    {
+            } else if (targetTemp == currentTemperature) {
                 //target temp reached
                 snprintf(statusString, sizeof(statusText), "Target temp reached");
                 snprintf(notificationString, sizeof(notificationText), "Target temperature of %d F reached \n", targetTemp);
                 sendANotification = 1;
-            } else   {
+            } else {
                 // user set target temp lower than current temp, do nothing
                 snprintf(statusString, sizeof(statusText), "Idle");
             }
-        } else   {
+        } else {
             // fan mode or off, don't do anything
         }
     }
@@ -409,12 +409,12 @@ uint8_t checkForUpdatesToSend()
                 snprintf(statusString, sizeof(statusText), "Heating to %d F", targetTemp);
                 snprintf(notificationString, sizeof(notificationText), "Mode changed to Auto, now heating to %d F \n", targetTemp);
                 sendANotification = 1;
-            } else if (targetTemp < currentTemperature)    {
+            } else if (targetTemp < currentTemperature) {
                 //cooling
                 snprintf(statusString, sizeof(statusText), "Cooling to %d F", targetTemp);
                 snprintf(notificationString, sizeof(notificationText), "Mode changed to Auto, now cooling to %d F \n", targetTemp);
                 sendANotification = 1;
-            } else   {
+            } else {
                 //target temp already reached
                 snprintf(statusString, sizeof(statusText), "Idle");
                 snprintf(notificationString, sizeof(notificationText), "Mode changed to Auto \n");
@@ -425,14 +425,14 @@ uint8_t checkForUpdatesToSend()
             disableFan();
             setTempSelectorFieldUpdate();
             setFanSpeedSelectorFieldUpdate();
-        } else if (currentMode == 1)    {
+        } else if (currentMode == 1) {
             // cooling mode
             if (targetTemp < currentTemperature) {
                 //cooling
                 snprintf(statusString, sizeof(statusText), "Cooling to %d F", targetTemp);
                 snprintf(notificationString, sizeof(notificationText), "Mode changed to Cool, now cooling to %d F \n", targetTemp);
                 sendANotification = 1;
-            } else   {
+            } else {
                 //target temp already reached or set higher than current temp
                 snprintf(statusString, sizeof(statusText), "Idle");
                 snprintf(notificationString, sizeof(notificationText), "Mode changed to Cool \n");
@@ -443,14 +443,14 @@ uint8_t checkForUpdatesToSend()
             disableFan();
             setTempSelectorFieldUpdate();
             setFanSpeedSelectorFieldUpdate();
-        } else if (currentMode == 2)    {
+        } else if (currentMode == 2) {
             // heating mode
             if (targetTemp > currentTemperature) {
                 //heating
                 snprintf(statusString, sizeof(statusText), "Heating to %d F", targetTemp);
                 snprintf(notificationString, sizeof(notificationText), "Mode changed to Heat, now heating to %d F \n", targetTemp);
                 sendANotification = 1;
-            } else   {
+            } else {
                 //target temp already reached or set lower than current temp
                 snprintf(statusString, sizeof(statusText), "Idle");
                 snprintf(notificationString, sizeof(notificationText), "Mode changed to Heat \n");
@@ -461,7 +461,7 @@ uint8_t checkForUpdatesToSend()
             disableFan();
             setTempSelectorFieldUpdate();
             setFanSpeedSelectorFieldUpdate();
-        } else if (currentMode == 3)    {
+        } else if (currentMode == 3) {
             // In fan mode
             //0==low
             //1==medium
@@ -470,11 +470,11 @@ uint8_t checkForUpdatesToSend()
                 snprintf(statusString, sizeof(statusText), "Fan on low");
                 snprintf(notificationString, sizeof(notificationText), "Mode changed to Fan, fan on low \n");
                 sendANotification = 1;
-            } else if (fanSpeed == 1)    {
+            } else if (fanSpeed == 1) {
                 snprintf(statusString, sizeof(statusText), "Fan on medium");
                 snprintf(notificationString, sizeof(notificationText), "Mode changed to Fan, fan on medium \n");
                 sendANotification = 1;
-            } else   {
+            } else {
                 snprintf(statusString, sizeof(statusText), "Fan on high");
                 snprintf(notificationString, sizeof(notificationText), "Mode changed to Fan, fan on high \n");
                 sendANotification = 1;
@@ -485,7 +485,7 @@ uint8_t checkForUpdatesToSend()
             disableTempSelect();
             setTempSelectorFieldUpdate();
             setFanSpeedSelectorFieldUpdate();
-        } else   {
+        } else {
             // Off
             snprintf(statusString, sizeof(statusText), "Unit is off");
             snprintf(notificationString, sizeof(notificationText), "Unit has been turned off \n");
@@ -512,11 +512,11 @@ uint8_t checkForUpdatesToSend()
                 snprintf(statusString, sizeof(statusText), "Fan on low");
                 snprintf(notificationString, sizeof(notificationText), "Fan on low \n");
                 sendANotification = 1;
-            } else if (fanSpeed == 1)    {
+            } else if (fanSpeed == 1) {
                 snprintf(statusString, sizeof(statusText), "Fan on medium");
                 snprintf(notificationString, sizeof(notificationText), "Fan on medium \n");
                 sendANotification = 1;
-            } else   {
+            } else {
                 snprintf(statusString, sizeof(statusText), "Fan on high");
                 snprintf(notificationString, sizeof(notificationText), "Fan on high \n");
                 sendANotification = 1;
@@ -530,7 +530,7 @@ uint8_t checkForUpdatesToSend()
 
         if (modeOrTargetTempChanged == 1) {
             modeOrTargetTempChanged = 0;
-        } else   {
+        } else {
             if (currentMode == 0) {
                 // auto mode
                 if (targetTemp > currentTemperature) {
@@ -539,14 +539,14 @@ uint8_t checkForUpdatesToSend()
                     currentTemperature++;
                     setTemperatureFieldUpdate();
                     checkTargetTempReached();
-                } else if (targetTemp < currentTemperature)    {
+                } else if (targetTemp < currentTemperature) {
                     //cooling
 //          previousTemperature = currentTemperature;
                     currentTemperature--;
                     setTemperatureFieldUpdate();
                     checkTargetTempReached();
                 }
-            } else if (currentMode == 1)    {
+            } else if (currentMode == 1) {
                 if (targetTemp < currentTemperature) {
                     //cooling
 //          previousTemperature = currentTemperature;
@@ -554,7 +554,7 @@ uint8_t checkForUpdatesToSend()
                     setTemperatureFieldUpdate();
                     checkTargetTempReached();
                 }
-            } else if (currentMode == 2)    {
+            } else if (currentMode == 2) {
                 if (targetTemp > currentTemperature) {
                     //heating
 //          previousTemperature = currentTemperature;
@@ -562,7 +562,7 @@ uint8_t checkForUpdatesToSend()
                     setTemperatureFieldUpdate();
                     checkTargetTempReached();
                 }
-            } else   {
+            } else {
                 // mode is either fan only or off, so don't need to do anything
             }
         }
