@@ -15,6 +15,7 @@
  ******************************************************************************/
 
 #include <alljoyn/controlpanel/ControlPanelService.h>
+#include <ControlPanelProvided.h>
 #include <aj_link_timeout.h>
 #include <ControlPanelSample.h>
 
@@ -177,6 +178,31 @@ Service_Status CPS_MessageProcessor(AJ_BusAttachment* bus, AJ_Message* msg, AJ_S
 
 void Controllee_DoWork(AJ_BusAttachment*bus)
 {
+    uint8_t sendUpdates = checkForUpdatesToSend();
+    if (sendUpdates > 0) {
+
+        // 0001 == need to update the temperature text field
+        // 0010 == need to update the status text field
+        // 0100 == need to update the state of temperature selector
+        // 1000 == need to update the state of fan speed selector
+
+        if ((sendUpdates & (1 << 0)) != 0) {
+            AJ_Printf("##### Sending update signal: temperature string field \n");
+            CpsSendPropertyChangedSignal(bus, EN_CURRENTTEMPSTRINGPROPERTY_SIGNAL_VALUE_CHANGED, CPSsessionId);
+        }
+        if ((sendUpdates & (1 << 1)) != 0) {
+            AJ_Printf("##### Sending update signal: status string field \n");
+            CpsSendPropertyChangedSignal(bus, EN_STATUSSTRINGPROPERTY_SIGNAL_VALUE_CHANGED, CPSsessionId);
+        }
+        if ((sendUpdates & (1 << 2)) != 0) {
+            AJ_Printf("##### Sending update signal: temperature selector state \n");
+            CpsSendPropertyChangedSignal(bus, EN_SET_TEMPERATURE_SIGNAL_PROPERTIES_CHANGED, CPSsessionId);
+        }
+        if ((sendUpdates & (1 << 3)) != 0) {
+            AJ_Printf("##### Sending update signal: fan speed selector state \n");
+            CpsSendPropertyChangedSignal(bus, EN_FAN_SPEED_SIGNAL_PROPERTIES_CHANGED, CPSsessionId);
+        }
+    }
     return;
 }
 

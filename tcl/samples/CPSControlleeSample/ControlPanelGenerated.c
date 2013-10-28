@@ -26,145 +26,210 @@
 
 const char rootContainerObjectPath[] = "/ControlPanel/MyDevice/rootContainer";
 const char enRootcontainerObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en";
-const char de_ATRootcontainerObjectPath[] = "/ControlPanel/MyDevice/rootContainer/de_AT";
-const char enCurrenttempObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/CurrentTemp";
-const char de_ATCurrenttempObjectPath[] = "/ControlPanel/MyDevice/rootContainer/de_AT/CurrentTemp";
-const char enHeatpropertyObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/heatProperty";
-const char de_ATHeatpropertyObjectPath[] = "/ControlPanel/MyDevice/rootContainer/de_AT/heatProperty";
-const char enOvenactionObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/ovenAction";
-const char de_ATOvenactionObjectPath[] = "/ControlPanel/MyDevice/rootContainer/de_AT/ovenAction";
-const char enLightactionObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/lightAction";
-const char de_ATLightactionObjectPath[] = "/ControlPanel/MyDevice/rootContainer/de_AT/lightAction";
-const char enLightconfirmObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/lightAction/LightConfirm";
-const char de_ATLightconfirmObjectPath[] = "/ControlPanel/MyDevice/rootContainer/de_AT/lightAction/LightConfirm";
-const char areYouSureObjectPath[] = "/ControlPanel/MyDevice/areYouSure";
-const char enAreyousureObjectPath[] = "/ControlPanel/MyDevice/areYouSure/en";
-const char de_ATAreyousureObjectPath[] = "/ControlPanel/MyDevice/areYouSure/de_AT";
+const char enTempandhumiditycontainerObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/tempAndHumidityContainer";
+const char enCurrenttempstringpropertyObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/tempAndHumidityContainer/CurrentTempStringProperty";
+const char enCurrenthumiditystringpropertyObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/tempAndHumidityContainer/CurrentHumidityStringProperty";
+const char enControlscontainerObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/controlsContainer";
+const char enAc_modeObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/controlsContainer/ac_mode";
+const char enStatusstringpropertyObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/controlsContainer/statusStringProperty";
+const char enSet_temperatureObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/set_temperature";
+const char enFan_speedObjectPath[] = "/ControlPanel/MyDevice/rootContainer/en/fan_speed";
 
 
 /*
  * Static variables used to fill rootContainerResponse
  */
 static ContainerWidget rootContainer;
-static const char* const rootContainerLabel[] = { "My Label of my container", "Container Etikett" };
 static const uint16_t rootContainerHints[] = { LAYOUT_HINT_VERTICAL_LINEAR, LAYOUT_HINT_HORIZONTAL_LINEAR };
-static LabelWidget CurrentTemp;
-static const char* const CurrentTempLabel[] = { "Current Temperature:", "Aktuelle Temperatur:" };
-static const uint16_t CurrentTempHints[] = { LABEL_HINT_TEXTLABEL };
-static PropertyWidget heatProperty;
-static const char* const heatPropertySignature = "q";
-static const char* const heatPropertyLabel[] = { "Oven Temperature", "Ofentemperatur" };
-static const uint16_t heatPropertyHints[] = { PROPERTY_WIDGET_HINT_SPINNER };
-static const char* const heatPropertyUnitMeasure[] = { "Degrees", "Grad" };
-static ConstraintList heatPropertyConstraintList[3];
-static const uint16_t heatPropertyConstraintValue0 = 175;
-static const char* const heatPropertyDisplay0[] = { "Regular", "Normal" };
-static const uint16_t heatPropertyConstraintValue1 = 200;
-static const char* const heatPropertyDisplay1[] = { "Hot", "Heiss" };
-static const uint16_t heatPropertyConstraintValue2 = 225;
-static const char* const heatPropertyDisplay2[] = { "Very Hot", "Sehr Heiss" };
-static ActionWidget ovenAction;
-static const char* const ovenActionLabel[] = { "Start Oven", "Ofen started" };
-static const uint16_t ovenActionHints[] = { ACTION_WIDGET_HINT_ACTIONBUTTON };
-static ActionWidget lightAction;
-static const char* const lightActionLabel[] = { "Turn on oven light", "Ofenlicht anschalten" };
-static const uint16_t lightActionHints[] = { ACTION_WIDGET_HINT_ACTIONBUTTON };
-static DialogWidget LightConfirm;
-static const char* const LightConfirmMessage[] = { "Are you sure you want to turn on the light", "Are you sure you want to turn on the light" };
-static const char* const LightConfirmLabel[] = { "Are you sure?", "Sind sie sicher?" };
-static const uint16_t LightConfirmHints[] = { DIALOG_HINT_ALERTDIALOG };
-static const char* const LightConfirmLabelaction1[] = { "Yes", "Ja" };
-static const char* const LightConfirmLabelaction2[] = { "No", "Nein" };
-static const char* const LightConfirmLabelaction3[] = { "Cancel", "Abrechen" };
-static DialogWidget areYouSure;
-static const char* const areYouSureMessage[] = { "Are you sure?", "Sind sie sicher?" };
-static const char* const areYouSureLabel[] = { "Are you sure?", "Sind sie sicher?" };
-static const char* const areYouSureLabelaction1[] = { "Yes", "Ja" };
+static ContainerWidget tempAndHumidityContainer;
+static const uint16_t tempAndHumidityContainerHints[] = { LAYOUT_HINT_VERTICAL_LINEAR };
+static PropertyWidget CurrentTempStringProperty;
+static const char* const CurrentTempStringPropertySignature = "s";
+static const char* const CurrentTempStringPropertyLabel[] = { "Current Temperature:" };
+static const uint16_t CurrentTempStringPropertyHints[] = { PROPERTY_WIDGET_HINT_TEXTVIEW };
+static PropertyWidget CurrentHumidityStringProperty;
+static const char* const CurrentHumidityStringPropertySignature = "s";
+static const char* const CurrentHumidityStringPropertyLabel[] = { "Current Humidity:" };
+static const uint16_t CurrentHumidityStringPropertyHints[] = { PROPERTY_WIDGET_HINT_TEXTVIEW };
+static ContainerWidget controlsContainer;
+static const uint16_t controlsContainerHints[] = { LAYOUT_HINT_HORIZONTAL_LINEAR };
+static PropertyWidget ac_mode;
+static const char* const ac_modeSignature = "q";
+static const char* const ac_modeLabel[] = { "Mode" };
+static const uint16_t ac_modeHints[] = { PROPERTY_WIDGET_HINT_SPINNER };
+static ConstraintList ac_modeConstraintList[5];
+static const uint16_t ac_modeConstraintValue0 = 0;
+static const char* const ac_modeDisplay0[] = { "Auto" };
+static const uint16_t ac_modeConstraintValue1 = 1;
+static const char* const ac_modeDisplay1[] = { "Cool" };
+static const uint16_t ac_modeConstraintValue2 = 2;
+static const char* const ac_modeDisplay2[] = { "Heat" };
+static const uint16_t ac_modeConstraintValue3 = 3;
+static const char* const ac_modeDisplay3[] = { "Fan" };
+static const uint16_t ac_modeConstraintValue4 = 4;
+static const char* const ac_modeDisplay4[] = { "Off" };
+static PropertyWidget statusStringProperty;
+static const char* const statusStringPropertySignature = "s";
+static const char* const statusStringPropertyLabel[] = { "Status:" };
+static const uint16_t statusStringPropertyHints[] = { PROPERTY_WIDGET_HINT_TEXTVIEW };
+static PropertyWidget set_temperature;
+static const char* const set_temperatureSignature = "q";
+static const char* const set_temperatureLabel[] = { "Temperature" };
+static const uint16_t set_temperatureHints[] = { PROPERTY_WIDGET_HINT_SLIDER };
+static const char* const set_temperatureUnitMeasure[] = { "Degrees" };
+static const uint16_t set_temperatureConstraintRangeMin = 50;
+static const uint16_t set_temperatureConstraintRangeMax = 90;
+static const uint16_t set_temperatureConstraintRangeInc = 1;
+static PropertyWidget fan_speed;
+static const char* const fan_speedSignature = "q";
+static const char* const fan_speedLabel[] = { "Fan Speed" };
+static const uint16_t fan_speedHints[] = { PROPERTY_WIDGET_HINT_SPINNER };
+static ConstraintList fan_speedConstraintList[3];
+static const uint16_t fan_speedConstraintValue0 = 0;
+static const char* const fan_speedDisplay0[] = { "Low" };
+static const uint16_t fan_speedConstraintValue1 = 1;
+static const char* const fan_speedDisplay1[] = { "Medium" };
+static const uint16_t fan_speedConstraintValue2 = 2;
+static const char* const fan_speedDisplay2[] = { "High" };
 
 
 void WidgetsInit()
 {
     initializeContainerWidget(&rootContainer);
-    rootContainer.base.numLanguages = 2;
+    rootContainer.base.numLanguages = 1;
     setBaseEnabled(&rootContainer.base, TRUE);
 
-    rootContainer.base.optParams.bgColor = 0x200;
-    rootContainer.base.optParams.label = rootContainerLabel;
+    rootContainer.base.optParams.bgColor = 0x1e90ff;
     rootContainer.base.optParams.hints = rootContainerHints;
     rootContainer.base.optParams.numHints = 2;
 
-    initializeLabelWidget(&CurrentTemp);
-    CurrentTemp.base.numLanguages = 2;
-    setBaseEnabled(&CurrentTemp.base, TRUE);
-    CurrentTemp.label = CurrentTempLabel;
+    initializeContainerWidget(&tempAndHumidityContainer);
+    tempAndHumidityContainer.base.numLanguages = 1;
+    setBaseEnabled(&tempAndHumidityContainer.base, TRUE);
 
-    CurrentTemp.base.optParams.bgColor = 0x98765;
-    CurrentTemp.base.optParams.hints = CurrentTempHints;
-    CurrentTemp.base.optParams.numHints = 1;
+    tempAndHumidityContainer.base.optParams.bgColor = 0x200;
+    tempAndHumidityContainer.base.optParams.hints = tempAndHumidityContainerHints;
+    tempAndHumidityContainer.base.optParams.numHints = 1;
 
-    initializePropertyWidget(&heatProperty);
-    heatProperty.base.numLanguages = 2;
-    setBaseEnabled(&heatProperty.base, TRUE);
-    setBaseWritable(&heatProperty.base, TRUE);
+    initializePropertyWidget(&CurrentTempStringProperty);
+    CurrentTempStringProperty.base.numLanguages = 1;
+    setBaseEnabled(&CurrentTempStringProperty.base, TRUE);
+    setBaseWritable(&CurrentTempStringProperty.base, FALSE);
 
-    heatProperty.signature = heatPropertySignature;
-    heatProperty.propertyType = SINGLE_VALUE_PROPERTY;
-    heatProperty.getValue = &getuint16Var;
+    CurrentTempStringProperty.signature = CurrentTempStringPropertySignature;
+    CurrentTempStringProperty.propertyType = SINGLE_VALUE_PROPERTY;
+    CurrentTempStringProperty.getValue = &getCurrentTemperatureString;
 
-    heatProperty.base.optParams.bgColor = 0x500;
-    heatProperty.base.optParams.label = heatPropertyLabel;
-    heatProperty.base.optParams.hints = heatPropertyHints;
-    heatProperty.base.optParams.numHints = 1;
-    heatProperty.optParams.unitOfMeasure = heatPropertyUnitMeasure;
+    CurrentTempStringProperty.base.optParams.bgColor = 0x500;
+    CurrentTempStringProperty.base.optParams.label = CurrentTempStringPropertyLabel;
+    CurrentTempStringProperty.base.optParams.hints = CurrentTempStringPropertyHints;
+    CurrentTempStringProperty.base.optParams.numHints = 1;
 
-    heatProperty.optParams.numConstraints = 3;
-    heatProperty.optParams.constraintList = heatPropertyConstraintList;
-    heatProperty.optParams.constraintList[0].value = &heatPropertyConstraintValue0;
-    heatProperty.optParams.constraintList[0].display = heatPropertyDisplay0;
-    heatProperty.optParams.constraintList[1].value = &heatPropertyConstraintValue1;
-    heatProperty.optParams.constraintList[1].display = heatPropertyDisplay1;
-    heatProperty.optParams.constraintList[2].value = &heatPropertyConstraintValue2;
-    heatProperty.optParams.constraintList[2].display = heatPropertyDisplay2;
+    initializePropertyWidget(&CurrentHumidityStringProperty);
+    CurrentHumidityStringProperty.base.numLanguages = 1;
+    setBaseEnabled(&CurrentHumidityStringProperty.base, TRUE);
+    setBaseWritable(&CurrentHumidityStringProperty.base, FALSE);
 
-    initializeActionWidget(&ovenAction);
-    ovenAction.base.numLanguages = 2;
-    setBaseEnabled(&ovenAction.base, TRUE);
+    CurrentHumidityStringProperty.signature = CurrentHumidityStringPropertySignature;
+    CurrentHumidityStringProperty.propertyType = SINGLE_VALUE_PROPERTY;
+    CurrentHumidityStringProperty.getValue = &getCurrentHumidityString;
 
-    ovenAction.base.optParams.bgColor = 0x400;
-    ovenAction.base.optParams.label = ovenActionLabel;
-    ovenAction.base.optParams.hints = ovenActionHints;
-    ovenAction.base.optParams.numHints = 1;
+    CurrentHumidityStringProperty.base.optParams.bgColor = 0x500;
+    CurrentHumidityStringProperty.base.optParams.label = CurrentHumidityStringPropertyLabel;
+    CurrentHumidityStringProperty.base.optParams.hints = CurrentHumidityStringPropertyHints;
+    CurrentHumidityStringProperty.base.optParams.numHints = 1;
 
-    initializeActionWidget(&lightAction);
-    lightAction.base.numLanguages = 2;
-    setBaseEnabled(&lightAction.base, TRUE);
+    initializeContainerWidget(&controlsContainer);
+    controlsContainer.base.numLanguages = 1;
+    setBaseEnabled(&controlsContainer.base, TRUE);
 
-    lightAction.base.optParams.bgColor = 0x400;
-    lightAction.base.optParams.label = lightActionLabel;
-    lightAction.base.optParams.hints = lightActionHints;
-    lightAction.base.optParams.numHints = 1;
-    initializeDialogWidget(&LightConfirm);
-    LightConfirm.base.numLanguages = 2;
-    setBaseEnabled(&LightConfirm.base, TRUE);
-    LightConfirm.message = LightConfirmMessage;
-    LightConfirm.numActions = 3;
+    controlsContainer.base.optParams.bgColor = 0x200;
+    controlsContainer.base.optParams.hints = controlsContainerHints;
+    controlsContainer.base.optParams.numHints = 1;
 
-    LightConfirm.base.optParams.bgColor = 0x789;
-    LightConfirm.base.optParams.label = LightConfirmLabel;
-    LightConfirm.base.optParams.hints = LightConfirmHints;
-    LightConfirm.base.optParams.numHints = 1;
-    LightConfirm.optParams.labelAction1 = LightConfirmLabelaction1;
-    LightConfirm.optParams.labelAction2 = LightConfirmLabelaction2;
-    LightConfirm.optParams.labelAction3 = LightConfirmLabelaction3;
-    initializeDialogWidget(&areYouSure);
-    areYouSure.base.numLanguages = 2;
-    setBaseEnabled(&areYouSure.base, TRUE);
-    areYouSure.message = areYouSureMessage;
-    areYouSure.numActions = 1;
+    initializePropertyWidget(&ac_mode);
+    ac_mode.base.numLanguages = 1;
+    setBaseEnabled(&ac_mode.base, TRUE);
+    setBaseWritable(&ac_mode.base, TRUE);
 
-    areYouSure.base.optParams.bgColor = 0x789;
-    areYouSure.base.optParams.label = areYouSureLabel;
-    areYouSure.optParams.labelAction1 = areYouSureLabelaction1;
+    ac_mode.signature = ac_modeSignature;
+    ac_mode.propertyType = SINGLE_VALUE_PROPERTY;
+    ac_mode.getValue = &getCurrentMode;
+
+    ac_mode.base.optParams.bgColor = 0xffd700;
+    ac_mode.base.optParams.label = ac_modeLabel;
+    ac_mode.base.optParams.hints = ac_modeHints;
+    ac_mode.base.optParams.numHints = 1;
+
+    ac_mode.optParams.numConstraints = 5;
+    ac_mode.optParams.constraintList = ac_modeConstraintList;
+    ac_mode.optParams.constraintList[0].value = &ac_modeConstraintValue0;
+    ac_mode.optParams.constraintList[0].display = ac_modeDisplay0;
+    ac_mode.optParams.constraintList[1].value = &ac_modeConstraintValue1;
+    ac_mode.optParams.constraintList[1].display = ac_modeDisplay1;
+    ac_mode.optParams.constraintList[2].value = &ac_modeConstraintValue2;
+    ac_mode.optParams.constraintList[2].display = ac_modeDisplay2;
+    ac_mode.optParams.constraintList[3].value = &ac_modeConstraintValue3;
+    ac_mode.optParams.constraintList[3].display = ac_modeDisplay3;
+    ac_mode.optParams.constraintList[4].value = &ac_modeConstraintValue4;
+    ac_mode.optParams.constraintList[4].display = ac_modeDisplay4;
+
+    initializePropertyWidget(&statusStringProperty);
+    statusStringProperty.base.numLanguages = 1;
+    setBaseEnabled(&statusStringProperty.base, TRUE);
+    setBaseWritable(&statusStringProperty.base, FALSE);
+
+    statusStringProperty.signature = statusStringPropertySignature;
+    statusStringProperty.propertyType = SINGLE_VALUE_PROPERTY;
+    statusStringProperty.getValue = &getStatusString;
+
+    statusStringProperty.base.optParams.bgColor = 0x500;
+    statusStringProperty.base.optParams.label = statusStringPropertyLabel;
+    statusStringProperty.base.optParams.hints = statusStringPropertyHints;
+    statusStringProperty.base.optParams.numHints = 1;
+
+    initializePropertyWidget(&set_temperature);
+    set_temperature.base.numLanguages = 1;
+    setBaseEnabled(&set_temperature.base, FALSE);
+    setBaseWritable(&set_temperature.base, TRUE);
+
+    set_temperature.signature = set_temperatureSignature;
+    set_temperature.propertyType = SINGLE_VALUE_PROPERTY;
+    set_temperature.getValue = &getTargetTemperature;
+
+    set_temperature.base.optParams.bgColor = 0x008000;
+    set_temperature.base.optParams.label = set_temperatureLabel;
+    set_temperature.base.optParams.hints = set_temperatureHints;
+    set_temperature.base.optParams.numHints = 1;
+    set_temperature.optParams.unitOfMeasure = set_temperatureUnitMeasure;
+
+    set_temperature.optParams.constraintRangeDefined = TRUE;
+    set_temperature.optParams.constraintRange.minValue = &set_temperatureConstraintRangeMin;
+    set_temperature.optParams.constraintRange.maxValue = &set_temperatureConstraintRangeMax;
+    set_temperature.optParams.constraintRange.increment = &set_temperatureConstraintRangeInc;
+
+    initializePropertyWidget(&fan_speed);
+    fan_speed.base.numLanguages = 1;
+    setBaseEnabled(&fan_speed.base, FALSE);
+    setBaseWritable(&fan_speed.base, TRUE);
+
+    fan_speed.signature = fan_speedSignature;
+    fan_speed.propertyType = SINGLE_VALUE_PROPERTY;
+    fan_speed.getValue = &getFanSpeed;
+
+    fan_speed.base.optParams.bgColor = 0xff69b4;
+    fan_speed.base.optParams.label = fan_speedLabel;
+    fan_speed.base.optParams.hints = fan_speedHints;
+    fan_speed.base.optParams.numHints = 1;
+
+    fan_speed.optParams.numConstraints = 3;
+    fan_speed.optParams.constraintList = fan_speedConstraintList;
+    fan_speed.optParams.constraintList[0].value = &fan_speedConstraintValue0;
+    fan_speed.optParams.constraintList[0].display = fan_speedDisplay0;
+    fan_speed.optParams.constraintList[1].value = &fan_speedConstraintValue1;
+    fan_speed.optParams.constraintList[1].display = fan_speedDisplay1;
+    fan_speed.optParams.constraintList[2].value = &fan_speedConstraintValue2;
+    fan_speed.optParams.constraintList[2].display = fan_speedDisplay2;
 
     return;
 }
@@ -195,328 +260,225 @@ void* identifyMsgOrPropId(uint32_t identifier, uint16_t* widgetType, uint16_t* p
         *language = MYLANGUAGES_EN;
         return &rootContainer;
 
-    case DE_AT_ROOTCONTAINER_GET_ALL_VALUES:
+    case EN_TEMPANDHUMIDITYCONTAINER_GET_ALL_VALUES:
         *widgetType = WIDGET_TYPE_CONTAINER;
-        *language = MYLANGUAGES_DE_AT;
-        return &rootContainer;
+        *language = MYLANGUAGES_EN;
+        return &tempAndHumidityContainer;
 
-    case DE_AT_ROOTCONTAINER_VERSION_PROPERTY:
+    case EN_TEMPANDHUMIDITYCONTAINER_VERSION_PROPERTY:
         *widgetType = WIDGET_TYPE_CONTAINER;
         *propType = PROPERTY_TYPE_VERSION;
-        *language = MYLANGUAGES_DE_AT;
-        return &rootContainer;
+        *language = MYLANGUAGES_EN;
+        return &tempAndHumidityContainer;
 
-    case DE_AT_ROOTCONTAINER_STATES_PROPERTY:
+    case EN_TEMPANDHUMIDITYCONTAINER_STATES_PROPERTY:
         *widgetType = WIDGET_TYPE_CONTAINER;
         *propType = PROPERTY_TYPE_STATES;
-        *language = MYLANGUAGES_DE_AT;
-        return &rootContainer;
+        *language = MYLANGUAGES_EN;
+        return &tempAndHumidityContainer;
 
-    case DE_AT_ROOTCONTAINER_OPTPARAMS_PROPERTY:
+    case EN_TEMPANDHUMIDITYCONTAINER_OPTPARAMS_PROPERTY:
         *widgetType = WIDGET_TYPE_CONTAINER;
         *propType = PROPERTY_TYPE_OPTPARAMS;
-        *language = MYLANGUAGES_DE_AT;
-        return &rootContainer;
-
-    case EN_CURRENTTEMP_GET_ALL_VALUES:
-        *widgetType = WIDGET_TYPE_LABEL;
         *language = MYLANGUAGES_EN;
-        return &CurrentTemp;
+        return &tempAndHumidityContainer;
 
-    case EN_CURRENTTEMP_VERSION_PROPERTY:
-        *widgetType = WIDGET_TYPE_LABEL;
-        *propType = PROPERTY_TYPE_VERSION;
-        *language = MYLANGUAGES_EN;
-        return &CurrentTemp;
-
-    case EN_CURRENTTEMP_STATES_PROPERTY:
-        *widgetType = WIDGET_TYPE_LABEL;
-        *propType = PROPERTY_TYPE_STATES;
-        *language = MYLANGUAGES_EN;
-        return &CurrentTemp;
-
-    case EN_CURRENTTEMP_OPTPARAMS_PROPERTY:
-        *widgetType = WIDGET_TYPE_LABEL;
-        *propType = PROPERTY_TYPE_OPTPARAMS;
-        *language = MYLANGUAGES_EN;
-        return &CurrentTemp;
-
-    case EN_CURRENTTEMP_LABEL_PROPERTY:
-        *widgetType = WIDGET_TYPE_LABEL;
-        *propType = PROPERTY_TYPE_LABEL;
-        *language = MYLANGUAGES_EN;
-        return &CurrentTemp;
-
-    case DE_AT_CURRENTTEMP_GET_ALL_VALUES:
-        *widgetType = WIDGET_TYPE_LABEL;
-        *language = MYLANGUAGES_DE_AT;
-        return &CurrentTemp;
-
-    case DE_AT_CURRENTTEMP_VERSION_PROPERTY:
-        *widgetType = WIDGET_TYPE_LABEL;
-        *propType = PROPERTY_TYPE_VERSION;
-        *language = MYLANGUAGES_DE_AT;
-        return &CurrentTemp;
-
-    case DE_AT_CURRENTTEMP_STATES_PROPERTY:
-        *widgetType = WIDGET_TYPE_LABEL;
-        *propType = PROPERTY_TYPE_STATES;
-        *language = MYLANGUAGES_DE_AT;
-        return &CurrentTemp;
-
-    case DE_AT_CURRENTTEMP_OPTPARAMS_PROPERTY:
-        *widgetType = WIDGET_TYPE_LABEL;
-        *propType = PROPERTY_TYPE_OPTPARAMS;
-        *language = MYLANGUAGES_DE_AT;
-        return &CurrentTemp;
-
-    case DE_AT_CURRENTTEMP_LABEL_PROPERTY:
-        *widgetType = WIDGET_TYPE_LABEL;
-        *propType = PROPERTY_TYPE_LABEL;
-        *language = MYLANGUAGES_DE_AT;
-        return &CurrentTemp;
-
-    case EN_HEATPROPERTY_GET_ALL_VALUES:
+    case EN_CURRENTTEMPSTRINGPROPERTY_GET_ALL_VALUES:
         *widgetType = WIDGET_TYPE_PROPERTY;
         *language = MYLANGUAGES_EN;
-        return &heatProperty;
+        return &CurrentTempStringProperty;
 
-    case EN_HEATPROPERTY_VERSION_PROPERTY:
+    case EN_CURRENTTEMPSTRINGPROPERTY_VERSION_PROPERTY:
         *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_VERSION;
         *language = MYLANGUAGES_EN;
-        return &heatProperty;
+        return &CurrentTempStringProperty;
 
-    case EN_HEATPROPERTY_STATES_PROPERTY:
+    case EN_CURRENTTEMPSTRINGPROPERTY_STATES_PROPERTY:
         *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_STATES;
         *language = MYLANGUAGES_EN;
-        return &heatProperty;
+        return &CurrentTempStringProperty;
 
-    case EN_HEATPROPERTY_OPTPARAMS_PROPERTY:
+    case EN_CURRENTTEMPSTRINGPROPERTY_OPTPARAMS_PROPERTY:
         *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_OPTPARAMS;
         *language = MYLANGUAGES_EN;
-        return &heatProperty;
+        return &CurrentTempStringProperty;
 
-    case EN_HEATPROPERTY_VALUE_PROPERTY:
+    case EN_CURRENTTEMPSTRINGPROPERTY_VALUE_PROPERTY:
         *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_VALUE;
         *language = MYLANGUAGES_EN;
-        return &heatProperty;
+        return &CurrentTempStringProperty;
 
-    case DE_AT_HEATPROPERTY_GET_ALL_VALUES:
+    case EN_CURRENTHUMIDITYSTRINGPROPERTY_GET_ALL_VALUES:
         *widgetType = WIDGET_TYPE_PROPERTY;
-        *language = MYLANGUAGES_DE_AT;
-        return &heatProperty;
+        *language = MYLANGUAGES_EN;
+        return &CurrentHumidityStringProperty;
 
-    case DE_AT_HEATPROPERTY_VERSION_PROPERTY:
+    case EN_CURRENTHUMIDITYSTRINGPROPERTY_VERSION_PROPERTY:
         *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_VERSION;
-        *language = MYLANGUAGES_DE_AT;
-        return &heatProperty;
+        *language = MYLANGUAGES_EN;
+        return &CurrentHumidityStringProperty;
 
-    case DE_AT_HEATPROPERTY_STATES_PROPERTY:
+    case EN_CURRENTHUMIDITYSTRINGPROPERTY_STATES_PROPERTY:
         *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_STATES;
-        *language = MYLANGUAGES_DE_AT;
-        return &heatProperty;
+        *language = MYLANGUAGES_EN;
+        return &CurrentHumidityStringProperty;
 
-    case DE_AT_HEATPROPERTY_OPTPARAMS_PROPERTY:
+    case EN_CURRENTHUMIDITYSTRINGPROPERTY_OPTPARAMS_PROPERTY:
         *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_OPTPARAMS;
-        *language = MYLANGUAGES_DE_AT;
-        return &heatProperty;
+        *language = MYLANGUAGES_EN;
+        return &CurrentHumidityStringProperty;
 
-    case DE_AT_HEATPROPERTY_VALUE_PROPERTY:
+    case EN_CURRENTHUMIDITYSTRINGPROPERTY_VALUE_PROPERTY:
         *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_VALUE;
-        *language = MYLANGUAGES_DE_AT;
-        return &heatProperty;
-
-    case EN_OVENACTION_GET_ALL_VALUES:
-        *widgetType = WIDGET_TYPE_ACTION;
         *language = MYLANGUAGES_EN;
-        return &ovenAction;
+        return &CurrentHumidityStringProperty;
 
-    case EN_OVENACTION_VERSION_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
+    case EN_CONTROLSCONTAINER_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *language = MYLANGUAGES_EN;
+        return &controlsContainer;
+
+    case EN_CONTROLSCONTAINER_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
         *propType = PROPERTY_TYPE_VERSION;
         *language = MYLANGUAGES_EN;
-        return &ovenAction;
+        return &controlsContainer;
 
-    case EN_OVENACTION_STATES_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
+    case EN_CONTROLSCONTAINER_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
         *propType = PROPERTY_TYPE_STATES;
         *language = MYLANGUAGES_EN;
-        return &ovenAction;
+        return &controlsContainer;
 
-    case EN_OVENACTION_OPTPARAMS_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
+    case EN_CONTROLSCONTAINER_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
         *propType = PROPERTY_TYPE_OPTPARAMS;
         *language = MYLANGUAGES_EN;
-        return &ovenAction;
+        return &controlsContainer;
 
-    case DE_AT_OVENACTION_GET_ALL_VALUES:
-        *widgetType = WIDGET_TYPE_ACTION;
-        *language = MYLANGUAGES_DE_AT;
-        return &ovenAction;
-
-    case DE_AT_OVENACTION_VERSION_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
-        *propType = PROPERTY_TYPE_VERSION;
-        *language = MYLANGUAGES_DE_AT;
-        return &ovenAction;
-
-    case DE_AT_OVENACTION_STATES_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
-        *propType = PROPERTY_TYPE_STATES;
-        *language = MYLANGUAGES_DE_AT;
-        return &ovenAction;
-
-    case DE_AT_OVENACTION_OPTPARAMS_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
-        *propType = PROPERTY_TYPE_OPTPARAMS;
-        *language = MYLANGUAGES_DE_AT;
-        return &ovenAction;
-
-    case EN_LIGHTACTION_GET_ALL_VALUES:
-        *widgetType = WIDGET_TYPE_ACTION;
+    case EN_AC_MODE_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *language = MYLANGUAGES_EN;
-        return &lightAction;
+        return &ac_mode;
 
-    case EN_LIGHTACTION_VERSION_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
+    case EN_AC_MODE_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_VERSION;
         *language = MYLANGUAGES_EN;
-        return &lightAction;
+        return &ac_mode;
 
-    case EN_LIGHTACTION_STATES_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
+    case EN_AC_MODE_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_STATES;
         *language = MYLANGUAGES_EN;
-        return &lightAction;
+        return &ac_mode;
 
-    case EN_LIGHTACTION_OPTPARAMS_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
+    case EN_AC_MODE_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_OPTPARAMS;
         *language = MYLANGUAGES_EN;
-        return &lightAction;
+        return &ac_mode;
 
-    case DE_AT_LIGHTACTION_GET_ALL_VALUES:
-        *widgetType = WIDGET_TYPE_ACTION;
-        *language = MYLANGUAGES_DE_AT;
-        return &lightAction;
-
-    case DE_AT_LIGHTACTION_VERSION_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
-        *propType = PROPERTY_TYPE_VERSION;
-        *language = MYLANGUAGES_DE_AT;
-        return &lightAction;
-
-    case DE_AT_LIGHTACTION_STATES_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
-        *propType = PROPERTY_TYPE_STATES;
-        *language = MYLANGUAGES_DE_AT;
-        return &lightAction;
-
-    case DE_AT_LIGHTACTION_OPTPARAMS_PROPERTY:
-        *widgetType = WIDGET_TYPE_ACTION;
-        *propType = PROPERTY_TYPE_OPTPARAMS;
-        *language = MYLANGUAGES_DE_AT;
-        return &lightAction;
-
-    case EN_LIGHTCONFIRM_GET_ALL_VALUES:
-        *widgetType = WIDGET_TYPE_DIALOG;
+    case EN_AC_MODE_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
         *language = MYLANGUAGES_EN;
-        return &LightConfirm;
+        return &ac_mode;
 
-    case EN_LIGHTCONFIRM_VERSION_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
+    case EN_STATUSSTRINGPROPERTY_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *language = MYLANGUAGES_EN;
+        return &statusStringProperty;
+
+    case EN_STATUSSTRINGPROPERTY_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_VERSION;
         *language = MYLANGUAGES_EN;
-        return &LightConfirm;
+        return &statusStringProperty;
 
-    case EN_LIGHTCONFIRM_STATES_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
+    case EN_STATUSSTRINGPROPERTY_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_STATES;
         *language = MYLANGUAGES_EN;
-        return &LightConfirm;
+        return &statusStringProperty;
 
-    case EN_LIGHTCONFIRM_OPTPARAMS_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
+    case EN_STATUSSTRINGPROPERTY_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_OPTPARAMS;
         *language = MYLANGUAGES_EN;
-        return &LightConfirm;
+        return &statusStringProperty;
 
-    case DE_AT_LIGHTCONFIRM_GET_ALL_VALUES:
-        *widgetType = WIDGET_TYPE_DIALOG;
-        *language = MYLANGUAGES_DE_AT;
-        return &LightConfirm;
-
-    case DE_AT_LIGHTCONFIRM_VERSION_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
-        *propType = PROPERTY_TYPE_VERSION;
-        *language = MYLANGUAGES_DE_AT;
-        return &LightConfirm;
-
-    case DE_AT_LIGHTCONFIRM_STATES_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
-        *propType = PROPERTY_TYPE_STATES;
-        *language = MYLANGUAGES_DE_AT;
-        return &LightConfirm;
-
-    case DE_AT_LIGHTCONFIRM_OPTPARAMS_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
-        *propType = PROPERTY_TYPE_OPTPARAMS;
-        *language = MYLANGUAGES_DE_AT;
-        return &LightConfirm;
-
-    case EN_AREYOUSURE_GET_ALL_VALUES:
-        *widgetType = WIDGET_TYPE_DIALOG;
+    case EN_STATUSSTRINGPROPERTY_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
         *language = MYLANGUAGES_EN;
-        return &areYouSure;
+        return &statusStringProperty;
 
-    case EN_AREYOUSURE_VERSION_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
+    case EN_SET_TEMPERATURE_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *language = MYLANGUAGES_EN;
+        return &set_temperature;
+
+    case EN_SET_TEMPERATURE_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_VERSION;
         *language = MYLANGUAGES_EN;
-        return &areYouSure;
+        return &set_temperature;
 
-    case EN_AREYOUSURE_STATES_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
+    case EN_SET_TEMPERATURE_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_STATES;
         *language = MYLANGUAGES_EN;
-        return &areYouSure;
+        return &set_temperature;
 
-    case EN_AREYOUSURE_OPTPARAMS_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
+    case EN_SET_TEMPERATURE_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_OPTPARAMS;
         *language = MYLANGUAGES_EN;
-        return &areYouSure;
+        return &set_temperature;
 
-    case DE_AT_AREYOUSURE_GET_ALL_VALUES:
-        *widgetType = WIDGET_TYPE_DIALOG;
-        *language = MYLANGUAGES_DE_AT;
-        return &areYouSure;
+    case EN_SET_TEMPERATURE_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
+        *language = MYLANGUAGES_EN;
+        return &set_temperature;
 
-    case DE_AT_AREYOUSURE_VERSION_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
+    case EN_FAN_SPEED_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *language = MYLANGUAGES_EN;
+        return &fan_speed;
+
+    case EN_FAN_SPEED_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_VERSION;
-        *language = MYLANGUAGES_DE_AT;
-        return &areYouSure;
+        *language = MYLANGUAGES_EN;
+        return &fan_speed;
 
-    case DE_AT_AREYOUSURE_STATES_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
+    case EN_FAN_SPEED_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_STATES;
-        *language = MYLANGUAGES_DE_AT;
-        return &areYouSure;
+        *language = MYLANGUAGES_EN;
+        return &fan_speed;
 
-    case DE_AT_AREYOUSURE_OPTPARAMS_PROPERTY:
-        *widgetType = WIDGET_TYPE_DIALOG;
+    case EN_FAN_SPEED_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
         *propType = PROPERTY_TYPE_OPTPARAMS;
-        *language = MYLANGUAGES_DE_AT;
-        return &areYouSure;
+        *language = MYLANGUAGES_EN;
+        return &fan_speed;
+
+    case EN_FAN_SPEED_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
+        *language = MYLANGUAGES_EN;
+        return &fan_speed;
 
     default:
         return FALSE;
@@ -529,52 +491,53 @@ void* identifyMsgOrPropIdForSignal(uint32_t identifier, uint8_t* isProperty)
     case EN_ROOTCONTAINER_SIGNAL_PROPERTIES_CHANGED:
         return &rootContainer;
 
-    case DE_AT_ROOTCONTAINER_SIGNAL_PROPERTIES_CHANGED:
-        return &rootContainer;
+    case EN_TEMPANDHUMIDITYCONTAINER_SIGNAL_PROPERTIES_CHANGED:
+        return &tempAndHumidityContainer;
 
-    case EN_CURRENTTEMP_SIGNAL_PROPERTIES_CHANGED:
-        return &CurrentTemp;
+    case EN_CURRENTTEMPSTRINGPROPERTY_SIGNAL_PROPERTIES_CHANGED:
+        return &CurrentTempStringProperty;
 
-    case DE_AT_CURRENTTEMP_SIGNAL_PROPERTIES_CHANGED:
-        return &CurrentTemp;
-
-    case EN_HEATPROPERTY_SIGNAL_PROPERTIES_CHANGED:
-        return &heatProperty;
-
-    case EN_HEATPROPERTY_SIGNAL_VALUE_CHANGED:
+    case EN_CURRENTTEMPSTRINGPROPERTY_SIGNAL_VALUE_CHANGED:
         *isProperty = TRUE;
-        return &heatProperty;
+        return &CurrentTempStringProperty;
 
-    case DE_AT_HEATPROPERTY_SIGNAL_PROPERTIES_CHANGED:
-        return &heatProperty;
+    case EN_CURRENTHUMIDITYSTRINGPROPERTY_SIGNAL_PROPERTIES_CHANGED:
+        return &CurrentHumidityStringProperty;
 
-    case DE_AT_HEATPROPERTY_SIGNAL_VALUE_CHANGED:
+    case EN_CURRENTHUMIDITYSTRINGPROPERTY_SIGNAL_VALUE_CHANGED:
         *isProperty = TRUE;
-        return &heatProperty;
+        return &CurrentHumidityStringProperty;
 
-    case EN_OVENACTION_SIGNAL_PROPERTIES_CHANGED:
-        return &ovenAction;
+    case EN_CONTROLSCONTAINER_SIGNAL_PROPERTIES_CHANGED:
+        return &controlsContainer;
 
-    case DE_AT_OVENACTION_SIGNAL_PROPERTIES_CHANGED:
-        return &ovenAction;
+    case EN_AC_MODE_SIGNAL_PROPERTIES_CHANGED:
+        return &ac_mode;
 
-    case EN_LIGHTACTION_SIGNAL_PROPERTIES_CHANGED:
-        return &lightAction;
+    case EN_AC_MODE_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &ac_mode;
 
-    case DE_AT_LIGHTACTION_SIGNAL_PROPERTIES_CHANGED:
-        return &lightAction;
+    case EN_STATUSSTRINGPROPERTY_SIGNAL_PROPERTIES_CHANGED:
+        return &statusStringProperty;
 
-    case EN_LIGHTCONFIRM_SIGNAL_PROPERTIES_CHANGED:
-        return &LightConfirm;
+    case EN_STATUSSTRINGPROPERTY_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &statusStringProperty;
 
-    case DE_AT_LIGHTCONFIRM_SIGNAL_PROPERTIES_CHANGED:
-        return &LightConfirm;
+    case EN_SET_TEMPERATURE_SIGNAL_PROPERTIES_CHANGED:
+        return &set_temperature;
 
-    case EN_AREYOUSURE_SIGNAL_PROPERTIES_CHANGED:
-        return &areYouSure;
+    case EN_SET_TEMPERATURE_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &set_temperature;
 
-    case DE_AT_AREYOUSURE_SIGNAL_PROPERTIES_CHANGED:
-        return &areYouSure;
+    case EN_FAN_SPEED_SIGNAL_PROPERTIES_CHANGED:
+        return &fan_speed;
+
+    case EN_FAN_SPEED_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &fan_speed;
 
     default:
         return FALSE;
@@ -586,11 +549,6 @@ uint8_t identifyRootMsgOrPropId(uint32_t identifier)
     switch (identifier) {
     case ROOT_CONTROLPANEL_ROOTCONTAINER_VERSION_PROPERTY:
     case ROOT_CONTROLPANEL_ROOTCONTAINER_GET_ALL_VALUES:
-        return TRUE;
-
-    case NOTIFICATION_ACTION_AREYOUSURE_VERSION_PROPERTY:
-    case NOTIFICATION_ACTION_AREYOUSURE_GET_ALL_VALUES:
-    case NOTIFICATION_ACTION_AREYOUSURE_SIGNAL_DISMISS:
         return TRUE;
 
     default:
@@ -606,16 +564,69 @@ AJ_Status SetValueProperty(AJ_Message* replyMsg, uint32_t propId, void* context)
     AJ_UnmarshalVariant(replyMsg, &variantSig);
 
     switch (propId) {
-    case EN_HEATPROPERTY_VALUE_PROPERTY:
-    case DE_AT_HEATPROPERTY_VALUE_PROPERTY:
+    case EN_CURRENTTEMPSTRINGPROPERTY_VALUE_PROPERTY:
+    {
+        const char* newValue;
+        if ((status = unmarshalPropertyValue(&CurrentTempStringProperty, replyMsg, &newValue, ((SetValueContext*)context)->sender)))
+            return status;
+        setCurrentTemperatureString(newValue);
+        ((SetValueContext*)context)->numSignals = 1;
+        ((SetValueContext*)context)->signals[0] = EN_CURRENTTEMPSTRINGPROPERTY_SIGNAL_VALUE_CHANGED;
+    }
+    break;
+
+    case EN_CURRENTHUMIDITYSTRINGPROPERTY_VALUE_PROPERTY:
+    {
+        const char* newValue;
+        if ((status = unmarshalPropertyValue(&CurrentHumidityStringProperty, replyMsg, &newValue, ((SetValueContext*)context)->sender)))
+            return status;
+        setCurrentHumidityString(newValue);
+        ((SetValueContext*)context)->numSignals = 1;
+        ((SetValueContext*)context)->signals[0] = EN_CURRENTHUMIDITYSTRINGPROPERTY_SIGNAL_VALUE_CHANGED;
+    }
+    break;
+
+    case EN_AC_MODE_VALUE_PROPERTY:
     {
         uint16_t newValue;
-        if ((status = unmarshalPropertyValue(&heatProperty, replyMsg, &newValue, ((SetValueContext*)context)->sender)))
+        if ((status = unmarshalPropertyValue(&ac_mode, replyMsg, &newValue, ((SetValueContext*)context)->sender)))
             return status;
-        setuint16Var(newValue);
-        ((SetValueContext*)context)->numSignals = 2;
-        ((SetValueContext*)context)->signals[0] = EN_HEATPROPERTY_SIGNAL_VALUE_CHANGED;
-        ((SetValueContext*)context)->signals[1] = DE_AT_HEATPROPERTY_SIGNAL_VALUE_CHANGED;
+        setCurrentMode(newValue);
+        ((SetValueContext*)context)->numSignals = 1;
+        ((SetValueContext*)context)->signals[0] = EN_AC_MODE_SIGNAL_VALUE_CHANGED;
+    }
+    break;
+
+    case EN_STATUSSTRINGPROPERTY_VALUE_PROPERTY:
+    {
+        const char* newValue;
+        if ((status = unmarshalPropertyValue(&statusStringProperty, replyMsg, &newValue, ((SetValueContext*)context)->sender)))
+            return status;
+        setStatusString(newValue);
+        ((SetValueContext*)context)->numSignals = 1;
+        ((SetValueContext*)context)->signals[0] = EN_STATUSSTRINGPROPERTY_SIGNAL_VALUE_CHANGED;
+    }
+    break;
+
+    case EN_SET_TEMPERATURE_VALUE_PROPERTY:
+    {
+        uint16_t newValue;
+        if ((status = unmarshalPropertyValue(&set_temperature, replyMsg, &newValue, ((SetValueContext*)context)->sender)))
+            return status;
+        setTargetTemperature(newValue);
+        ((SetValueContext*)context)->numSignals = 1;
+        ((SetValueContext*)context)->signals[0] = EN_SET_TEMPERATURE_SIGNAL_VALUE_CHANGED;
+    }
+    break;
+
+    case EN_FAN_SPEED_VALUE_PROPERTY:
+    {
+        uint16_t newValue;
+        if ((status = unmarshalPropertyValue(&fan_speed, replyMsg, &newValue, ((SetValueContext*)context)->sender)))
+            return status;
+        setFanSpeed(newValue);
+        ((SetValueContext*)context)->numSignals = 1;
+        ((SetValueContext*)context)->signals[0] = EN_FAN_SPEED_SIGNAL_VALUE_CHANGED;
     }
     break;
 
@@ -630,55 +641,6 @@ AJ_Status ExecuteAction(AJ_Message* msg, uint32_t msgId, ExecuteActionContext* c
     AJ_MarshalReplyMsg(msg, &reply);
 
     switch (msgId) {
-    case EN_OVENACTION_EXEC:
-    case DE_AT_OVENACTION_EXEC:
-    {
-        AJ_Printf("Starting the Oven. Execute was called\n");
-    }
-    break;
-
-    case EN_LIGHTCONFIRM_EXEC_ACTION1:
-    case DE_AT_LIGHTCONFIRM_EXEC_ACTION1:
-    {
-        AJ_Printf("Execute Action1 was called\n");
-    }
-    break;
-
-    case EN_LIGHTCONFIRM_EXEC_ACTION2:
-    case DE_AT_LIGHTCONFIRM_EXEC_ACTION2:
-    {
-        AJ_Printf("Execute Action2 was called\n");
-    }
-    break;
-
-    case EN_LIGHTCONFIRM_EXEC_ACTION3:
-    case DE_AT_LIGHTCONFIRM_EXEC_ACTION3:
-    {
-        AJ_Printf("Execute Action3 was called\n");
-    }
-    break;
-
-    case EN_AREYOUSURE_EXEC_ACTION1:
-    case DE_AT_AREYOUSURE_EXEC_ACTION1:
-    {
-        AJ_Printf("Execute Action1 was called\n"); addDismissSignal(context, NOTIFICATION_ACTION_AREYOUSURE_SIGNAL_DISMISS);
-    }
-    break;
-
-    case EN_AREYOUSURE_EXEC_ACTION2:
-    case DE_AT_AREYOUSURE_EXEC_ACTION2:
-    {
-        AJ_MarshalErrorMsg(msg, &reply, AJ_ErrServiceUnknown);
-    }
-    break;
-
-    case EN_AREYOUSURE_EXEC_ACTION3:
-    case DE_AT_AREYOUSURE_EXEC_ACTION3:
-    {
-        AJ_MarshalErrorMsg(msg, &reply, AJ_ErrServiceUnknown);
-    }
-    break;
-
 
     }
 
@@ -688,4 +650,23 @@ AJ_Status ExecuteAction(AJ_Message* msg, uint32_t msgId, ExecuteActionContext* c
 void TestsInit(CPSTest* testsToRun)
 {
 
+}
+void disableFan()
+{
+    setBaseEnabled(&fan_speed.base, FALSE);
+}
+
+void enableFan()
+{
+    setBaseEnabled(&fan_speed.base, TRUE);
+}
+
+void disableTempSelect()
+{
+    setBaseEnabled(&set_temperature.base, FALSE);
+}
+
+void enableTempSelect()
+{
+    setBaseEnabled(&set_temperature.base, TRUE);
 }
