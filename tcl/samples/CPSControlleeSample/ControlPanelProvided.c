@@ -16,7 +16,7 @@
 
 #include "ControlPanelProvided.h"
 #include "ControlPanelGenerated.h"
-#include "alljoyn/controlpanel/common/BaseWidget.h"
+#include "alljoyn/controlpanel/Common/BaseWidget.h"
 
 #ifndef snprintf
 #include <stdio.h>
